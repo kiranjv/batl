@@ -1,0 +1,133 @@
+package com.bottlr.dataacess;
+
+import android.content.Context;
+import android.content.SyncResult;
+import android.database.Cursor;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+
+public class DBAdapter {
+	public static final String DATABASE_NAME = "Bottl_Database";
+	private static final int DATABASE_VERSION = 3;
+	Context context;
+	private DBHelper mDBHelper;
+	private static SQLiteDatabase db = null;;
+
+	public DBAdapter(Context context) {
+
+		this.context = context;
+		mDBHelper = new DBHelper(this.context);
+		if (db == null) {
+			try {
+				
+				// db = mDBHelper.getWritableDatabase();
+				
+				
+				db = mDBHelper.getReadableDatabase();
+
+			} catch (Exception e) {
+
+				e.printStackTrace();
+			}
+		}
+		// Log.v("Safecell :"+"DBAdapter","context= "+this.context);
+	}
+
+	public class DBHelper extends SQLiteOpenHelper {
+
+		public DBHelper(Context context) {
+			super(context, DATABASE_NAME, null, DATABASE_VERSION);
+
+		}
+
+		@Override
+		public void onCreate(SQLiteDatabase db) {
+			Log.e("DBAdapter", "Dbadater onCreate");
+			db.execSQL(BottlesRepository.CREATE_QUERY);
+			
+
+			// db = mDBHelper.getWritableDatabase();
+		}
+
+		@Override
+		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+			Log.e("DBAdapter", "Dbadater onUpgrade");
+		}
+		
+		@Override
+		public void onOpen(SQLiteDatabase db) {
+			
+			super.onOpen(db);
+		}
+		
+		
+	}
+
+	public Cursor selectQuery(String sql, String[] args) {
+		Cursor cursor = null;
+		try {
+
+			// db = mDBHelper.getWritableDatabase();
+			// Log.v("Safecell :"+"DBAdapter","db = "+db);
+
+			cursor = db.rawQuery(sql, args);
+
+			if (cursor != null) {
+				cursor.getCount();
+			}
+			// db.close();
+			// mDBHelper.close();
+
+		} catch (Exception e) {
+			// db.close();
+			e.printStackTrace();
+		}
+
+		return cursor;
+	}
+
+	public void Query(String sql, Object[] bindArgs) {
+		try {
+			// db = mDBHelper.getWritableDatabase();
+			db.execSQL(sql, bindArgs);
+			// db.close();
+		} catch (Exception e) {
+			// Log.v("Safecell :"+"DBAdapter","Query");
+			// db.close();
+			e.printStackTrace();
+		}
+	}
+
+	public DBAdapter open() throws SQLException {
+		try {
+			db = mDBHelper.getReadableDatabase();
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+
+		}
+		return this;
+
+	}
+
+	public void closeDatabase() {
+		mDBHelper.close();
+
+	}
+
+	protected void deleteQuery(String sql) {
+		try {
+			// db = mDBHelper.getWritableDatabase();
+			db.execSQL(sql);
+			// db.close();
+		} catch (Exception e) {
+			// Log.v("Safecell :"+"DBAdapter ","deleteQuery Exeption");
+			e.printStackTrace();
+			// db.close();
+		}
+	}
+
+}// end DBAdapter

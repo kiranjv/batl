@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <include
+            android:id="@+id/btnOne"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/headder_layout"
+            android:gravity="center" />
+
+        <Button
+            android:id="@+id/homescreen_loginbutton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:paddingTop="3dp"
+            android:text="Login" />
+
+    </RelativeLayout>
+
+    <AbsoluteLayout
+        android:id="@+id/homescreen_absolute_list_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="@drawable/background" >
+
+        <!--  -->
+
+        <ListView
+            android:id="@+id/homescreen_listview"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" >
+        </ListView>
+    </AbsoluteLayout>
+
+    <include
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/fottler_layout"
+        android:gravity="center" />
+
+</LinearLayout>

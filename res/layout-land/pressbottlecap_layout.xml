@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/background"
+    android:orientation="vertical" >
+
+   <include
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    layout="@layout/headder_layout" />
+
+    <ImageView
+        android:id="@+id/presscap_messageimg"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+      
+        android:src="@drawable/botlmessage" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.27" >
+
+        <ImageView
+            android:id="@+id/presscap_bottlebutton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="5dp"
+            
+            android:src="@drawable/bottlecap_unclick" />
+
+
+
+        <TextView
+            android:id="@+id/pressbottle_opentext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/presscap_bottlebutton"
+            android:layout_centerHorizontal="true"
+            
+            android:text="Open Bottle"
+			android:textColor="#f8f8f8"
+			
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    </RelativeLayout>
+	
+
+    <include
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/fottler_layout"
+       
+        android:layout_gravity="bottom" />
+
+</LinearLayout>

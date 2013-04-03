@@ -1,0 +1,53 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.bottlr"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="15" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:hardwareAccelerated="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@android:style/Theme.NoTitleBar" >
+        <activity
+            android:name=".views.SplashScreenView"
+            android:noHistory="true"
+            android:label="@string/title_activity_splash_screen" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Press bottle cap activity -->
+        <activity
+            android:name=".views.PressBottleCapView"
+            android:noHistory="true" >
+        </activity>
+
+        <!-- Home screen activity -->
+        <activity
+            android:name=".views.HomeScreenView"
+            android:noHistory="true" >
+        </activity>
+
+        <!-- Bottle details view -->
+        <activity
+            android:name=".views.BottleDetailsView"
+            android:noHistory="true" >
+        </activity>
+
+        <!-- login activity view -->
+        <activity
+            android:name=".views.LoginView"
+            android:noHistory="true" >
+        </activity>
+    </application>
+
+</manifest>
