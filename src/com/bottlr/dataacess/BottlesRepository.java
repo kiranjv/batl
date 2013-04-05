@@ -9,16 +9,18 @@ import android.database.Cursor;
 public class BottlesRepository extends DBAdapter {
 
 	public static String CREATE_QUERY = "CREATE TABLE bottle (bottle_id TEXT  NOT NULL,botlType TEXT  NOT NULL,"
-			+ " botlImageUrl TEXT NULL, dateCreated TEXT NULL, distance TEXT NULL, imageName TEXT NULL, "
+			+ "botlImageUrl TEXT NULL, dateCreated TEXT NULL, distance TEXT NULL, imageName TEXT NULL, "
 			+ "likeCount TEXT NULL, locationsCount TEXT NULL, message TEXT NULL, title TEXT NULL, username TEXT NULL,"
-			+ " vidId TEXT NULL, vidUrl TEXT NULL, videoType TEXT NULL, videoThumbUrl TEXT NULL)";
+			+ "vidId TEXT NULL, vidUrl TEXT NULL, videoType TEXT NULL, full_top_image_url TEXT NULL, full_video_url TEXT NULL, full_audio_url TEXT NULL, audio_url TEXT NULL,"
+			+ "vidfrom TEXT NULL)";
 
 	private String insertQuery = "INSERT INTO bottle ("
 			+ "bottle_id ,botlType,"
 			+ " botlImageUrl, dateCreated, distance, imageName, "
 			+ "likeCount, locationsCount, message, title, username,"
-			+ " vidId, vidUrl, videoType, videoThumbUrl" + ") VALUES ("
-			+ "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?" + ")";
+			+ " vidId, vidUrl, videoType, full_top_image_url, full_video_url, full_audio_url, audio_url,"
+			+ "vidfrom" + ") VALUES ("
+			+ "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?,?" + ")";
 
 	private Context context;
 
@@ -28,13 +30,16 @@ public class BottlesRepository extends DBAdapter {
 	}
 
 	public void insertBottle(BottleDetails bottle) {
+		
 		Object[] args = { bottle.getBottle_id(), bottle.getBotlType(),
 				bottle.getBotlImageUrl(), bottle.getDateCreated(),
 				bottle.getDistance(), bottle.getImageName(),
 				bottle.getLikeCount(), bottle.getLocationsCount(),
 				bottle.getMessage(), bottle.getTitle(), bottle.getUsername(),
 				bottle.getVideoid(), bottle.getVidUrl(), bottle.getVideoType(),
-				bottle.getVidThumbUrl() };
+				bottle.getFull_top_image_url(), bottle.getFull_video_url(),
+				bottle.getFull_audio_url(), bottle.getAudio_url(),
+				bottle.getVidfrom() };
 
 		this.Query(insertQuery, args);
 	}
@@ -79,12 +84,19 @@ public class BottlesRepository extends DBAdapter {
 				String vidId = cursor.getString(11);
 				String vidUrl = cursor.getString(12);
 				String videoType = cursor.getString(13);
-				String videoThumbUrl = cursor.getString(14);
+				String full_top_image_url = cursor.getString(14);
+				String full_video_url = cursor.getString(15);
+				String full_audio_url = cursor.getString(16);
+				String audio_url = cursor.getString(17);
+				String vidfrom = cursor.getString(18);
+
 				BottleDetails bottle = new BottleDetails(bottle_id, botlType,
 						botlImageUrl, dateCreated, distance, imageName,
 						likeCount, locationsCount, message, title, username,
-						vidId, vidUrl, videoType, videoThumbUrl);
+						vidId, vidUrl, videoType, full_top_image_url,
+						full_video_url, full_audio_url, audio_url, vidfrom);
 				bottles.add(bottle);
+				cursor.moveToNext();
 			}
 		}
 		cursor.close();

@@ -19,4 +19,11 @@ public class URLs {
 	//Vimeo
 	//soundcloud
 	
+	
+	public static String HEADImageBaseURL = "http://c801459.r59.cf2.rackcdn.com/";
+	public static String HEADImageENDURL = "_large.jpg";
+	
+	
+	
+	
 }

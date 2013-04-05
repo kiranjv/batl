@@ -8,10 +8,14 @@ import com.bottlr.utils.UIUtils;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.Toast;
 
 public class AsyncBottleDownload extends AsyncTask<Void, Void, Boolean> {
 
+	private static final String TAG = "AsyncBottleDownload";
+	
+	public static boolean isDownloading = false;
 	private Context context;
 	private int bottle_count;
 	List<BottleDetails> parsedBottles;
@@ -37,6 +41,12 @@ public class AsyncBottleDownload extends AsyncTask<Void, Void, Boolean> {
 		this.bottle_count = bottle_count;
 	}
 
+	
+	@Override
+	protected void onPreExecute() {
+		isDownloading = true;
+		super.onPreExecute();
+	}
 	/**
 	 * asyncronus background service to download the bottles from bottle server.
 	 */
@@ -48,8 +58,12 @@ public class AsyncBottleDownload extends AsyncTask<Void, Void, Boolean> {
 			failureMSG = download.getFailureMessage();
 			return false;
 		}
+
+	
 		BottleParseHelper bottlesParser = new BottleParseHelper(context);
 		parsedBottles = bottlesParser.parseBottles(bottles);
+		Log.e(TAG, "Downloaded bottles size: " + parsedBottles.size());
+		Log.e(TAG, "Downloaded bottles json: " + bottles);
 		bottlesParser.storeBottleLocal(parsedBottles);
 		return true;
 	}
@@ -57,13 +71,20 @@ public class AsyncBottleDownload extends AsyncTask<Void, Void, Boolean> {
 	@Override
 	protected void onPostExecute(Boolean result) {
 		if (!result) {
-			//UIUtils.OkDialog(context, "No bottles from server. Message is "+failureMSG);
-			Toast.makeText(context, "No bottles from server. Message is "+failureMSG,
+			// UIUtils.OkDialog(context,
+			// "No bottles from server. Message is "+failureMSG);
+			Toast.makeText(context,
+					"No bottles from server. Message is " + failureMSG,
 					Toast.LENGTH_SHORT).show();
 		} else {
-			Toast.makeText(context, "Bottle download sucess.",
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(
+					context,
+					"Bottle download sucess." + parsedBottles.size()
+							+ " bottles downloaded.", Toast.LENGTH_SHORT)
+					.show();
 		}
+		
+		isDownloading = false;
 		super.onPostExecute(result);
 	}
 

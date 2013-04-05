@@ -1,5 +1,7 @@
 package com.bottlr.views;
 
+import java.util.concurrent.ExecutionException;
+
 import com.bottlr.R;
 import com.bottlr.R.layout;
 import com.bottlr.R.menu;
@@ -40,11 +42,26 @@ public class SplashScreenView extends Activity {
 		}
 
 		downloadBottles(30);
-		loadPressBottleView();
+
+		
+		
+
+		try {
+			Thread.sleep(Utils.secsToMilliSeconds(5));
+			loadPressBottleView();
+
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 
 	private void downloadBottles(int bottle_count) {
-		new AsyncBottleDownload(context, bottle_count).execute();
+		AsyncBottleDownload downloadTask = new AsyncBottleDownload(context,
+				bottle_count);
+		downloadTask.execute();
+
 	}
 
 	private void loadPressBottleView() {
@@ -52,12 +69,7 @@ public class SplashScreenView extends Activity {
 
 			@Override
 			public void run() {
-				Log.d(TAG, "Starting press bottle cap view");
-				Intent intent = new Intent(SplashScreenView.this,
-						PressBottleCapView.class);
-				intent.setFlags(Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY);
-				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				startActivity(intent);
+				startOpenBottleView();
 
 			}
 		};
@@ -68,6 +80,16 @@ public class SplashScreenView extends Activity {
 		handler = new Handler();
 
 		handler.postDelayed(runnable, Utils.secsToMilliSeconds(WAITING_TIME));
+
+	}
+
+	protected void startOpenBottleView() {
+		Log.d(TAG, "Starting press bottle cap view");
+		Intent intent = new Intent(SplashScreenView.this,
+				PressBottleCapView.class);
+		intent.setFlags(Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY);
+		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		startActivity(intent);
 
 	}
 

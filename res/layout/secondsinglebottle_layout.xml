@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/secondsingle_botl_main_linearlayout"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+     android:onClick="onSecondSingleBottleClick"
+    android:background="@drawable/bottle_background"
+    
+    android:orientation="vertical" >
+
+     <TextView
+        android:id="@+id/second_bottle_clicked_bottleid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible" />
+     
+     
+    <RelativeLayout
+        android:layout_width="150dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+        android:paddingLeft="25dp"
+         >
+
+        <ProgressBar
+            android:id="@+id/second_single_botl_Img_progressBar1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="15dp" />
+
+        <ImageView
+            android:id="@+id/second_sing_botl_mainTopImage"
+            android:layout_width="150dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:alpha="0"
+            android:visibility="invisible" />
+    </RelativeLayout>
+    <!-- profile details layout -->
+
+    <LinearLayout
+        android:id="@+id/second_sing_botl_profiledetails_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="5dp" >
+
+        <!-- profile description -->
+
+        <TextView
+            android:id="@+id/second_sing_botl_profiledesc"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Huston. We have a bottle."
+            android:textColor="#333333" >
+        </TextView>
+
+        <!-- profile image and profile details layout -->
+
+        <LinearLayout
+            android:id="@+id/second_sing_botl_profimg_details_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="15dp" >
+
+            <ImageView
+                android:id="@+id/second_singlebotl_imageView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="20dp"
+                android:src="@drawable/bottle_img" />
+
+            <!-- Profile name details  layout -->
+
+            <LinearLayout
+                android:id="@+id/second_singlebotl_profilename_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <!-- profile first name & last name -->
+
+                <TextView
+                    android:id="@+id/second_singlebotl_profile_firstname"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="20dp"
+                    android:text="DonPuryar"
+                    android:textColor="#333333" >
+                </TextView>
+
+                <TextView
+                    android:id="@+id/second_singlebotl_profile_lastname"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="20dp"
+                    android:text="OdonPuryar"
+                    android:textColor="#333333" >
+                </TextView>
+            </LinearLayout>
+        </LinearLayout>
+        <!-- bottle created date filed -->
+
+        <TextView
+            android:id="@+id/second_singlebotl_bottle_date"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingTop="15dp"
+            android:text="botled on jan 10. 2012"
+            android:textColor="#333333" >
+        </TextView>
+    </LinearLayout>
+    <!-- profile details layout completed -->
+
+
+    <!-- bottle like unlike and miles layout -->
+
+    <LinearLayout
+        android:id="@+id/second_singlebotl_likepanel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="#dceadb"
+        android:orientation="horizontal"
+        android:paddingRight="10dp"
+        android:paddingTop="15dp" >
+
+        <!-- user bottle image -->
+
+        <ImageView
+            android:id="@+id/second_singlebotl_bottleimage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:src="@drawable/bottle" />
+
+        <!-- Like linear layout -->
+
+        <LinearLayout
+            android:id="@+id/second_singlebotl_likepanel_likelayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+          
+            android:orientation="vertical"
+            android:paddingLeft="15dp" >
+
+            <ImageView
+                android:id="@+id/second_singlebotl_likepanel_likelayout_heartimg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/heart" />
+
+            <TextView
+                android:id="@+id/second_singlebotl_likepanel_likelayout_likes_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="25"
+                android:textColor="#333333" >
+            </TextView>
+
+            <TextView
+                android:id="@+id/second_singlebotl_likepanel_likelayout_likes_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="likes"
+                android:textColor="#333333" >
+            </TextView>
+        </LinearLayout>
+
+        <!-- Views linear layout -->
+
+        <LinearLayout
+            android:id="@+id/second_singlebotl_viewspanel_viewlayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="15dp" >
+
+            <ImageView
+                android:id="@+id/second_singlebotl_viewspanel_viewlayout_eyeimg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/eye" />
+
+            <TextView
+                android:id="@+id/second_singlebotl_viewspanel_viewlayout_views_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="49"
+                android:textColor="#333333" >
+            </TextView>
+
+            <TextView
+                android:id="@+id/second_singlebotl_viewspanel_viewlayout_views_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="views"
+                android:textColor="#333333" >
+            </TextView>
+        </LinearLayout>
+
+        <!-- Miles linear layout -->
+
+        <LinearLayout
+            android:id="@+id/second_singlebotl_milesspanel_viewlayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="15dp" >
+
+            <ImageView
+                android:id="@+id/second_singlebotl_milespanel_milelayout_mileimg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/boat" />
+
+            <TextView
+                android:id="@+id/second_singlebotl_milespanel_milelayout_miles_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="409"
+                android:textColor="#333333" >
+            </TextView>
+
+            <TextView
+                android:id="@+id/second_singlebotl_milespanel_milelayout_miles_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="miles"
+                android:textColor="#333333" >
+            </TextView>
+        </LinearLayout>
+    </LinearLayout>
+    <!-- end of bottle like and unlike layout -->
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="20dp" />
+
+</LinearLayout>

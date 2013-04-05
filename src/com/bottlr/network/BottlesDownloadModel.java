@@ -35,7 +35,7 @@ public class BottlesDownloadModel extends AbstractProxy {
 		// queryString.add("lng", "" + longitude);
 		// queryString.add("distance", "" + radius);
 
-		String url = URLs.BOTTLE_URL;
+		String url = URLs.BOTTLE_URL + "/"+bottle_count;
 		HttpGet getRequest = new HttpGet(url);
 		// getRequest.setHeader("Content-Type", "application/json");
 

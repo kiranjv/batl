@@ -1,26 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     android:background="@drawable/background"
     android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/bottleText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:text="Bottle details"
-        android:textColor="#333333" />
-    <ImageView  android:id="@+id/bottleImage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+    <ImageView
+        android:id="@+id/bottledetails_open_botl_img"
+        android:layout_width="250px"
+        android:layout_height="100px"
+        android:layout_gravity="center"
+        android:src="@drawable/bot_open" />
 
+    <ImageView
+        android:id="@+id/bottleImage"
+        android:layout_width="wrap_content"
+        android:layout_height="150dp"
+        android:src="@drawable/eggs" />
+
     <WebView
         android:id="@+id/bottledetails_webiew"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
         
+        android:layout_gravity="center_horizontal">
+
     </WebView>
+
+    <TextView
+        android:id="@+id/bottledetails_messages_filed"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/white"
+        android:padding="2dp" />
 
 </LinearLayout>

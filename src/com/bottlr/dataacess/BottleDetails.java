@@ -20,23 +20,32 @@ public class BottleDetails {
 	private String username;
 	private String vidUrl;
 	private String videoType;
-	private String vidThumbUrl;
+
 	private String videoid;
 
+	private String full_top_image_url;
+
+	private String full_video_url;
+	private String full_audio_url;
+	private String audio_url;
+	private String vidfrom;
+
 	public BottleDetails(JSONObject json_bottle) {
-		try {
-			parseBottleJson(json_bottle);
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		// try {
+		// // parseBottleJson(json_bottle);
+		// } catch (JSONException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
 	}
 
 	public BottleDetails(String bottle_id, String botlType,
 			String botlImageUrl, String dateCreated, String distance,
 			String imageName, String likeCount, String locationsCount,
-			String message, String title, String username, String vidId,
-			String vidUrl, String videoType, String videoThumbUrl) {
+			String message, String title, String username, String videoid,
+			String vidUrl, String videoType, String full_top_image_url,
+			String full_video_url, String full_audio_url, String audio_url,
+			String vidfrom) {
 		this.bottle_id = bottle_id;
 		this.botlType = botlType;
 		this.botlImageUrl = botlImageUrl;
@@ -48,42 +57,25 @@ public class BottleDetails {
 		this.message = message;
 		this.title = title;
 		this.username = username;
-		this.videoType = videoType;
-		this.videoid = vidId;
+		this.videoid = videoid;
 		this.vidUrl = vidUrl;
-		this.vidThumbUrl = videoThumbUrl;
+		this.videoType = videoType;
+		this.full_top_image_url = full_top_image_url;
+		this.full_video_url = full_video_url;
+		this.full_audio_url = full_audio_url;
+		this.audio_url = audio_url;
+		this.vidfrom = vidfrom;
 
 	}
 
-	private void parseBottleJson(JSONObject json_bottle) throws JSONException {
-		this.bottle_id = json_bottle.getString("bid");
-		this.botlType = json_bottle.getString("botlType");
-		this.botlImageUrl = json_bottle.getString("botlImageUrl");
-		this.dateCreated = json_bottle.getString("dateCreated");
-		this.distance = json_bottle.getString("distance");
-		this.imageName = json_bottle.getString("imageName");
-		this.likeCount = json_bottle.getJSONObject("likes").getString(
-				"likeCount");
-		this.locationsCount = json_bottle.getString("locationsCount");
-		this.message = json_bottle.getString("message");
-		this.title = json_bottle.getString("title");
-		this.username = json_bottle.getString("username");
-		this.videoType = "YouTube";
-		this.videoid = json_bottle.getString("vidUrl");
-
-		generateVideoUrl();
-
-	}
-
-	private void generateVideoUrl() {
-		if (!videoid.equalsIgnoreCase("") && botlType.equalsIgnoreCase("video")) {
-			this.vidUrl = Utils.generateVideoUrl(videoid, videoType);
-			this.vidThumbUrl = Utils.generateVideoThumbImgUrl(videoid,
-					videoType);
-		} else {
-			this.vidUrl = "";
-			this.vidThumbUrl = "";
-		}
+	@Override
+	public String toString() {
+		String data = "BottleId: " + this.bottle_id + " botlType: "
+				+ this.botlType + " likeCount:" + likeCount
+				+ " locationsCount: " + locationsCount + " full video url: "
+				+ full_video_url + " full_image_url: " + full_top_image_url
+				+ " full audio url: " + full_audio_url;
+		return data;
 	}
 
 	/**
@@ -282,21 +274,6 @@ public class BottleDetails {
 	}
 
 	/**
-	 * @return the vidThumbUrl
-	 */
-	public String getVidThumbUrl() {
-		return vidThumbUrl;
-	}
-
-	/**
-	 * @param vidThumbUrl
-	 *            the vidThumbUrl to set
-	 */
-	public void setVidThumbUrl(String vidThumbUrl) {
-		this.vidThumbUrl = vidThumbUrl;
-	}
-
-	/**
 	 * @return the videoid
 	 */
 	public String getVideoid() {
@@ -311,13 +288,79 @@ public class BottleDetails {
 		this.videoid = videoid;
 	}
 
-	@Override
-	public String toString() {
-		String data = "BottleId: " + this.bottle_id + " botlType:"
-				+ this.botlType + " likeCount:" + likeCount
-				+ " locationsCount:" + locationsCount + " videoId: " + videoid
-				+ " videoUrl: " + vidUrl + " VideoThumbUrl: " + vidThumbUrl;
-		return data;
+	/**
+	 * @return the full_top_image_url
+	 */
+	public String getFull_top_image_url() {
+		return full_top_image_url;
+	}
+
+	/**
+	 * @param full_top_image_url
+	 *            the full_top_image_url to set
+	 */
+	public void setFull_top_image_url(String full_top_image_url) {
+		this.full_top_image_url = full_top_image_url;
+	}
+
+	/**
+	 * @return the full_video_url
+	 */
+	public String getFull_video_url() {
+		return full_video_url;
+	}
+
+	/**
+	 * @param full_video_url
+	 *            the full_video_url to set
+	 */
+	public void setFull_video_url(String full_video_url) {
+		this.full_video_url = full_video_url;
+	}
+
+	/**
+	 * @return the full_audio_url
+	 */
+	public String getFull_audio_url() {
+		return full_audio_url;
+	}
+
+	/**
+	 * @param full_audio_url
+	 *            the full_audio_url to set
+	 */
+	public void setFull_audio_url(String full_audio_url) {
+		this.full_audio_url = full_audio_url;
+	}
+
+	/**
+	 * @return the audio_url
+	 */
+	public String getAudio_url() {
+		return audio_url;
+	}
+
+	/**
+	 * @param audio_url
+	 *            the audio_url to set
+	 */
+	public void setAudio_url(String audio_url) {
+		this.audio_url = audio_url;
+	}
+
+	/**
+	 * @return the vidfrom
+	 */
+	public String getVidfrom() {
+		return vidfrom;
+	}
+
+	/**
+	 * @param vidfrom
+	 *            the vidfrom to set
+	 */
+	public void setVidfrom(String vidfrom) {
+		this.vidfrom = vidfrom;
 	}
 
 }
