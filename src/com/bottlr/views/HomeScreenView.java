@@ -23,12 +23,13 @@ import com.bottlr.dataacess.BottlesRepository;
 import com.bottlr.helpers.AsyncBottleDownload;
 import com.bottlr.helpers.ItemDetails;
 import com.bottlr.helpers.ListRowItemsAdapter;
+import com.bottlr.utils.Utils;
 
 public class HomeScreenView extends Activity {
 
 	private static final String TAG = "HomeScreenView";
 	public ListView list_bottles;
-	public Context context;
+	public static Context context;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -116,11 +117,13 @@ public class HomeScreenView extends Activity {
 		BottleDetailsView.SELECTED_LAYOUT = layout;
 		TextView bottleView = (TextView) layout
 				.findViewById(R.id.singlebottle_clicked_bottleid);
-
+		String bottle_id = (String) bottleView.getText();
 		Toast.makeText(this,
-				"Selected first bottle clicked id:" + bottleView.getText(),
+				"Selected first bottle clicked id:" + bottle_id,
 				Toast.LENGTH_SHORT).show();
 
+//		BottleDetails bottle = Utils.getBottleDetails(this, bottle_id);
+//		BottleDetailsView.CURRENT_OPEN_BOTTLE = bottle;
 		Intent intent = new Intent(HomeScreenView.this, BottleDetailsView.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY);
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -134,9 +137,18 @@ public class HomeScreenView extends Activity {
 		TextView bottleView = (TextView) layout
 				.findViewById(R.id.second_bottle_clicked_bottleid);
 
+		String bottle_id = (String) bottleView.getText();
 		Toast.makeText(this,
-				"Selected second bottle clicked id:" + bottleView.getText(),
+				"Selected second bottle clicked id:" + bottle_id,
 				Toast.LENGTH_SHORT).show();
+		
+//		BottleDetails bottle = Utils.getBottleDetails(this, bottle_id);
+//		BottleDetailsView.CURRENT_OPEN_BOTTLE = bottle;
+		Intent intent = new Intent(HomeScreenView.this, BottleDetailsView.class);
+		intent.setFlags(Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY);
+		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+		startActivity(intent);
 	}
 
 	public void onSingleBottleLikeClick(View v) {
@@ -147,6 +159,7 @@ public class HomeScreenView extends Activity {
 		Toast.makeText(this,
 				"Bottle like clicked. Likes: " + likeText.getText(),
 				Toast.LENGTH_SHORT).show();
+		
 
 	}
 

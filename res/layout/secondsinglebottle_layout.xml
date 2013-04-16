@@ -3,39 +3,37 @@
     android:id="@+id/secondsingle_botl_main_linearlayout"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-     android:onClick="onSecondSingleBottleClick"
     android:background="@drawable/bottle_background"
-    
+    android:onClick="onSecondSingleBottleClick"
     android:orientation="vertical" >
 
-     <TextView
+    <TextView
         android:id="@+id/second_bottle_clicked_bottleid"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="invisible" />
-     
-     
+
     <RelativeLayout
-        android:layout_width="150dp"
+        android:layout_width="match_parent"
         android:layout_height="100dp"
         android:layout_gravity="center"
-        android:paddingLeft="25dp"
-         >
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp" >
 
         <ProgressBar
             android:id="@+id/second_single_botl_Img_progressBar1"
-            android:layout_width="wrap_content"
+             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:padding="15dp" />
+            android:visibility="invisible" />
 
         <ImageView
             android:id="@+id/second_sing_botl_mainTopImage"
-            android:layout_width="150dp"
+            android:layout_width="250dp"
             android:layout_height="100dp"
             android:layout_gravity="center"
-            android:alpha="0"
-            android:visibility="invisible" />
+                       
+            android:src="@drawable/loading" />
     </RelativeLayout>
     <!-- profile details layout -->
 
@@ -67,7 +65,7 @@
             android:paddingTop="15dp" >
 
             <ImageView
-                android:id="@+id/second_singlebotl_imageView1"
+                android:id="@+id/second_singlebotl_profileimg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingLeft="20dp"
@@ -126,7 +124,7 @@
         android:layout_gravity="center_horizontal"
         android:background="#dceadb"
         android:orientation="horizontal"
-        android:paddingRight="10dp"
+        
         android:paddingTop="15dp" >
 
         <!-- user bottle image -->
@@ -134,8 +132,10 @@
         <ImageView
             android:id="@+id/second_singlebotl_bottleimage"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="10dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="fill_vertical"
+            android:paddingLeft="14dp"
+            android:paddingRight="-5dp"
             android:src="@drawable/bottle" />
 
         <!-- Like linear layout -->
@@ -144,7 +144,6 @@
             android:id="@+id/second_singlebotl_likepanel_likelayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-          
             android:orientation="vertical"
             android:paddingLeft="15dp" >
 
@@ -209,8 +208,10 @@
             android:id="@+id/second_singlebotl_milesspanel_viewlayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:orientation="vertical"
-            android:paddingLeft="15dp" >
+            android:paddingLeft="15dp"
+            android:paddingRight="10dp" >
 
             <ImageView
                 android:id="@+id/second_singlebotl_milespanel_milelayout_mileimg"
@@ -237,8 +238,13 @@
     </LinearLayout>
     <!-- end of bottle like and unlike layout -->
 
-    <TextView
+    <ImageView
+        android:id="@+id/second_botl_pattren_image"
         android:layout_width="fill_parent"
-        android:layout_height="20dp" />
+        android:layout_height="30dp"
+        
+        android:src="@drawable/pattern_001" />
+
+    
 
 </LinearLayout>

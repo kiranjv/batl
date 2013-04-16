@@ -5,7 +5,7 @@
 
     <include
         android:id="@+id/listrow_firstitem"
-        android:layout_width="wrap_content"
+        android:layout_width="350px"
         android:layout_height="wrap_content"
         layout="@layout/singlebottle_layout"
         android:layout_weight="1"
@@ -14,7 +14,7 @@
     
    <include
         android:id="@+id/listrow_seconditem"
-        android:layout_width="wrap_content"
+        android:layout_width="350px"
         android:layout_height="wrap_content"
         layout="@layout/secondsinglebottle_layout"
         android:layout_weight="1"

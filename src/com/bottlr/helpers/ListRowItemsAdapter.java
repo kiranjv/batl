@@ -2,25 +2,26 @@ package com.bottlr.helpers;
 
 import java.util.ArrayList;
 
-import com.bottlr.R;
-import com.bottlr.dataacess.BottleDetails;
-import com.bottlr.utils.TAGS;
-import com.bottlr.utils.URLs;
-import com.bottlr.utils.Utils;
-
-import android.annotation.TargetApi;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.androidquery.AQuery;
+import com.androidquery.callback.AjaxCallback;
+import com.androidquery.callback.AjaxStatus;
+import com.bottlr.R;
+import com.bottlr.dataacess.BottleDetails;
+import com.bottlr.utils.TAGS;
+import com.bottlr.utils.Utils;
+import com.bottlr.views.HomeScreenView;
 
 public class ListRowItemsAdapter extends BaseAdapter {
 
@@ -93,9 +94,10 @@ public class ListRowItemsAdapter extends BaseAdapter {
 		updateFirstLayout(row, firstItemBottle);
 
 		/* second layout items update. */
-		if(position < secondBottleArrayList.size()) {
-		BottleDetails secondItemBottle = secondBottleArrayList.get(position);
-		updateSecondLayout(row, secondItemBottle);
+		if (position < secondBottleArrayList.size()) {
+			BottleDetails secondItemBottle = secondBottleArrayList
+					.get(position);
+			updateSecondLayout(row, secondItemBottle);
 		}
 
 		return row;
@@ -103,13 +105,26 @@ public class ListRowItemsAdapter extends BaseAdapter {
 
 	private void updateFirstLayout(View row, BottleDetails bottle) {
 		/* update top image. */
-		ImageView headderImage = (ImageView) row
+		final ImageView headderImage = (ImageView) row
 				.findViewById(R.id.sing_botl_mainTopImage);
-		ProgressBar progress = (ProgressBar) row
-				.findViewById(R.id.single_botl_Img_progressBar1);
-		new DownloadImageTask(headderImage, progress,
-				bottle.getFull_top_image_url())
-				.execute();
+		 ProgressBar progress = (ProgressBar) row
+		 .findViewById(R.id.single_botl_Img_progressBar1);
+		 new DownloadImageTask(context, headderImage, progress,
+		 bottle.getFull_top_image_url())
+		 .execute();
+		
+		// fetch a remote resource in raw bitmap
+//		AQuery aq = new AQuery(HomeScreenView.context);
+//		// String url =
+//		// "http://www.vikispot.com/z/images/vikispot/android-w.png";
+//		String url = bottle.getFull_top_image_url();
+//		aq.ajax(url, Bitmap.class, new AjaxCallback<Bitmap>() {
+//
+//			@Override
+//			public void callback(String url, Bitmap bitmap, AjaxStatus status) {
+//				headderImage.setImageBitmap(result);
+//			}
+//		});
 
 		/* update bottle title (id - sing_botl_profiledesc) */
 		TextView titleView = (TextView) row
@@ -142,46 +157,98 @@ public class ListRowItemsAdapter extends BaseAdapter {
 				TAGS.BOTTLE_LARGE_TYPE);
 		bottleImg.setImageDrawable(Utils.loadImgFromAssets(context, localPath));
 
-		/* update likes id - singlebotl_likepanel_likelayout_likes_number*/
+		/* update likes id - singlebotl_likepanel_likelayout_likes_number */
 		TextView likesView = (TextView) row
 				.findViewById(R.id.singlebotl_likepanel_likelayout_likes_number);
 		likesView.setText(bottle.getLikeCount());
-		
-		/* update view id - singlebotl_likepanel_likelayout_likes_number*/
+
+		/* update view id - singlebotl_likepanel_likelayout_likes_number */
 		TextView viewsView = (TextView) row
 				.findViewById(R.id.singlebotl_viewspanel_viewlayout_views_number);
 		viewsView.setText(bottle.getLocationsCount());
-		
-		/* update miles id - singlebotl_likepanel_likelayout_likes_number*/
+
+		/* update miles id - singlebotl_likepanel_likelayout_likes_number */
 		TextView milesView = (TextView) row
 				.findViewById(R.id.singlebotl_milespanel_milelayout_miles_number);
 		milesView.setText(bottle.getDistance());
-		
-		
-		/*setting bottle id for invisible textview*/
+
+		/* setting bottle id for invisible textview */
 		TextView bottleView = (TextView) row
 				.findViewById(R.id.singlebottle_clicked_bottleid);
 		bottleView.setText(bottle.getBottle_id());
 
 	}
 
-	private void updateSecondLayout(View row, BottleDetails secondItemBottle) {
+	private void updateSecondLayout(View row, BottleDetails bottle) {
 		// Log.v(TAG, "secondItemBottle: " + secondItemBottle);
 		ImageView mainImage2 = (ImageView) row
 				.findViewById(R.id.second_sing_botl_mainTopImage);
 		ProgressBar second_progress = (ProgressBar) row
 				.findViewById(R.id.second_single_botl_Img_progressBar1);
-		new DownloadImageTask(mainImage2, second_progress,
-				"http://c801459.r59.cf2.rackcdn.com/940d5158_large.gif")
+		new DownloadImageTask(context, mainImage2, second_progress,
+				bottle.getFull_top_image_url())
 				.execute();
 
 		TextView likesView2 = (TextView) row
 				.findViewById(R.id.second_singlebotl_likepanel_likelayout_likes_number);
-		likesView2.setText(secondItemBottle.getLikeCount());
+		likesView2.setText(bottle.getLikeCount());
 
 		TextView secondbottleidView = (TextView) row
 				.findViewById(R.id.second_bottle_clicked_bottleid);
-		secondbottleidView.setText(secondItemBottle.getBottle_id());
+		secondbottleidView.setText(bottle.getBottle_id());
+		
+		
+		/* update bottle title (id - sing_botl_profiledesc) */
+		TextView titleView = (TextView) row
+				.findViewById(R.id.second_sing_botl_profiledesc);
+		titleView.setText(bottle.getTitle());
+
+		/* update profile img id - singlebotl_profile_img */
+		ImageView profileImg = (ImageView) row
+				.findViewById(R.id.second_singlebotl_profileimg);
+
+		/* update profile name id = singlebotl_profile_firstname */
+		TextView profileNameView = (TextView) row
+				.findViewById(R.id.second_singlebotl_profile_firstname);
+		profileNameView.setText("bottle king");
+
+		/* update username id - singlebotl_profile_username */
+		TextView userNameView = (TextView) row
+				.findViewById(R.id.second_singlebotl_profile_lastname);
+		userNameView.setText("bottle king");
+		
+		/* update bottle date id - singlebotl_bottle_date */
+		TextView dateView = (TextView) row
+				.findViewById(R.id.second_singlebotl_bottle_date);
+		userNameView.setText(bottle.getDateCreated());
+
+		/* update bottle img id - singlebotl_bottleimage */
+		ImageView bottleImg = (ImageView) row
+				.findViewById(R.id.second_singlebotl_bottleimage);
+		String localPath = Utils.openBottleLocalPath(bottle.getBotlImageUrl(),
+				TAGS.BOTTLE_LARGE_TYPE);
+		bottleImg.setImageDrawable(Utils.loadImgFromAssets(context, localPath));
+
+		/* update likes id - singlebotl_likepanel_likelayout_likes_number */
+		TextView likesView = (TextView) row
+				.findViewById(R.id.second_singlebotl_likepanel_likelayout_likes_number);
+		likesView.setText(bottle.getLikeCount());
+		
+		
+		/* update view id - singlebotl_likepanel_likelayout_likes_number */
+		TextView viewsView = (TextView) row
+				.findViewById(R.id.second_singlebotl_viewspanel_viewlayout_views_number);
+		viewsView.setText(bottle.getLocationsCount());
+
+		/* update miles id - singlebotl_likepanel_likelayout_likes_number */
+		TextView milesView = (TextView) row
+				.findViewById(R.id.second_singlebotl_milespanel_milelayout_miles_number);
+		milesView.setText(bottle.getDistance());
+
+		/* setting bottle id for invisible textview */
+		TextView bottleView = (TextView) row
+				.findViewById(R.id.second_bottle_clicked_bottleid);
+		bottleView.setText(bottle.getBottle_id());
 
 	}
 

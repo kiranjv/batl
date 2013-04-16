@@ -10,7 +10,11 @@ import java.net.URL;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.bottlr.dataacess.BottleDetails;
+import com.bottlr.dataacess.BottlesRepository;
+
 import android.content.Context;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
@@ -156,4 +160,64 @@ public class Utils {
 		return path;
 	}
 
+	public static String generateIFrameTag(String video_audio_id, String type) {
+
+		// id_vimeo = "17336587";
+		// socail cam ="3Eha19fC";
+		String iFrame = null;
+
+		if (type.equalsIgnoreCase(TAGS.BOTTLE_YOUTUBE_TYPE)) {
+			iFrame = "<center><iframe src=\"http://www.youtube.com/embed/"
+					+ video_audio_id
+					+ "?feature=player_detailpage\" frameborder=\"0\" allowfullscreen></iframe></center>";
+
+		} else if (type.equalsIgnoreCase(TAGS.BOTTLE_VAMIEO_TYPE)) {
+
+			// iFrame = "<center><iframe src=\"http://player.vimeo.com/video/"
+			// + video_audio_id +
+			// "\" frameborder=\"0\" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe></center>";
+
+			// iFrame =
+			// "<iframe src=\"http://player.vimeo.com/video/17336587\" frameborder=\"0\" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>";
+
+			iFrame = "<center><iframe src=\"http://player.vimeo.com/video/"
+					+ video_audio_id
+					+ "?player_id=player&title=0&byline=0&portrait=0&autoplay=1&api=1\" ></iframe>";
+
+		}
+
+		else if (type.equalsIgnoreCase(TAGS.BOTTLE_SOCIALCAM_TYPE)) {
+			// iFrame = "<center><iframe src=\"https://socialcam.com/v/"
+			// + video_audio_id + "?autostart=true\" </iframe></center>";
+
+			iFrame = "<center><iframe src=\"https://socialcam.com/v/"
+					+ video_audio_id + "?autostart=true\" </iframe></center>";
+
+		} else if (type.equalsIgnoreCase(TAGS.BOTTLE_SOUNDCLOUD_TYPE)) {
+			iFrame = "<center><iframe src=\"https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%"
+					+ video_audio_id + "\"></iframe></center>";
+
+		}
+
+		return iFrame;
+
+	}
+
+	public static boolean isFlashAvailable(Context context) {
+		String mVersion;
+		try {
+			mVersion = context.getPackageManager().getPackageInfo(
+					"com.adobe.flashplayer", 0).versionName;
+			Log.d("Flash", "Installed: " + mVersion);
+			return true;
+		} catch (NameNotFoundException e) {
+			Log.d("Flash", "Not installed");
+			return false;
+		}
+	}
+	
+	public static BottleDetails getBottleDetails(Context context, String bottle_id) {
+		BottlesRepository bottle_repo = new BottlesRepository(context);
+		return bottle_repo.searchBottle(bottle_id);
+	}
 }

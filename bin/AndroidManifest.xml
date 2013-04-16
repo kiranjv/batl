@@ -8,6 +8,8 @@
         android:targetSdkVersion="15" />
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:hardwareAccelerated="true"
@@ -16,9 +18,9 @@
         android:theme="@android:style/Theme.NoTitleBar" >
         <activity
             android:name=".views.SplashScreenView"
-            android:noHistory="true"
-            android:label="@string/title_activity_splash_screen" >
-           <intent-filter>
+            android:label="@string/title_activity_splash_screen"
+            android:noHistory="true" >
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -29,13 +31,10 @@
         <activity
             android:name=".views.PressBottleCapView"
             android:noHistory="true" >
-             
         </activity>
 
         <!-- Home screen activity -->
-        <activity
-            android:name=".views.HomeScreenView"
-             >
+        <activity android:name=".views.HomeScreenView" >
         </activity>
 
         <!-- Bottle details view -->
