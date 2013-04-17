@@ -1,29 +1,44 @@
 package com.bottlr.views;
 
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import com.bottlr.R;
 import com.bottlr.R.layout;
 import com.bottlr.R.menu;
+import com.bottlr.dataacess.BottleDetails;
 import com.bottlr.dataacess.DBAdapter;
 import com.bottlr.helpers.AsyncBottleDownload;
+import com.bottlr.helpers.BottleParseHelper;
+import com.bottlr.network.BottlesDownloadModel;
+import com.bottlr.utils.TAGS;
 import com.bottlr.utils.Utils;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.app.Activity;
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.view.Menu;
+import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 public class SplashScreenView extends Activity {
 
 	protected static final String TAG = "SplashScreenView";
-	private static long WAITING_TIME = 5; // sec's
+
 	Handler handler;
 	Runnable runnable;
 	private Context context;
+	private ProgressThread mThread;
+	private ProgressBar progressDialog;
+	private String failureMSG;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -31,6 +46,8 @@ public class SplashScreenView extends Activity {
 		setContentView(R.layout.splashscreen_layout);
 
 		context = SplashScreenView.this;
+
+		progressDialog = (ProgressBar) findViewById(R.id.splashscreen_ProgressBar01);
 
 		DBAdapter dbAdapter = new DBAdapter(context);
 		try {
@@ -41,19 +58,26 @@ public class SplashScreenView extends Activity {
 			e.printStackTrace();
 		}
 
-		downloadBottles(30);
+		mThread = new ProgressThread();
+		handler = new Handler() {
 
-		
-		
+			@Override
+			public void handleMessage(Message msg) {
+				super.handleMessage(msg);
+				try {
+					progressDialog.clearAnimation();
+					startOpenBottleView();
+				} catch (Exception e) {
+					Log.e(TAG, "Exception while dismissing progress dialog");
+					e.printStackTrace();
+				}
+				if (mThread.isAlive()) {
+					mThread = new ProgressThread();
+				}
+			}
+		};
 
-		try {
-			Thread.sleep(Utils.secsToMilliSeconds(5));
-			loadPressBottleView();
-
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		mThread.start();
 
 	}
 
@@ -61,25 +85,6 @@ public class SplashScreenView extends Activity {
 		AsyncBottleDownload downloadTask = new AsyncBottleDownload(context,
 				bottle_count);
 		downloadTask.execute();
-
-	}
-
-	private void loadPressBottleView() {
-		runnable = new Runnable() {
-
-			@Override
-			public void run() {
-				startOpenBottleView();
-
-			}
-		};
-		if (handler != null) {
-			handler.removeCallbacks(runnable);
-			handler = null;
-		}
-		handler = new Handler();
-
-		handler.postDelayed(runnable, Utils.secsToMilliSeconds(WAITING_TIME));
 
 	}
 
@@ -91,6 +96,51 @@ public class SplashScreenView extends Activity {
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		startActivity(intent);
 
+	}
+
+	private class ProgressThread extends Thread {
+
+		private List<BottleDetails> parsedBottles;
+
+		ProgressThread() {
+		}
+
+		public void run() {
+			try {
+				Looper.prepare();
+				Log.v(TAG, "Download bottles");
+				BottlesDownloadModel download = new BottlesDownloadModel(
+						context);
+				String bottles = download
+						.downloadBottlesJson(TAGS.BOTTLE_INITIAL_DOWNLOAD);
+				if (bottles == null) {
+					failureMSG = download.getFailureMessage();
+					Toast.makeText(context,
+							"No bottles downloaded. " + failureMSG,
+							Toast.LENGTH_LONG).show();
+
+				} else {
+
+					BottleParseHelper bottlesParser = new BottleParseHelper(
+							context);
+					parsedBottles = bottlesParser.parseBottles(bottles);
+					Log.e(TAG,
+							"Downloaded bottles size: " + parsedBottles.size());
+					Log.e(TAG, "Downloaded bottles json: " + bottles);
+					Toast.makeText(context,
+							"Downloaded bottles: " + parsedBottles.size(),
+							Toast.LENGTH_LONG).show();
+					bottlesParser.storeBottleLocal(parsedBottles);
+				}
+
+			} catch (Exception e) {
+				Log.e(TAG, "Exception while getting profile information");
+				e.printStackTrace();
+			}
+
+			handler.sendEmptyMessage(0);
+			Looper.loop();
+		}
 	}
 
 }

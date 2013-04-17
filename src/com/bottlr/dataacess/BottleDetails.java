@@ -6,29 +6,69 @@ import org.json.JSONObject;
 import com.bottlr.utils.Utils;
 
 public class BottleDetails {
-
+	/** bottle id */
 	private String bottle_id;
+	/** bottle type */
 	private String botlType;
+	/** Represents bottle image name */
 	private String botlImageUrl;
+	/** bottle created date */
 	private String dateCreated;
+	/** bottle distance travelled */
 	private String distance;
+	/** bottle top image name. */
 	private String imageName;
+
+	/** bottle like count value */
 	private String likeCount;
+
+	/** bottle views count value */
 	private String locationsCount;
+
+	/** bottle messages */
 	private String message;
+
+	/** bottle title */
 	private String title;
+
+	/** bottle username */
 	private String username;
+
+	/** bottle video name */
 	private String vidUrl;
+
+	/** bottle video type i.e youtube or vimeo */
 	private String videoType;
 
+	/** bottle video id */
 	private String videoid;
 
+	/** bottle header image full length url */
 	private String full_top_image_url;
 
+	/** bottle video full length url */
 	private String full_video_url;
+
+	/** bottle audio full length url */
 	private String full_audio_url;
+
+	/** bottle audio name or id */
 	private String audio_url;
+
+	/** bottle video type i.e youtube or vimeo */
 	private String vidfrom;
+
+	/** bottle profile imiage full length location */
+	private String avatar_img;
+
+	/** bottle pattern img name */
+	private String pattern_url;
+
+	/** bottle user real name */
+	private String real_name;
+
+	/** bottle date message */
+	private String bottled_date_msg;
 
 	public BottleDetails(JSONObject json_bottle) {
 		// try {
@@ -45,7 +85,8 @@ public class BottleDetails {
 			String message, String title, String username, String videoid,
 			String vidUrl, String videoType, String full_top_image_url,
 			String full_video_url, String full_audio_url, String audio_url,
-			String vidfrom) {
+			String vidfrom, String avatar_img, String pattren_url,
+			String real_name, String bottled_date_msg) {
 		this.bottle_id = bottle_id;
 		this.botlType = botlType;
 		this.botlImageUrl = botlImageUrl;
@@ -65,17 +106,71 @@ public class BottleDetails {
 		this.full_audio_url = full_audio_url;
 		this.audio_url = audio_url;
 		this.vidfrom = vidfrom;
+		this.avatar_img = avatar_img;
+		this.pattern_url = pattren_url;
+		this.real_name = real_name;
+		this.bottled_date_msg = bottled_date_msg;
 
 	}
 
-	@Override
-	public String toString() {
-		String data = "BottleId: " + this.bottle_id + " botlType: "
-				+ this.botlType + " likeCount:" + likeCount
-				+ " locationsCount: " + locationsCount + " full video url: "
-				+ full_video_url + " full_image_url: " + full_top_image_url
-				+ " full audio url: " + full_audio_url;
-		return data;
+	/**
+	 * @return the avatar_img
+	 */
+	public String getAvatar_img() {
+		return avatar_img;
+	}
+
+	/**
+	 * @param avatar_img
+	 *            the avatar_img to set
+	 */
+	public void setAvatar_img(String avatar_img) {
+		this.avatar_img = avatar_img;
+	}
+
+	/**
+	 * @return the pattern_url
+	 */
+	public String getPattern_url() {
+		return pattern_url;
+	}
+
+	/**
+	 * @param pattern_url
+	 *            the pattern_url to set
+	 */
+	public void setPattern_url(String pattern_url) {
+		this.pattern_url = pattern_url;
+	}
+
+	/**
+	 * @return the real_name
+	 */
+	public String getReal_name() {
+		return real_name;
+	}
+
+	/**
+	 * @param real_name
+	 *            the real_name to set
+	 */
+	public void setReal_name(String real_name) {
+		this.real_name = real_name;
+	}
+
+	/**
+	 * @return the bottled_date_msg
+	 */
+	public String getBottled_date_msg() {
+		return bottled_date_msg;
+	}
+
+	/**
+	 * @param bottled_date_msg
+	 *            the bottled_date_msg to set
+	 */
+	public void setBottled_date_msg(String bottled_date_msg) {
+		this.bottled_date_msg = bottled_date_msg;
 	}
 
 	/**
@@ -361,6 +456,17 @@ public class BottleDetails {
 	 */
 	public void setVidfrom(String vidfrom) {
 		this.vidfrom = vidfrom;
+	}
+
+	@Override
+	public String toString() {
+		String data = "BottleId: " + this.bottle_id + " botlType: "
+				+ this.botlType + " likeCount:" + likeCount
+				+ " locationsCount: " + locationsCount + " full video url: "
+				+ full_video_url + " full_image_url: " + full_top_image_url
+				+ " full audio url: " + full_audio_url + " real name: "
+				+ real_name + " bottle date msg: " + bottled_date_msg;
+		return data;
 	}
 
 }

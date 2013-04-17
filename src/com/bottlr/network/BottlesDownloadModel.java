@@ -13,12 +13,14 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.HttpConnectionParams;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.bottlr.utils.QueryString;
 import com.bottlr.utils.URLs;
 
 public class BottlesDownloadModel extends AbstractProxy {
 
+	private static final String TAG = "BottlesDownloadModel";
 	Context context;
 
 	public BottlesDownloadModel(Context context) {
@@ -36,6 +38,7 @@ public class BottlesDownloadModel extends AbstractProxy {
 		// queryString.add("distance", "" + radius);
 
 		String url = URLs.BOTTLE_URL + "/"+bottle_count;
+		Log.v(TAG, "URL: "+url);
 		HttpGet getRequest = new HttpGet(url);
 		// getRequest.setHeader("Content-Type", "application/json");
 
@@ -43,6 +46,7 @@ public class BottlesDownloadModel extends AbstractProxy {
 
 		try {
 			response = client.execute(getRequest);
+			Log.v(TAG, "Server response: "+response);
 			if (response == null) {
 				
 				result = null;

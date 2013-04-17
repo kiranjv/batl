@@ -12,15 +12,17 @@ public class BottlesRepository extends DBAdapter {
 			+ "botlImageUrl TEXT NULL, dateCreated TEXT NULL, distance TEXT NULL, imageName TEXT NULL, "
 			+ "likeCount TEXT NULL, locationsCount TEXT NULL, message TEXT NULL, title TEXT NULL, username TEXT NULL,"
 			+ "vidId TEXT NULL, vidUrl TEXT NULL, videoType TEXT NULL, full_top_image_url TEXT NULL, full_video_url TEXT NULL, full_audio_url TEXT NULL, audio_url TEXT NULL,"
-			+ "vidfrom TEXT NULL)";
+			+ "vidfrom TEXT NULL, avatar_img TEXT NULL, pattern_url TEXT NULL, realname TEXT NULL, bottle_date_msg TEXT NULL)";
 
 	private String insertQuery = "INSERT INTO bottle ("
 			+ "bottle_id ,botlType,"
 			+ " botlImageUrl, dateCreated, distance, imageName, "
 			+ "likeCount, locationsCount, message, title, username,"
 			+ " vidId, vidUrl, videoType, full_top_image_url, full_video_url, full_audio_url, audio_url,"
-			+ "vidfrom" + ") VALUES ("
-			+ "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?,?" + ")";
+			+ "vidfrom, avatar_img, pattern_url, realname, bottle_date_msg"
+			+ ") VALUES ("
+			+ "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?"
+			+ ")";
 
 	private Context context;
 
@@ -39,7 +41,9 @@ public class BottlesRepository extends DBAdapter {
 				bottle.getVideoid(), bottle.getVidUrl(), bottle.getVideoType(),
 				bottle.getFull_top_image_url(), bottle.getFull_video_url(),
 				bottle.getFull_audio_url(), bottle.getAudio_url(),
-				bottle.getVidfrom() };
+				bottle.getVidfrom(), bottle.getAvatar_img(),
+				bottle.getPattern_url(), bottle.getReal_name(),
+				bottle.getBottled_date_msg() };
 
 		this.Query(insertQuery, args);
 	}
@@ -70,12 +74,17 @@ public class BottlesRepository extends DBAdapter {
 			String full_audio_url = cursor.getString(16);
 			String audio_url = cursor.getString(17);
 			String vidfrom = cursor.getString(18);
+			String avatar_img = cursor.getString(19);
+			String pattern_url = cursor.getString(20);
+			String realname = cursor.getString(21);
+			String bottled_date_msg = cursor.getString(22);
 
 			BottleDetails bottle = new BottleDetails(bottle_id, botlType,
 					botlImageUrl, dateCreated, distance, imageName, likeCount,
 					locationsCount, message, title, username, vidId, vidUrl,
 					videoType, full_top_image_url, full_video_url,
-					full_audio_url, audio_url, vidfrom);
+					full_audio_url, audio_url, vidfrom, avatar_img,
+					pattern_url, realname, bottled_date_msg);
 			cursor.close();
 			return bottle;
 		}
@@ -118,12 +127,17 @@ public class BottlesRepository extends DBAdapter {
 				String full_audio_url = cursor.getString(16);
 				String audio_url = cursor.getString(17);
 				String vidfrom = cursor.getString(18);
+				String avatar_img = cursor.getString(19);
+				String pattern_url = cursor.getString(20);
+				String realname = cursor.getString(21);
+				String bottled_date_msg = cursor.getString(22);
 
 				BottleDetails bottle = new BottleDetails(bottle_id, botlType,
 						botlImageUrl, dateCreated, distance, imageName,
 						likeCount, locationsCount, message, title, username,
 						vidId, vidUrl, videoType, full_top_image_url,
-						full_video_url, full_audio_url, audio_url, vidfrom);
+						full_video_url, full_audio_url, audio_url, vidfrom,
+						avatar_img, pattern_url, realname, bottled_date_msg);
 				bottles.add(bottle);
 				cursor.moveToNext();
 			}

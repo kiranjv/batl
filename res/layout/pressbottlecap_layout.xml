@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="83dp"
+            android:layout_marginTop="50dp"
             
             android:src="@drawable/bottlecap_unclick" />
 

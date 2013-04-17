@@ -23,7 +23,7 @@ public class URLs {
 	public static String HEADImageBaseURL = "http://c801459.r59.cf2.rackcdn.com/";
 	public static String HEADImageENDURL = "_large.jpg";
 	
-	
+	public static String AvatarImageBaseURL = "http://c801458.r58.cf2.rackcdn.com/";
 	
 	
 }

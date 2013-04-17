@@ -15,7 +15,7 @@
         android:padding="15dip" >
 
         <ProgressBar
-            android:id="@+id/ProgressBar01"
+            android:id="@+id/splashscreen_ProgressBar01"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center" />

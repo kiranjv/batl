@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" 
     android:id="@+id/secondsingle_botl_main_linearlayout"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:orientation="vertical">
+<LinearLayout 
+    android:id="@+id/secondsingle_botl_main_linearlayout1"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="12dp"
     android:background="@drawable/bottle_background"
     android:onClick="onSecondSingleBottleClick"
     android:orientation="vertical" >
@@ -26,14 +32,15 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:visibility="invisible" />
-
+
         <ImageView
             android:id="@+id/second_sing_botl_mainTopImage"
             android:layout_width="250dp"
             android:layout_height="100dp"
             android:layout_gravity="center"
-                       
+            android:scaleType="fitXY"
             android:src="@drawable/loading" />
+
     </RelativeLayout>
     <!-- profile details layout -->
 
@@ -47,7 +54,7 @@
         <!-- profile description -->
 
         <TextView
-            android:id="@+id/second_sing_botl_profiledesc"
+            android:id="@+id/second_sing_botl_title"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -63,12 +70,13 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingTop="15dp" >
-
+
             <ImageView
                 android:id="@+id/second_singlebotl_profileimg"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="20dp"
+                 android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:paddingLeft="15dp"
+                
                 android:src="@drawable/bottle_img" />
 
             <!-- Profile name details  layout -->
@@ -85,7 +93,7 @@
                     android:id="@+id/second_singlebotl_profile_firstname"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="20dp"
+                    android:paddingLeft="10dp"
                     android:text="DonPuryar"
                     android:textColor="#333333" >
                 </TextView>
@@ -94,23 +102,25 @@
                     android:id="@+id/second_singlebotl_profile_lastname"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="20dp"
+                    android:paddingLeft="10dp"
                     android:text="OdonPuryar"
                     android:textColor="#333333" >
                 </TextView>
+
             </LinearLayout>
         </LinearLayout>
         <!-- bottle created date filed -->
-
-        <TextView
-            android:id="@+id/second_singlebotl_bottle_date"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:paddingTop="15dp"
-            android:text="botled on jan 10. 2012"
-            android:textColor="#333333" >
-        </TextView>
+		
+		 <TextView
+                android:id="@+id/second_singlebotl_bottle_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:textSize="12dp"
+                android:paddingTop="10dp"
+                android:text="botled on jan 10. 2012"
+                android:textColor="#333333" />
+		
     </LinearLayout>
     <!-- profile details layout completed -->
 
@@ -119,24 +129,31 @@
 
     <LinearLayout
         android:id="@+id/second_singlebotl_likepanel"
-        android:layout_width="wrap_content"
+         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:background="#dceadb"
+        android:background="#e5e5e5"
         android:orientation="horizontal"
         
-        android:paddingTop="15dp" >
+        android:paddingTop="5dp" >
 
+       
+        <LinearLayout android:layout_width="wrap_content"
+            android:layout_height="fill_parent">
         <!-- user bottle image -->
 
         <ImageView
             android:id="@+id/second_singlebotl_bottleimage"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="fill_vertical"
-            android:paddingLeft="14dp"
-            android:paddingRight="-5dp"
-            android:src="@drawable/bottle" />
+     android:layout_height="match_parent"
+     android:layout_gravity="fill_vertical"
+     android:adjustViewBounds="true"
+     android:baselineAlignBottom="true"
+     android:paddingRight="-5dp"
+     android:scaleType="centerCrop"
+     android:src="@drawable/bottle" />
+        
+        </LinearLayout>
 
         <!-- Like linear layout -->
 
@@ -211,7 +228,7 @@
             android:layout_gravity="center"
             android:orientation="vertical"
             android:paddingLeft="15dp"
-            android:paddingRight="10dp" >
+            android:paddingRight="12dp" >
 
             <ImageView
                 android:id="@+id/second_singlebotl_milespanel_milelayout_mileimg"
@@ -238,13 +255,17 @@
     </LinearLayout>
     <!-- end of bottle like and unlike layout -->
 
-    <ImageView
+   
+
+    
+
+</LinearLayout>
+
+ <ImageView
         android:id="@+id/second_botl_pattren_image"
         android:layout_width="fill_parent"
         android:layout_height="30dp"
         
         android:src="@drawable/pattern_001" />
-
-    
 
 </LinearLayout>

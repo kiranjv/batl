@@ -19,6 +19,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
+import android.widget.ImageView;
 
 public class Utils {
 
@@ -139,7 +140,30 @@ public class Utils {
 			// set image to ImageView
 			// mImage.setImageDrawable(d);
 		} catch (IOException ex) {
+			ex.printStackTrace();
 			return null;
+		}
+	}
+
+	public static void loadImageFromAssets(Context context,
+			ImageView image_view, String img_path) {
+		InputStream bitmap_ip = null;
+		try {
+			bitmap_ip = context.getAssets().open(img_path);
+			Bitmap bitmap = BitmapFactory.decodeStream(bitmap_ip);
+			image_view.setImageBitmap(bitmap);
+		} catch (Exception e) {
+			e.printStackTrace();
+
+		} finally {
+			if (bitmap_ip != null) {
+				try {
+					bitmap_ip.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 
@@ -156,6 +180,14 @@ public class Utils {
 		else if (type.equalsIgnoreCase(TAGS.BOTTLE_OPEN_TYPE))
 			path = TAGS.BOTTLE_FOLDER + TAGS.PATH_SEPERATER + bottleImgUrl
 					+ TAGS.BOTTLE_OPEN_EXTENSION + TAGS.BOTTLE_TYPE_EXTENSION;
+
+		return path;
+	}
+
+	public static String createBottlePatternPath(String patternImgUrl) {
+
+		String path = TAGS.PATTERNS_FOLDER + TAGS.PATH_SEPERATER
+				+ patternImgUrl;
 
 		return path;
 	}
@@ -180,9 +212,14 @@ public class Utils {
 			// iFrame =
 			// "<iframe src=\"http://player.vimeo.com/video/17336587\" frameborder=\"0\" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>";
 
-			iFrame = "<center><iframe src=\"http://player.vimeo.com/video/"
-					+ video_audio_id
-					+ "?player_id=player&title=0&byline=0&portrait=0&autoplay=1&api=1\" ></iframe>";
+			// iFrame = "<center><iframe src=\"http://player.vimeo.com/video/"
+			// + video_audio_id
+			// +
+			// "?player_id=player&title=0&byline=0&portrait=0&autoplay=1&api=1\" ></iframe>";
+
+			// working one
+			iFrame = "<center><iframe width=\"450\" height=\"350\" src=\"http://player.vimeo.com/video/"
+					+ video_audio_id + "\"></iframe></center>";
 
 		}
 
@@ -190,10 +227,21 @@ public class Utils {
 			// iFrame = "<center><iframe src=\"https://socialcam.com/v/"
 			// + video_audio_id + "?autostart=true\" </iframe></center>";
 
-			iFrame = "<center><iframe src=\"https://socialcam.com/v/"
-					+ video_audio_id + "?autostart=true\" </iframe></center>";
+			// iFrame = "<center><iframe src=\"http://socialcam.com/v/"
+			// + video_audio_id + "?autostart=true\" </iframe></center>";
 
-		} else if (type.equalsIgnoreCase(TAGS.BOTTLE_SOUNDCLOUD_TYPE)) {
+			// iFrame =
+			// "<iframe width=\"450\" height=\"350\" src=\"http://socialcam.com/videos/3Eha19fC/embed?utm_campaign=external&utm_source=api\" scrolling=\"no\"></iframe>";
+
+			iFrame = "<iframe allowfullscreen=\"allowfullscreen\" frameborder=\"0\" height=\"391\" marginheight=\"0\" marginwidth=\"0\" scrolling=\"no\" src=\"http://socialcam.com/videos/3Eha19fC/embed?utm_campaign=external&amp;utm_source=api\" width=\"520\"></iframe>";
+
+		}
+
+		else if (type.equalsIgnoreCase(TAGS.BOTTLE_VIDDY_TYPE)) {
+			iFrame = "<iframe width=\"640\" height=\"362\" src=\"http://www.viddy.com/embed/video/0b2b103a-0c40-48a4-877a-64645ef5a0ae\"></iframe>";
+		}
+
+		else if (type.equalsIgnoreCase(TAGS.BOTTLE_SOUNDCLOUD_TYPE)) {
 			iFrame = "<center><iframe src=\"https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%"
 					+ video_audio_id + "\"></iframe></center>";
 
@@ -215,8 +263,9 @@ public class Utils {
 			return false;
 		}
 	}
-	
-	public static BottleDetails getBottleDetails(Context context, String bottle_id) {
+
+	public static BottleDetails getBottleDetails(Context context,
+			String bottle_id) {
 		BottlesRepository bottle_repo = new BottlesRepository(context);
 		return bottle_repo.searchBottle(bottle_id);
 	}

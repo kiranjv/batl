@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView.FindListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -84,22 +85,26 @@ public class ListRowItemsAdapter extends BaseAdapter {
 						+ secondBottleArrayList.size());
 
 		View row = l_Inflater.inflate(R.layout.listrow_layout, null);
+		try {
 
-		if (position >= ALLOWED_ROWS)
-			return row;
+			if (position >= ALLOWED_ROWS)
+				return row;
 
-		/* first layout items update. */
+			/* first layout items update. */
 
-		BottleDetails firstItemBottle = firstBottleArrayList.get(position);
-		updateFirstLayout(row, firstItemBottle);
+			BottleDetails firstItemBottle = firstBottleArrayList.get(position);
+			updateFirstLayout(row, firstItemBottle);
 
-		/* second layout items update. */
-		if (position < secondBottleArrayList.size()) {
-			BottleDetails secondItemBottle = secondBottleArrayList
-					.get(position);
-			updateSecondLayout(row, secondItemBottle);
+			/* second layout items update. */
+			if (position < secondBottleArrayList.size()) {
+				BottleDetails secondItemBottle = secondBottleArrayList
+						.get(position);
+				updateSecondLayout(row, secondItemBottle);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-
 		return row;
 	}
 
@@ -107,54 +112,58 @@ public class ListRowItemsAdapter extends BaseAdapter {
 		/* update top image. */
 		final ImageView headderImage = (ImageView) row
 				.findViewById(R.id.sing_botl_mainTopImage);
-		 ProgressBar progress = (ProgressBar) row
-		 .findViewById(R.id.single_botl_Img_progressBar1);
-		 new DownloadImageTask(context, headderImage, progress,
-		 bottle.getFull_top_image_url())
-		 .execute();
-		
-		// fetch a remote resource in raw bitmap
-//		AQuery aq = new AQuery(HomeScreenView.context);
-//		// String url =
-//		// "http://www.vikispot.com/z/images/vikispot/android-w.png";
-//		String url = bottle.getFull_top_image_url();
-//		aq.ajax(url, Bitmap.class, new AjaxCallback<Bitmap>() {
-//
-//			@Override
-//			public void callback(String url, Bitmap bitmap, AjaxStatus status) {
-//				headderImage.setImageBitmap(result);
-//			}
-//		});
+		ProgressBar progress = (ProgressBar) row
+				.findViewById(R.id.single_botl_Img_progressBar1);
+		new DownloadImageTask(context, headderImage, progress,
+				bottle.getFull_top_image_url()).execute();
 
-		/* update bottle title (id - sing_botl_profiledesc) */
-		TextView titleView = (TextView) row
-				.findViewById(R.id.sing_botl_profiledesc);
+		// fetch a remote resource in raw bitmap
+		// AQuery aq = new AQuery(HomeScreenView.context);
+		// // String url =
+		// // "http://www.vikispot.com/z/images/vikispot/android-w.png";
+		// String url = bottle.getFull_top_image_url();
+		// aq.ajax(url, Bitmap.class, new AjaxCallback<Bitmap>() {
+		//
+		// @Override
+		// public void callback(String url, Bitmap bitmap, AjaxStatus status) {
+		// headderImage.setImageBitmap(result);
+		// }
+		// });
+
+		/* update bottle title (id - sing_botl_title) */
+		TextView titleView = (TextView) row.findViewById(R.id.sing_botl_title);
 		titleView.setText(bottle.getTitle());
 
 		/* update profile img id - singlebotl_profile_img */
 		ImageView profileImg = (ImageView) row
 				.findViewById(R.id.singlebotl_profile_img);
+		new DownloadImageTask(context, profileImg, progress,
+				bottle.getAvatar_img()).execute();
 
 		/* update profile name id = singlebotl_profile_firstname */
 		TextView profileNameView = (TextView) row
 				.findViewById(R.id.singlebotl_profile_firstname);
-		profileNameView.setText("bottle king");
+		profileNameView.setText(bottle.getReal_name());
 
 		/* update username id - singlebotl_profile_username */
 		TextView userNameView = (TextView) row
 				.findViewById(R.id.singlebotl_profile_username);
-		userNameView.setText("bottle king");
+		String username = "@" + bottle.getUsername();
+		userNameView.setText(username);
 
 		/* update bottle date id - singlebotl_bottle_date */
 		TextView dateView = (TextView) row
 				.findViewById(R.id.singlebotl_bottle_date);
-		userNameView.setText(bottle.getDateCreated());
+		String date_msg = bottle.getBottled_date_msg();
+		Log.v(TAG, "Data msg: " + date_msg);
+		dateView.setText(date_msg);
 
 		/* update bottle img id - singlebotl_bottleimage */
 		ImageView bottleImg = (ImageView) row
 				.findViewById(R.id.singlebotl_bottleimage);
 		String localPath = Utils.openBottleLocalPath(bottle.getBotlImageUrl(),
 				TAGS.BOTTLE_LARGE_TYPE);
+		Log.v(TAG, "Bottle local path: " + localPath);
 		bottleImg.setImageDrawable(Utils.loadImgFromAssets(context, localPath));
 
 		/* update likes id - singlebotl_likepanel_likelayout_likes_number */
@@ -172,6 +181,17 @@ public class ListRowItemsAdapter extends BaseAdapter {
 				.findViewById(R.id.singlebotl_milespanel_milelayout_miles_number);
 		milesView.setText(bottle.getDistance());
 
+		/* update pattern image */
+		ImageView pattern_img = (ImageView) row
+				.findViewById(R.id.singlebotl_pattren_image);
+		String patternLocalPath = Utils.createBottlePatternPath(bottle
+				.getPattern_url());
+		patternLocalPath = TAGS.BOTTLE_FOLDER + "/" + "pattern-020.gif";
+		Log.v(TAG, "pattren local path: " + patternLocalPath);
+		// Utils.loadImageFromAssets(context, pattern_img, patternLocalPath);
+		// pattern_img.setImageDrawable(Utils.loadImgFromAssets(context,
+		// patternLocalPath));
+
 		/* setting bottle id for invisible textview */
 		TextView bottleView = (TextView) row
 				.findViewById(R.id.singlebottle_clicked_bottleid);
@@ -186,41 +206,35 @@ public class ListRowItemsAdapter extends BaseAdapter {
 		ProgressBar second_progress = (ProgressBar) row
 				.findViewById(R.id.second_single_botl_Img_progressBar1);
 		new DownloadImageTask(context, mainImage2, second_progress,
-				bottle.getFull_top_image_url())
-				.execute();
+				bottle.getFull_top_image_url()).execute();
 
-		TextView likesView2 = (TextView) row
-				.findViewById(R.id.second_singlebotl_likepanel_likelayout_likes_number);
-		likesView2.setText(bottle.getLikeCount());
-
-		TextView secondbottleidView = (TextView) row
-				.findViewById(R.id.second_bottle_clicked_bottleid);
-		secondbottleidView.setText(bottle.getBottle_id());
-		
-		
 		/* update bottle title (id - sing_botl_profiledesc) */
 		TextView titleView = (TextView) row
-				.findViewById(R.id.second_sing_botl_profiledesc);
+				.findViewById(R.id.second_sing_botl_title);
 		titleView.setText(bottle.getTitle());
 
-		/* update profile img id - singlebotl_profile_img */
+		/* update profile img id - second_singlebotl_profile_img */
 		ImageView profileImg = (ImageView) row
 				.findViewById(R.id.second_singlebotl_profileimg);
+		new DownloadImageTask(context, profileImg, second_progress,
+				bottle.getAvatar_img()).execute();
 
 		/* update profile name id = singlebotl_profile_firstname */
 		TextView profileNameView = (TextView) row
 				.findViewById(R.id.second_singlebotl_profile_firstname);
-		profileNameView.setText("bottle king");
+		profileNameView.setText(bottle.getReal_name());
 
 		/* update username id - singlebotl_profile_username */
 		TextView userNameView = (TextView) row
 				.findViewById(R.id.second_singlebotl_profile_lastname);
-		userNameView.setText("bottle king");
-		
+		userNameView.setText("@" + bottle.getUsername());
+
 		/* update bottle date id - singlebotl_bottle_date */
 		TextView dateView = (TextView) row
 				.findViewById(R.id.second_singlebotl_bottle_date);
-		userNameView.setText(bottle.getDateCreated());
+		String date_msg = bottle.getBottled_date_msg();
+		Log.v(TAG, "Data msg: " + date_msg);
+		dateView.setText(date_msg);
 
 		/* update bottle img id - singlebotl_bottleimage */
 		ImageView bottleImg = (ImageView) row
@@ -233,8 +247,7 @@ public class ListRowItemsAdapter extends BaseAdapter {
 		TextView likesView = (TextView) row
 				.findViewById(R.id.second_singlebotl_likepanel_likelayout_likes_number);
 		likesView.setText(bottle.getLikeCount());
-		
-		
+
 		/* update view id - singlebotl_likepanel_likelayout_likes_number */
 		TextView viewsView = (TextView) row
 				.findViewById(R.id.second_singlebotl_viewspanel_viewlayout_views_number);
@@ -244,6 +257,17 @@ public class ListRowItemsAdapter extends BaseAdapter {
 		TextView milesView = (TextView) row
 				.findViewById(R.id.second_singlebotl_milespanel_milelayout_miles_number);
 		milesView.setText(bottle.getDistance());
+
+		/* update pattern image */
+		ImageView pattern_img = (ImageView) row
+				.findViewById(R.id.second_botl_pattren_image);
+		String patternLocalPath = Utils.createBottlePatternPath(bottle
+				.getPattern_url());
+		patternLocalPath = TAGS.BOTTLE_FOLDER + "/" + "pattern-020.gif";
+		Log.v(TAG, "pattren local path: " + patternLocalPath);
+		// Utils.loadImageFromAssets(context, pattern_img, patternLocalPath);
+		// pattern_img.setImageDrawable(Utils.loadImgFromAssets(context,
+		// patternLocalPath));
 
 		/* setting bottle id for invisible textview */
 		TextView bottleView = (TextView) row
