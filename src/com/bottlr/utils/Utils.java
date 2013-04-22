@@ -5,13 +5,17 @@ import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URL;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.bottlr.dataacess.BottleDetails;
 import com.bottlr.dataacess.BottlesRepository;
+
 
 import android.content.Context;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -23,6 +27,9 @@ import android.widget.ImageView;
 
 public class Utils {
 
+	static private final Logger logger = LoggerFactory
+			.getLogger(Utils.class);
+	
 	private static final String TAG = "Utils";
 
 	public static long secsToMilliSeconds(long seconds) {
@@ -199,11 +206,11 @@ public class Utils {
 		String iFrame = null;
 
 		if (type.equalsIgnoreCase(TAGS.BOTTLE_YOUTUBE_TYPE)) {
-			iFrame = "<center><iframe src=\"http://www.youtube.com/embed/"
+			iFrame = "<center><iframe width=\"850\" height=\"650\" src=\"http://www.youtube.com/embed/"
 					+ video_audio_id
 					+ "?feature=player_detailpage\" frameborder=\"0\" allowfullscreen></iframe></center>";
 
-		} else if (type.equalsIgnoreCase(TAGS.BOTTLE_VAMIEO_TYPE)) {
+		} else if (type.equalsIgnoreCase(TAGS.BOTTLE_VIMEO_TYPE)) {
 
 			// iFrame = "<center><iframe src=\"http://player.vimeo.com/video/"
 			// + video_audio_id +
@@ -218,7 +225,7 @@ public class Utils {
 			// "?player_id=player&title=0&byline=0&portrait=0&autoplay=1&api=1\" ></iframe>";
 
 			// working one
-			iFrame = "<center><iframe width=\"450\" height=\"350\" src=\"http://player.vimeo.com/video/"
+			iFrame = "<center><iframe width=\"850\" height=\"650\" src=\"http://player.vimeo.com/video/"
 					+ video_audio_id + "\"></iframe></center>";
 
 		}
@@ -233,17 +240,32 @@ public class Utils {
 			// iFrame =
 			// "<iframe width=\"450\" height=\"350\" src=\"http://socialcam.com/videos/3Eha19fC/embed?utm_campaign=external&utm_source=api\" scrolling=\"no\"></iframe>";
 
-			iFrame = "<iframe allowfullscreen=\"allowfullscreen\" frameborder=\"0\" height=\"391\" marginheight=\"0\" marginwidth=\"0\" scrolling=\"no\" src=\"http://socialcam.com/videos/3Eha19fC/embed?utm_campaign=external&amp;utm_source=api\" width=\"520\"></iframe>";
+			video_audio_id = "HSXAcuWQ";
+			// working url
+			iFrame = "<iframe allowfullscreen=\"allowfullscreen\" frameborder=\"0\" height=\"391px\" marginheight=\"0\" marginwidth=\"0\" scrolling=\"no\" src=\"http://socialcam.com/videos/"+video_audio_id+"/embed?utm_campaign=external&amp;utm_source=api\" width=\"520px\"></iframe>";
 
 		}
 
 		else if (type.equalsIgnoreCase(TAGS.BOTTLE_VIDDY_TYPE)) {
-			iFrame = "<iframe width=\"640\" height=\"362\" src=\"http://www.viddy.com/embed/video/0b2b103a-0c40-48a4-877a-64645ef5a0ae\"></iframe>";
+			//iFrame = "<iframe width=\"850\" height=\"650\" src=\"http://www.viddy.com/embed/video/0b2b103a-0c40-48a4-877a-64645ef5a0ae\"></iframe>";
+			
+			iFrame = "<iframe width=\"850\" height=\"650\" src=\"http://cdn.viddy.com/media/video/964c032b-28ce-4d97-aece-950d33b20a32-high.mp4?t=635017344652830000\"></iframe>";
 		}
 
 		else if (type.equalsIgnoreCase(TAGS.BOTTLE_SOUNDCLOUD_TYPE)) {
-			iFrame = "<center><iframe src=\"https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%"
-					+ video_audio_id + "\"></iframe></center>";
+
+			if (video_audio_id.contains("http://soundcloud.com/")) {
+
+				// String soundcloud_url =
+				// "http://soundcloud.com/moontide/dirty-water-standells-cover";
+
+				iFrame = "<iframe id=\"iframesoundcloud\" width=\"100\" height=\"166\" scrolling=\"no\" frameborder=\"no\" src=\"http://w.soundcloud.com/player/?url="
+						+ video_audio_id
+						+ "&amp;auto_play=true&amp;show_artwork=false&amp;color=ff7700\"></iframe>";
+			} else {
+				iFrame = "<center><iframe width=\"1200\" height=\"250\" src=\"https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F"
+						+ video_audio_id + "\"></iframe></center>";
+			}
 
 		}
 
@@ -268,5 +290,19 @@ public class Utils {
 			String bottle_id) {
 		BottlesRepository bottle_repo = new BottlesRepository(context);
 		return bottle_repo.searchBottle(bottle_id);
+	}
+
+	public static void CopyStream(InputStream is, OutputStream os) {
+		final int buffer_size = 1024;
+		try {
+			byte[] bytes = new byte[buffer_size];
+			for (;;) {
+				int count = is.read(bytes, 0, buffer_size);
+				if (count == -1)
+					break;
+				os.write(bytes, 0, count);
+			}
+		} catch (Exception ex) {
+		}
 	}
 }

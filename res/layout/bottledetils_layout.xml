@@ -4,18 +4,19 @@
     android:layout_height="fill_parent"
     android:background="@drawable/background"
     android:orientation="vertical" >
-
+
     <ImageView
         android:id="@+id/bottledetails_open_botl_img"
-        android:layout_width="250px"
-        android:layout_height="100px"
+        android:layout_width="250dp"
+        android:layout_height="100dp"
         android:layout_gravity="center"
         android:src="@drawable/bot_open" />
 
     <ImageView
-        android:id="@+id/bottleImage"
-        android:layout_width="wrap_content"
+        android:id="@+id/bottledetails_bottleHImage"
+        android:layout_width="250dp"
         android:layout_height="150dp"
+        android:layout_gravity="center_horizontal"
         android:src="@drawable/eggs" />
 <!-- 
     <com.bottlr.views.HTML5WebView
@@ -26,12 +27,12 @@
     </com.bottlr.views.HTML5WebView>
     
      -->
-    
+    
     <WebView
         android:id="@+id/bottledetails_webiew"
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal">
+        android:layout_gravity="center_horizontal" >
 
     </WebView>
     <TextView

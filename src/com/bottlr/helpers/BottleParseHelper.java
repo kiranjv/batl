@@ -134,7 +134,7 @@ public class BottleParseHelper {
 		/* video type bottle */
 		else if (botlType == "video" || botlType.equalsIgnoreCase("video")) {
 			imageName = json_bottle.getString("imageName");
-			vidfrom = json_bottle.getString("vidfrom");
+			vidfrom = getJsonValue(json_bottle, "vidfrom");
 			if (vidfrom.equalsIgnoreCase("")) {
 				vidfrom = "Youtube";
 
@@ -168,7 +168,16 @@ public class BottleParseHelper {
 
 		else if (botlType == "AudioUrl"
 				|| botlType.equalsIgnoreCase("AudioUrl")) {
-			audio_url = json_bottle.getString("audiourl_url");
+			
+			if(!json_bottle.isNull("audiourl_url")) {
+				if(!json_bottle.getString("audiourl_url").equalsIgnoreCase(""))
+				audio_url = json_bottle.getString("audiourl_url");
+			} else if(!json_bottle.isNull("soundcloud_url")) {
+				if(!json_bottle.getString("soundcloud_url").equalsIgnoreCase(""))
+				audio_url = json_bottle.getString("soundcloud_url");
+			}
+			
+			
 			imageName = json_bottle.getString("imageName");
 
 		}
@@ -214,5 +223,21 @@ public class BottleParseHelper {
 				full_top_image_url, full_video_url, full_audio_url, audio_url,
 				vidfrom, avatar_img, pattren_url, real_name, bottled_date_msg);
 
+	}
+	
+	
+	private static String getJsonValue(JSONObject json_object, String key_value) {
+		String value = "";
+		try {
+			if(!json_object.isNull(key_value) && !json_object
+						.getString(key_value).equalsIgnoreCase(""))
+				value = json_object.getString(key_value);
+			return value;
+		} catch (JSONException e) {
+			
+			e.printStackTrace();
+			
+		}
+		return value;
 	}
 }

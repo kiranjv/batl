@@ -14,7 +14,7 @@
             android:layout_height="wrap_content"
             layout="@layout/headder_layout"
             android:gravity="center" />
-       
+
         <Button
             android:id="@+id/homescreen_loginbutton"
             android:layout_width="wrap_content"
@@ -22,10 +22,30 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:paddingTop="3dp"
-            android:visibility="gone"
-            android:text="Login" />
-        
-   </RelativeLayout>
+            android:text="Login"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/home_loading_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center" >
+
+        <ProgressBar
+            android:id="@+id/home_loading_progress"
+            android:layout_width="40dp"
+            android:layout_height="40dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dp"
+            android:text="Loading.."
+            android:textSize="18dp" />
+
+    </LinearLayout>
 
     <AbsoluteLayout
         android:id="@+id/homescreen_absolute_list_layout"
@@ -35,18 +55,23 @@
         android:background="@drawable/background" >
 
         <!--  -->
-        <TextView android:id="@+id/homeview_nobottle_text"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:text="No bottles downloaded."
-                  android:textColor="@android:color/white"
-                  android:textSize="20dp"
-                  android:visibility="invisible"
-                  android:gravity="center_horizontal"/> 
+
+        <TextView
+            android:id="@+id/homeview_nobottle_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="No bottles downloaded."
+            android:textColor="@android:color/white"
+            android:textSize="20dp"
+            android:visibility="invisible" />
+
         <ListView
             android:id="@+id/homescreen_listview"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:cacheColorHint="#00000000"
+            android:listSelector="@android:color/transparent" >
         </ListView>
     </AbsoluteLayout>
 

@@ -1,5 +1,7 @@
 package com.bottlr.utils;
 
+import com.bottlr.dataacess.BottleDetails;
+
 public class TAGS {
 
 	
@@ -19,12 +21,14 @@ public class TAGS {
 	public static String BOTTLE_TYPE_EXTENSION = ".png";
 	
 	public static String BOTTLE_YOUTUBE_TYPE = "youtube";
-	public static String BOTTLE_VAMIEO_TYPE = "vamieo";
+	public static String BOTTLE_VIMEO_TYPE = "vamieo";
 	public static String BOTTLE_SOUNDCLOUD_TYPE = "soundcloud";
 	public static String BOTTLE_SOCIALCAM_TYPE = "socialcam";
 	public static final String BOTTLE_VIDDY_TYPE = "viddy";
 
 	public static final int BOTTLE_INITIAL_DOWNLOAD = 5;
+	
+	public static BottleDetails SELECTED_BOTTLE = null;
 	
 	
 	

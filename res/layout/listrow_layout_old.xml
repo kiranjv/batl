@@ -1,0 +1,24 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="horizontal" >
+
+    <include
+        android:id="@+id/listrow_firstitem"
+        android:layout_width="350px"
+        android:layout_height="wrap_content"
+        layout="@layout/singlebottle_layout"
+        android:layout_weight="1"
+        android:paddingLeft="5dp"
+         />
+    
+   <include
+        android:id="@+id/listrow_seconditem"
+        android:layout_width="350px"
+        android:layout_height="wrap_content"
+        layout="@layout/secondsinglebottle_layout"
+        android:layout_weight="1"
+        android:paddingRight="5dp" />
+    
+
+</LinearLayout>

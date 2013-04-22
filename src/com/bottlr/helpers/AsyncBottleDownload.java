@@ -14,39 +14,26 @@ import android.widget.Toast;
 public class AsyncBottleDownload extends AsyncTask<Void, Void, Boolean> {
 
 	private static final String TAG = "AsyncBottleDownload";
-	
+
 	public static boolean isDownloading = false;
 	private Context context;
 	private int bottle_count;
+	private ListRowItemsAdapter list_adapter;
 	List<BottleDetails> parsedBottles;
 	private String failureMSG;
 
-	/**
-	 * @return the parsedBottles
-	 */
-	public List<BottleDetails> getParsedBottles() {
-		return parsedBottles;
-	}
-
-	/**
-	 * @param parsedBottles
-	 *            the parsedBottles to set
-	 */
-	public void setParsedBottles(List<BottleDetails> parsedBottles) {
-		this.parsedBottles = parsedBottles;
-	}
-
 	public AsyncBottleDownload(Context context, int bottle_count) {
 		this.context = context;
+		
 		this.bottle_count = bottle_count;
 	}
 
-	
 	@Override
 	protected void onPreExecute() {
 		isDownloading = true;
 		super.onPreExecute();
 	}
+
 	/**
 	 * asyncronus background service to download the bottles from bottle server.
 	 */
@@ -59,12 +46,12 @@ public class AsyncBottleDownload extends AsyncTask<Void, Void, Boolean> {
 			return false;
 		}
 
-	
 		BottleParseHelper bottlesParser = new BottleParseHelper(context);
 		parsedBottles = bottlesParser.parseBottles(bottles);
 		Log.e(TAG, "Downloaded bottles size: " + parsedBottles.size());
 		Log.e(TAG, "Downloaded bottles json: " + bottles);
 		bottlesParser.storeBottleLocal(parsedBottles);
+		
 		return true;
 	}
 
@@ -83,9 +70,24 @@ public class AsyncBottleDownload extends AsyncTask<Void, Void, Boolean> {
 							+ " bottles downloaded.", Toast.LENGTH_SHORT)
 					.show();
 		}
-		
+
 		isDownloading = false;
 		super.onPostExecute(result);
+	}
+
+	/**
+	 * @return the parsedBottles
+	 */
+	public List<BottleDetails> getParsedBottles() {
+		return parsedBottles;
+	}
+
+	/**
+	 * @param parsedBottles
+	 *            the parsedBottles to set
+	 */
+	public void setParsedBottles(List<BottleDetails> parsedBottles) {
+		this.parsedBottles = parsedBottles;
 	}
 
 }

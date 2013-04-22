@@ -120,7 +120,6 @@ public class SplashScreenView extends Activity {
 							Toast.LENGTH_LONG).show();
 
 				} else {
-
 					BottleParseHelper bottlesParser = new BottleParseHelper(
 							context);
 					parsedBottles = bottlesParser.parseBottles(bottles);

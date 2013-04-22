@@ -1,14 +1,22 @@
 package com.bottlr.views;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
@@ -21,15 +29,26 @@ import com.bottlr.R;
 import com.bottlr.dataacess.BottleDetails;
 import com.bottlr.dataacess.BottlesRepository;
 import com.bottlr.helpers.AsyncBottleDownload;
+import com.bottlr.helpers.BottleParseHelper;
 import com.bottlr.helpers.ItemDetails;
 import com.bottlr.helpers.ListRowItemsAdapter;
+import com.bottlr.network.BottlesDownloadModel;
 import com.bottlr.utils.Utils;
 
 public class HomeScreenView extends Activity {
 
+	static private final Logger logger = LoggerFactory
+			.getLogger(HomeScreenView.class);
+
 	private static final String TAG = "HomeScreenView";
-	public ListView list_bottles;
+	public ListView listview_bottles;
+	private ListRowItemsAdapter listview_adapter;
 	public static Context context;
+
+	private boolean loadingMore = false;
+	private Handler handler = new Handler();
+	private ArrayList<BottleDetails> bottle_details_list;
+	private LinearLayout loading_layout;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +67,9 @@ public class HomeScreenView extends Activity {
 	private void initGUI() {
 
 		Button login_button = (Button) findViewById(R.id.homescreen_loginbutton);
+		loading_layout = (LinearLayout) findViewById(R.id.home_loading_layout);
+		loading_layout.setVisibility(View.GONE);
+
 		login_button.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -61,48 +83,84 @@ public class HomeScreenView extends Activity {
 		});
 
 		login_button.setEnabled(false);
-		
 
 	}
 
 	@Override
 	protected void onStart() {
 		TextView nobottle_view = (TextView) findViewById(R.id.homeview_nobottle_text);
-		ArrayList<BottleDetails> bottle_details = new BottlesRepository(context)
-				.retriveBottles();
-		if(bottle_details.size() > 1 ) {
-		// Log.e(TAG, "Bottles from bottle repo: "+bottle_details);
-		list_bottles = (ListView) findViewById(R.id.homescreen_listview);
-		// list_bottles.setAdapter(new ItemListBaseAdapter(this,
-		// bottle_details));
-		list_bottles.setAdapter(new ListRowItemsAdapter(this, bottle_details));
-		list_bottles.setOnItemClickListener(new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> a, View v, int position,
-					long id) {
-				Object o = list_bottles.getItemAtPosition(position);
-				BottleDetails obj_BottleDetails = (BottleDetails) o;
-				BottleDetailsView.CURRENT_OPEN_BOTTLE = obj_BottleDetails;
-				Toast.makeText(
-						HomeScreenView.this,
-						"You have chosen bottle id : " + " "
-								+ obj_BottleDetails.getBottle_id()
-								+ " Position: " + position, Toast.LENGTH_SHORT)
-						.show();
+		bottle_details_list = new BottlesRepository(context).retriveBottles();
+		if (bottle_details_list.size() > 1) {
+			// Log.e(TAG, "Bottles from bottle repo: "+bottle_details);
+			listview_bottles = (ListView) findViewById(R.id.homescreen_listview);
+			// list_bottles.setAdapter(new ItemListBaseAdapter(this,
+			// bottle_details));
+			listview_adapter = new ListRowItemsAdapter(this,
+					bottle_details_list);
+			listview_bottles.setAdapter(listview_adapter);
+			listview_bottles.setOnItemClickListener(new OnItemClickListener() {
+				@Override
+				public void onItemClick(AdapterView<?> a, View v, int position,
+						long id) {
+					Object o = listview_bottles.getItemAtPosition(position);
+					BottleDetails obj_BottleDetails = (BottleDetails) o;
+					BottleDetailsView.CURRENT_OPEN_BOTTLE = obj_BottleDetails;
+					Toast.makeText(
+							HomeScreenView.this,
+							"You have chosen bottle id : " + " "
+									+ obj_BottleDetails.getBottle_id()
+									+ " Position: " + position,
+							Toast.LENGTH_SHORT).show();
 
-				Intent intent = new Intent(HomeScreenView.this,
-						BottleDetailsView.class);
-				intent.setFlags(Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY);
-				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+					Intent intent = new Intent(HomeScreenView.this,
+							BottleDetailsView.class);
+					intent.setFlags(Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY);
+					intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-				startActivity(intent);
-			}
-		});
-		}
-		else {
+					startActivity(intent);
+				}
+			});
+
+			// adding scroll listener
+			listview_bottles.setOnScrollListener(new OnScrollListener() {
+
+				@Override
+				public void onScrollStateChanged(AbsListView view,
+						int scrollState) {
+					// TODO Auto-generated method stub
+
+				}
+
+				@Override
+				public void onScroll(AbsListView view, int firstVisibleItem,
+						int visibleItemCount, int totalItemCount) {
+					// what is the bottom iten that is visible
+					int lastInScreen = firstVisibleItem + visibleItemCount;
+					if ((lastInScreen == totalItemCount) && !(loadingMore)) {
+						// Run background thread
+
+						new AsyncHomeBottleDownload(lastInScreen,
+								listview_adapter, 5).execute();
+
+						// Thread tt = new loadBackgroung(lastInScreen,
+						// listview_adapter);
+						// tt.start();
+					}
+				}
+			});
+
+		} else {
 			nobottle_view.setVisibility(View.VISIBLE);
 		}
+
+		// start bottle download service
+		startBottleService();
+
 		super.onStart();
+
+	}
+
+	private void startBottleService() {
 
 	}
 
@@ -118,12 +176,11 @@ public class HomeScreenView extends Activity {
 		TextView bottleView = (TextView) layout
 				.findViewById(R.id.singlebottle_clicked_bottleid);
 		String bottle_id = (String) bottleView.getText();
-		Toast.makeText(this,
-				"Selected first bottle clicked id:" + bottle_id,
+		Toast.makeText(this, "Selected first bottle clicked id:" + bottle_id,
 				Toast.LENGTH_SHORT).show();
 
-//		BottleDetails bottle = Utils.getBottleDetails(this, bottle_id);
-//		BottleDetailsView.CURRENT_OPEN_BOTTLE = bottle;
+		// BottleDetails bottle = Utils.getBottleDetails(this, bottle_id);
+		// BottleDetailsView.CURRENT_OPEN_BOTTLE = bottle;
 		Intent intent = new Intent(HomeScreenView.this, BottleDetailsView.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY);
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -138,12 +195,11 @@ public class HomeScreenView extends Activity {
 				.findViewById(R.id.second_bottle_clicked_bottleid);
 
 		String bottle_id = (String) bottleView.getText();
-		Toast.makeText(this,
-				"Selected second bottle clicked id:" + bottle_id,
+		Toast.makeText(this, "Selected second bottle clicked id:" + bottle_id,
 				Toast.LENGTH_SHORT).show();
-		
-//		BottleDetails bottle = Utils.getBottleDetails(this, bottle_id);
-//		BottleDetailsView.CURRENT_OPEN_BOTTLE = bottle;
+
+		// BottleDetails bottle = Utils.getBottleDetails(this, bottle_id);
+		// BottleDetailsView.CURRENT_OPEN_BOTTLE = bottle;
 		Intent intent = new Intent(HomeScreenView.this, BottleDetailsView.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY);
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -159,7 +215,153 @@ public class HomeScreenView extends Activity {
 		Toast.makeText(this,
 				"Bottle like clicked. Likes: " + likeText.getText(),
 				Toast.LENGTH_SHORT).show();
-		
+
+	}
+
+	class AsyncHomeBottleDownload extends AsyncTask<Void, Void, Boolean> {
+
+		private static final String TAG = "AsyncHomeBottleDownload";
+
+		public int lastIndex;
+		private int bottle_count;
+		private ListRowItemsAdapter adaptor;
+		List<BottleDetails> parsedBottles;
+		private String failureMSG;
+
+		public AsyncHomeBottleDownload(int lastIndex,
+				ListRowItemsAdapter adaptor, int bottle_count) {
+			this.lastIndex = lastIndex;
+			this.adaptor = adaptor;
+			this.bottle_count = bottle_count;
+		}
+
+		@Override
+		protected void onPreExecute() {
+			loadingMore = true;
+			loading_layout.setVisibility(View.VISIBLE);
+			super.onPreExecute();
+		}
+
+		/**
+		 * asyncronus background service to download the bottles from bottle
+		 * server.
+		 */
+		@Override
+		protected Boolean doInBackground(Void... params) {
+			BottlesDownloadModel download = new BottlesDownloadModel(context);
+			String bottles = download.downloadBottlesJson(bottle_count);
+			if (bottles == null) {
+				failureMSG = download.getFailureMessage();
+				return false;
+			}
+
+			BottleParseHelper bottlesParser = new BottleParseHelper(context);
+			parsedBottles = bottlesParser.parseBottles(bottles);
+			Log.e(TAG, "Downloaded bottles size: " + parsedBottles.size());
+			Log.e(TAG, "Downloaded bottles json: " + bottles);
+			bottlesParser.storeBottleLocal(parsedBottles);
+			
+
+			loadingMore = false;
+			return true;
+		}
+
+		@Override
+		protected void onPostExecute(Boolean result) {
+			loading_layout.setVisibility(View.GONE);
+
+			if (!result) {
+				// UIUtils.OkDialog(context,
+				// "No bottles from server. Message is "+failureMSG);
+				Toast.makeText(context,
+						"No bottles from server. Message is " + failureMSG,
+						Toast.LENGTH_SHORT).show();
+			} else {
+				try {
+					// TODO Auto-generated method stub
+					for (int i = 0; i < parsedBottles.size(); i++) {
+						bottle_details_list.add(parsedBottles.get(i));
+					}
+					adaptor.notifyDataSetChanged();
+				} catch (Exception e) {
+					Log.e(TAG,
+							"Error notify dataset change.. " + e.getMessage());
+					logger.error("Error notify dataset change.. "
+							+ e.getMessage());
+					e.printStackTrace();
+				}
+				Toast.makeText(
+						context,
+						"Bottle download sucess." + parsedBottles.size()
+								+ " bottles downloaded.", Toast.LENGTH_SHORT)
+						.show();
+			}
+
+			super.onPostExecute(result);
+		}
+
+		/**
+		 * @return the parsedBottles
+		 */
+		public List<BottleDetails> getParsedBottles() {
+			return parsedBottles;
+		}
+
+		/**
+		 * @param parsedBottles
+		 *            the parsedBottles to set
+		 */
+		public void setParsedBottles(List<BottleDetails> parsedBottles) {
+			this.parsedBottles = parsedBottles;
+		}
+
+	}
+
+	class loadBackgroung extends Thread {
+		public int lastIndex;
+		public ListRowItemsAdapter adaptor;
+
+		public loadBackgroung(int lastIndex, ListRowItemsAdapter adaptor) {
+			super();
+			this.lastIndex = lastIndex;
+			this.adaptor = adaptor;
+		}
+
+		@Override
+		public void run() {
+			loading_layout.setVisibility(View.VISIBLE);
+			handler.post(new Runnable() {
+
+				@Override
+				public void run() {
+
+					BottlesDownloadModel download = new BottlesDownloadModel(
+							context);
+					String bottles = download.downloadBottlesJson(5);
+					if (bottles == null) {
+						// failureMSG = download.getFailureMessage();
+
+					}
+
+					BottleParseHelper bottlesParser = new BottleParseHelper(
+							context);
+					List<BottleDetails> parsedBottles = bottlesParser
+							.parseBottles(bottles);
+					Log.e(TAG,
+							"Downloaded bottles size: " + parsedBottles.size());
+					Log.e(TAG, "Downloaded bottles json: " + bottles);
+					bottlesParser.storeBottleLocal(parsedBottles);
+
+					// TODO Auto-generated method stub
+					for (int i = 0; i < parsedBottles.size(); i++) {
+						bottle_details_list.add(parsedBottles.get(i));
+					}
+					adaptor.notifyDataSetChanged();
+				}
+			});
+			loadingMore = false;
+
+		}
 
 	}
 

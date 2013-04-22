@@ -36,6 +36,8 @@ public class DownloadImageTask extends AsyncTask<Void, Void, Bitmap> {
 	protected Bitmap doInBackground(Void... params) {
 
 		try {
+			BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+			bmOptions.inSampleSize = 2; // 1 = 100% if you write 4 means 1/4 = 25% 
 			InputStream in = new java.net.URL(urldisplay).openStream();
 			mIcon11 = BitmapFactory.decodeStream(in);
 		} 
@@ -54,7 +56,7 @@ public class DownloadImageTask extends AsyncTask<Void, Void, Bitmap> {
 	}
 
 	protected void onPostExecute(Bitmap result) {
-		progress.setVisibility(View.GONE);
+		
 		bmImage.setVisibility(View.VISIBLE);
 		if(result != null)
 		bmImage.setImageBitmap(result); 
