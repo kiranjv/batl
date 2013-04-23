@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import com.bottlr.dataacess.BottleDetails;
 import com.bottlr.dataacess.BottlesRepository;
-
+import com.bottlr.helpers.WebServiceRequesterHelper;
 
 import android.content.Context;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -27,9 +27,8 @@ import android.widget.ImageView;
 
 public class Utils {
 
-	static private final Logger logger = LoggerFactory
-			.getLogger(Utils.class);
-	
+	static private final Logger logger = LoggerFactory.getLogger(Utils.class);
+
 	private static final String TAG = "Utils";
 
 	public static long secsToMilliSeconds(long seconds) {
@@ -109,8 +108,8 @@ public class Utils {
 		return url;
 	}
 
-	public static String generateVideoThumbImgUrl(String videoid,
-			String video_type) {
+	public static String generateVideoThumbImgUrl(Context context, String videoid,
+			String video_type, JSONObject json_bottle) {
 		String url = "";
 		if (video_type.equalsIgnoreCase("youtube") || video_type == "youtube") {
 			url = URLs.YOUTUBE_THUMB_URLBASE + videoid
@@ -118,9 +117,16 @@ public class Utils {
 			// Log.d(TAG, "Youtube video thumb url: " + url);
 		} else if (video_type.equalsIgnoreCase("vimeo")
 				|| video_type == "vimeo") {
+			url = getJsonValue(json_bottle, "vimeoimg");
 
 		} else if (video_type.equalsIgnoreCase("socialcam")
 				|| video_type == "socialcam") {
+			// url = getJsonValue(json_bottle, "vimeoimg");
+			url = WebServiceRequesterHelper.getInstance(context).getSocailCamThumbImageAPI(videoid);
+		}
+
+		else if (video_type.equalsIgnoreCase("viddy") || video_type == "viddy") {
+			url = "http://cdn-edc-ns.viddy.com/images/video/"+videoid+".jpg";
 
 		} else if (video_type.equalsIgnoreCase("soundcloud")
 				|| video_type == "soundcloud") {
@@ -206,7 +212,7 @@ public class Utils {
 		String iFrame = null;
 
 		if (type.equalsIgnoreCase(TAGS.BOTTLE_YOUTUBE_TYPE)) {
-			iFrame = "<center><iframe width=\"850\" height=\"650\" src=\"http://www.youtube.com/embed/"
+			iFrame = "<center><iframe width=\"1050\" height=\"950\" src=\"http://www.youtube.com/embed/"
 					+ video_audio_id
 					+ "?feature=player_detailpage\" frameborder=\"0\" allowfullscreen></iframe></center>";
 
@@ -225,7 +231,7 @@ public class Utils {
 			// "?player_id=player&title=0&byline=0&portrait=0&autoplay=1&api=1\" ></iframe>";
 
 			// working one
-			iFrame = "<center><iframe width=\"850\" height=\"650\" src=\"http://player.vimeo.com/video/"
+			iFrame = "<center><iframe frameborder=\"0\" width=\"1050\" height=\"950\" src=\"http://player.vimeo.com/video/"
 					+ video_audio_id + "\"></iframe></center>";
 
 		}
@@ -240,16 +246,21 @@ public class Utils {
 			// iFrame =
 			// "<iframe width=\"450\" height=\"350\" src=\"http://socialcam.com/videos/3Eha19fC/embed?utm_campaign=external&utm_source=api\" scrolling=\"no\"></iframe>";
 
-			video_audio_id = "HSXAcuWQ";
+			// video_audio_id = "HSXAcuWQ";
 			// working url
-			iFrame = "<iframe allowfullscreen=\"allowfullscreen\" frameborder=\"0\" height=\"391px\" marginheight=\"0\" marginwidth=\"0\" scrolling=\"no\" src=\"http://socialcam.com/videos/"+video_audio_id+"/embed?utm_campaign=external&amp;utm_source=api\" width=\"520px\"></iframe>";
+			iFrame = "<center><iframe allowfullscreen=\"allowfullscreen\" frameborder=\"0\" height=\"1050\" marginheight=\"0\" marginwidth=\"0\" scrolling=\"no\" src=\"http://socialcam.com/videos/"
+					+ video_audio_id
+					+ "/embed?utm_campaign=external&amp;utm_source=api\" width=\"950\"></iframe></center>";
 
 		}
 
 		else if (type.equalsIgnoreCase(TAGS.BOTTLE_VIDDY_TYPE)) {
-			//iFrame = "<iframe width=\"850\" height=\"650\" src=\"http://www.viddy.com/embed/video/0b2b103a-0c40-48a4-877a-64645ef5a0ae\"></iframe>";
-			
-			iFrame = "<iframe width=\"850\" height=\"650\" src=\"http://cdn.viddy.com/media/video/964c032b-28ce-4d97-aece-950d33b20a32-high.mp4?t=635017344652830000\"></iframe>";
+			// iFrame =
+			// "<iframe width=\"850\" height=\"650\" src=\"http://www.viddy.com/embed/video/0b2b103a-0c40-48a4-877a-64645ef5a0ae\"></iframe>";
+			// iFrame =
+			// "<iframe width=\"850\" height=\"650\" src=\"http://cdn.viddy.com/media/video/964c032b-28ce-4d97-aece-950d33b20a32-high.mp4?t=635017344652830000\"></iframe>";
+			iFrame = "http://cdn.viddy.com/media/video/" + video_audio_id
+					+ "-high.mp4?t=635017344652830000";
 		}
 
 		else if (type.equalsIgnoreCase(TAGS.BOTTLE_SOUNDCLOUD_TYPE)) {
@@ -263,7 +274,7 @@ public class Utils {
 						+ video_audio_id
 						+ "&amp;auto_play=true&amp;show_artwork=false&amp;color=ff7700\"></iframe>";
 			} else {
-				iFrame = "<center><iframe width=\"1200\" height=\"250\" src=\"https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F"
+				iFrame = "<center><iframe width=\"1200\" height=\"550\" src=\"https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F"
 						+ video_audio_id + "\"></iframe></center>";
 			}
 
@@ -304,5 +315,20 @@ public class Utils {
 			}
 		} catch (Exception ex) {
 		}
+	}
+
+	public static String getJsonValue(JSONObject json_object, String key_value) {
+		String value = "";
+		try {
+			if (!json_object.isNull(key_value)
+					&& !json_object.getString(key_value).equalsIgnoreCase(""))
+				value = json_object.getString(key_value);
+			return value;
+		} catch (JSONException e) {
+
+			e.printStackTrace();
+
+		}
+		return value;
 	}
 }

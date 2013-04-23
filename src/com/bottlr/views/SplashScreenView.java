@@ -112,7 +112,7 @@ public class SplashScreenView extends Activity {
 				BottlesDownloadModel download = new BottlesDownloadModel(
 						context);
 				String bottles = download
-						.downloadBottlesJson(TAGS.BOTTLE_INITIAL_DOWNLOAD);
+						.downloadBottlesJson(0);
 				if (bottles == null) {
 					failureMSG = download.getFailureMessage();
 					Toast.makeText(context,

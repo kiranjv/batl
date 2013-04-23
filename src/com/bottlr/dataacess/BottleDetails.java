@@ -70,6 +70,9 @@ public class BottleDetails {
 	/** bottle date message */
 	private String bottled_date_msg;
 
+	/** bottle audio from details */
+	private String audio_from;
+
 	public BottleDetails(JSONObject json_bottle) {
 		// try {
 		// // parseBottleJson(json_bottle);
@@ -86,7 +89,7 @@ public class BottleDetails {
 			String vidUrl, String videoType, String full_top_image_url,
 			String full_video_url, String full_audio_url, String audio_url,
 			String vidfrom, String avatar_img, String pattren_url,
-			String real_name, String bottled_date_msg) {
+			String real_name, String bottled_date_msg, String audio_from) {
 		this.bottle_id = bottle_id;
 		this.botlType = botlType;
 		this.botlImageUrl = botlImageUrl;
@@ -110,7 +113,7 @@ public class BottleDetails {
 		this.pattern_url = pattren_url;
 		this.real_name = real_name;
 		this.bottled_date_msg = bottled_date_msg;
-
+		this.audio_from = audio_from;
 	}
 
 	/**
@@ -456,6 +459,21 @@ public class BottleDetails {
 	 */
 	public void setVidfrom(String vidfrom) {
 		this.vidfrom = vidfrom;
+	}
+
+	/**
+	 * @return the audio_from
+	 */
+	public String getAudio_from() {
+		return audio_from;
+	}
+
+	/**
+	 * @param audio_from
+	 *            the audio_from to set
+	 */
+	public void setAudio_from(String audio_from) {
+		this.audio_from = audio_from;
 	}
 
 	@Override

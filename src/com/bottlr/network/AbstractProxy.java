@@ -10,7 +10,7 @@ public abstract class AbstractProxy {
 	protected Context context;
 	protected HttpResponse response;
 	protected String failureMessage = "";
-	private boolean consumedRespose = false;
+	protected boolean consumedRespose = false;
 	private String responseBody = null;
 	protected int statusCode;
 	protected AbstractProxy(Context context) {

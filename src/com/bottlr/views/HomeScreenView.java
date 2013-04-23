@@ -93,6 +93,7 @@ public class HomeScreenView extends Activity {
 		if (bottle_details_list.size() > 1) {
 			// Log.e(TAG, "Bottles from bottle repo: "+bottle_details);
 			listview_bottles = (ListView) findViewById(R.id.homescreen_listview);
+			listview_bottles.setDivider(null);
 			// list_bottles.setAdapter(new ItemListBaseAdapter(this,
 			// bottle_details));
 			listview_adapter = new ListRowItemsAdapter(this,

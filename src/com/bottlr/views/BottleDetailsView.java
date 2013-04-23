@@ -1,16 +1,31 @@
 package com.bottlr.views;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.ExecutionException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
+import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnPreparedListener;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
@@ -22,16 +37,21 @@ import android.view.GestureDetector;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.GestureDetector.OnGestureListener;
+import android.view.View.OnClickListener;
 import android.view.MotionEvent;
 import android.view.ViewParent;
+import android.webkit.URLUtil;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebSettings.PluginState;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
@@ -39,9 +59,11 @@ import android.widget.VideoView;
 import com.bottlr.R;
 import com.bottlr.dataacess.BottleDetails;
 import com.bottlr.helpers.DownloadImageTask;
+import com.bottlr.helpers.WebServiceRequesterHelper;
 import com.bottlr.imgloader.ImageLoader;
 import com.bottlr.utils.TAGS;
 import com.bottlr.utils.UIUtils;
+import com.bottlr.utils.URLs;
 import com.bottlr.utils.Utils;
 
 public class BottleDetailsView extends Activity implements OnGestureListener {
@@ -59,12 +81,31 @@ public class BottleDetailsView extends Activity implements OnGestureListener {
 	private String webViewIFrameData = "";
 	private boolean isWebShow = false;
 	private boolean isHeadderShow = false;
+	private boolean isVideoShow = false;
 
 	private TextView messagesView;
 	private WebView webView;
 	private ImageView openedBottleImage;
 	private ImageView headderImage;
 	private ImageLoader imageLoader;
+
+	private VideoView mVideoView;
+
+	private ImageButton mPlay;
+
+	private ImageButton mPause;
+
+	private ImageButton mReset;
+
+	private ImageButton mStop;
+
+	private String viddyvideolink;
+
+	protected String current;
+
+	private LinearLayout video_include_layout;
+
+	private ProgressDialog progressDialog;
 
 	static final FrameLayout.LayoutParams COVER_SCREEN_PARAMS = new FrameLayout.LayoutParams(
 			ViewGroup.LayoutParams.MATCH_PARENT,
@@ -74,15 +115,37 @@ public class BottleDetailsView extends Activity implements OnGestureListener {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+
 		setContentView(R.layout.bottledetils_layout);
 
 		imageLoader = new ImageLoader(this);
+		long initGUI_start = System.currentTimeMillis();
 		initGUI(savedInstanceState);
-		configureGUI(savedInstanceState);
+		long initGUI_end = System.currentTimeMillis();
+		Log.e(TAG,
+				"Init Gui Time: "
+						+ Utils.milliToSeconds((initGUI_end - initGUI_start)));
+		logger.info("Init Gui Time: "
+				+ Utils.milliToSeconds((initGUI_end - initGUI_start)));
+		// configureGUI(savedInstanceState);
 
 		gestureScanner = new GestureDetector(this);
+		super.onCreate(savedInstanceState);
 
+	}
+
+	@Override
+	protected void onStart() {
+
+		super.onStart();
+		long initConf_start = System.currentTimeMillis();
+		configureGUI();
+		long initConf_end = System.currentTimeMillis();
+		Log.e(TAG,
+				"Init Gui Time: "
+						+ Utils.milliToSeconds((initConf_end - initConf_start)));
+		logger.info("Init Gui Time: "
+				+ Utils.milliToSeconds((initConf_end - initConf_start)));
 	}
 
 	private void initGUI(Bundle savedInstanceState) {
@@ -96,21 +159,88 @@ public class BottleDetailsView extends Activity implements OnGestureListener {
 		webView = (WebView) findViewById(R.id.bottledetails_webiew);
 		headderImage = (ImageView) findViewById(R.id.bottledetails_bottleHImage);
 		messagesView = (TextView) findViewById(R.id.bottledetails_messages_filed);
+
+		// load videoview layout
+		// video_include_layout = (LinearLayout)
+		// findViewById(R.id.bottledetails_videoview_layout);
+		video_include_layout = (LinearLayout) findViewById(R.id.bottle_details_videoview_layout);
+		mVideoView = (VideoView) findViewById(R.id.bottle_detail_surface_view);
+
+		// mPath.setText("http://logisticinfotech.com/extra/Veer.mp4");
+		// mPath.setText("http://www.youtube.com/watch?v=rkOySwlEtVk&amp;feature=youtube_gdata_player");
+		// mPath.setText("http://socialcam.edgesuite.net/videos/2013-4-9/XA4ybJ8S.mp4");
+		// mPath.setText("http://cdn.viddy.com/media/video/964c032b-28ce-4d97-aece-950d33b20a32-high.mp4?t=635017344652830000");
+		viddyvideolink = "http://cdn.viddy.com/media/video/964c032b-28ce-4d97-aece-950d33b20a32-high.mp4?t=635017344652830000";
+		mPlay = (ImageButton) findViewById(R.id.bottle_detail_play);
+		mPause = (ImageButton) findViewById(R.id.bottle_detail_pause);
+		mReset = (ImageButton) findViewById(R.id.bottle_detail_reset);
+		mStop = (ImageButton) findViewById(R.id.bottle_detail_stop);
+		mPlay.setVisibility(View.GONE);
+		mPause.setVisibility(View.GONE);
+		mReset.setVisibility(View.GONE);
+		mStop.setVisibility(View.GONE);
+
+		mPlay.setOnClickListener(new OnClickListener() {
+			public void onClick(View view) {
+				playVideo();
+			}
+		});
+		mPause.setOnClickListener(new OnClickListener() {
+			public void onClick(View view) {
+				if (mVideoView != null) {
+					mVideoView.pause();
+				}
+			}
+		});
+		mReset.setOnClickListener(new OnClickListener() {
+			public void onClick(View view) {
+				if (mVideoView != null) {
+					mVideoView.seekTo(0);
+				}
+			}
+		});
+		mStop.setOnClickListener(new OnClickListener() {
+
+			public void onClick(View view) {
+				if (mVideoView != null) {
+					current = null;
+					mVideoView.stopPlayback();
+				}
+			}
+		});
+
+		// runOnUiThread(new Runnable() {
+		// public void run() {
+		// playVideo();
+		//
+		// }
+		//
+		// });
+
+		video_include_layout.setVisibility(View.GONE);
+
 	}
 
-	private void configureGUI(Bundle savedInstanceState) {
+	private void configureGUI() {
 
 		Log.v(TAG, "------Bottle details-----------");
 		String botlType = CURRENT_OPEN_BOTTLE.getBotlType();
 		Log.v(TAG, "Bottle id: " + CURRENT_OPEN_BOTTLE.getBottle_id());
 		Log.v(TAG, "Bottle type: " + botlType);
+		Log.v(TAG,
+				"Headder image url: "
+						+ CURRENT_OPEN_BOTTLE.getFull_top_image_url());
+		Log.v(TAG, "Headder image url: " + CURRENT_OPEN_BOTTLE.getVideoType());
 		logger.debug("Bottle id: " + CURRENT_OPEN_BOTTLE.getBottle_id());
 		logger.debug("Bottle type: " + botlType);
+
 		if (botlType.equalsIgnoreCase("image")
-				|| botlType.equalsIgnoreCase("AudioUrl")) {
+				|| botlType.equalsIgnoreCase("imageurl")
+				|| botlType.equalsIgnoreCase("AudioUrl")
+				|| botlType.equalsIgnoreCase("audio")) {
 			// read json key value audiofrom
 			String audio_id = CURRENT_OPEN_BOTTLE.getAudio_url();
-			String audio_from = "Soundcloud";
+			String audio_from = CURRENT_OPEN_BOTTLE.getAudio_from();// "Soundcloud";
 
 			Log.v(TAG, "Audio id: " + audio_id + " Audio from: " + audio_from);
 
@@ -122,6 +252,7 @@ public class BottleDetailsView extends Activity implements OnGestureListener {
 					&& !audio_id.equalsIgnoreCase("")) {
 				Log.v(TAG, "Create sound cloud iFrame data. ");
 				isWebShow = true;
+				isVideoShow = false;
 				webViewIFrameData = Utils.generateIFrameTag(audio_id,
 						audio_from);
 
@@ -129,10 +260,28 @@ public class BottleDetailsView extends Activity implements OnGestureListener {
 				if (!audio_id.equalsIgnoreCase("")) {
 					Log.v(TAG, "Create mp3 link of server");
 					isWebShow = false;
-					webViewIFrameData = null;
+					isVideoShow = true;
+
+					// webViewIFrameData = getMp3FullURL("36");
+//					String audiourl = WebServiceRequesterHelper.getInstance(
+//							getApplicationContext()).getMP3AudioAPI(audio_id);
+					AsyncDownloader asyncDownloader = new AsyncDownloader(audio_id, "audio");
+					String audiourl = null;
+					try {
+						audiourl = asyncDownloader.execute().get();
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (ExecutionException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					Log.v(TAG, "Audio url: " + audiourl);
+					webViewIFrameData = audiourl;
 				} else {
 					Log.v(TAG, "Show image only.");
 					isWebShow = false;
+					isVideoShow = false;
 					webViewIFrameData = null;
 				}
 			}
@@ -141,9 +290,19 @@ public class BottleDetailsView extends Activity implements OnGestureListener {
 		else if (botlType.equalsIgnoreCase("video")) {
 			String video_id = CURRENT_OPEN_BOTTLE.getVidUrl();
 			String video_from = CURRENT_OPEN_BOTTLE.getVidfrom();
-			Log.v(TAG, "Video id: " + video_id + " Video from: " + video_from);
-			webViewIFrameData = Utils.generateIFrameTag(video_id, video_from);
-			isWebShow = true;
+			if (!video_from.equalsIgnoreCase("viddy")) {
+
+				Log.v(TAG, "Video id: " + video_id + " Video from: "
+						+ video_from);
+				webViewIFrameData = Utils.generateIFrameTag(video_id,
+						video_from);
+				isWebShow = true;
+			} else {
+				isWebShow = false;
+				isVideoShow = true;
+				webViewIFrameData = Utils.generateIFrameTag(video_id,
+						video_from);
+			}
 
 		}
 
@@ -157,6 +316,11 @@ public class BottleDetailsView extends Activity implements OnGestureListener {
 		Log.v(TAG, "iFrame Data: " + webViewIFrameData);
 
 		if (isHeadderShow) {
+			Toast.makeText(this, "showing headder image..", Toast.LENGTH_SHORT)
+					.show();
+			Log.v(TAG,
+					"Headder image url: "
+							+ CURRENT_OPEN_BOTTLE.getFull_top_image_url());
 			headderImage.setVisibility(View.VISIBLE);
 			// new DownloadImageTask(this, headderImage, null,
 			// CURRENT_OPEN_BOTTLE.getFull_top_image_url()).execute();
@@ -168,11 +332,38 @@ public class BottleDetailsView extends Activity implements OnGestureListener {
 
 		// configure webview based on flags
 		if (isWebShow && webViewIFrameData != null) {
+			Toast.makeText(this, "showing web bottle for.." + botlType,
+					Toast.LENGTH_SHORT).show();
 			if (botlType.equalsIgnoreCase(""))
 				headderImage.setVisibility(View.GONE);
 			configureWebView();
 		} else {
 			webView.setVisibility(View.GONE);
+
+		}
+
+		// configure videoview
+		if (isVideoShow && webViewIFrameData != null) {
+			// show videoview
+			Toast.makeText(this,
+					"showing video view. Data: " + webViewIFrameData,
+					Toast.LENGTH_SHORT).show();
+			video_include_layout.setVisibility(View.VISIBLE);
+			playVideo();
+			new Timer().schedule(new TimerTask() {
+
+				@Override
+				public void run() {
+					runOnUiThread(new Runnable() {
+						public void run() {
+							// playVideo();
+
+						}
+
+					});
+				}
+			}, 1000);
+
 		}
 
 		configureMessageView();
@@ -263,11 +454,14 @@ public class BottleDetailsView extends Activity implements OnGestureListener {
 				webView.getSettings().setPluginState(PluginState.ON);
 			}
 
-			
-
-			webViewIFrameData = "<iframe allowfullscreen=\"allowfullscreen\" frameborder=\"0\" height=\"391px\" marginheight=\"0\" marginwidth=\"0\" scrolling=\"no\" src=\"http://socialcam.com/videos/HSXAcuWQ/embed?utm_campaign=external&amp;utm_source=api\" width=\"520px\"></iframe>";
-			//webViewIFrameData = "<iframe allowfullscreen=\"allowfullscreen\" frameborder=\"0\" height=\"391px\" marginheight=\"0\" marginwidth=\"0\" scrolling=\"no\" src=\"http://cdn.viddy.com/media/video/964c032b-28ce-4d97-aece-950d33b20a32-high.mp4?t=635017344652830000\" width=\"520px\"></iframe>";
-			
+			// webViewIFrameData =
+			// "<iframe allowfullscreen=\"allowfullscreen\" frameborder=\"0\" height=\"391px\" marginheight=\"0\" marginwidth=\"0\" scrolling=\"no\" src=\"http://socialcam.com/videos/HSXAcuWQ/embed?utm_campaign=external&amp;utm_source=api\" width=\"520px\"></iframe>";
+			// webViewIFrameData =
+			// "<iframe allowfullscreen=\"allowfullscreen\" frameborder=\"0\" height=\"391px\" marginheight=\"0\" marginwidth=\"0\" scrolling=\"no\" src=\"http://cdn.viddy.com/media/video/964c032b-28ce-4d97-aece-950d33b20a32-high.mp4?t=635017344652830000\" width=\"520px\"></iframe>";
+			// webViewIFrameData =
+			// "<iframe allowfullscreen=\"allowfullscreen\" frameborder=\"0\" height=\"391px\" marginheight=\"0\" marginwidth=\"0\" scrolling=\"no\" src=\"http://cdn.viddy.com/media/video/964c032b-28ce-4d97-aece-950d33b20a32-high.mp4\" width=\"520px\"></iframe>";
+			// webViewIFrameData =
+			// "<iframe width=\"640\" height=\"640\" src=\"http://www.viddy.com/embed/video/25517315-b52c-45b3-a62f-99b766abfaf8\" frameborder=\"0\" allowfullscreen></iframe>";
 			Log.v(TAG, "Web view iframe data: " + webViewIFrameData);
 			logger.debug("WebView Data: " + webViewIFrameData);
 			webView.loadData(webViewIFrameData, "text/html", "utf-8");
@@ -277,114 +471,6 @@ public class BottleDetailsView extends Activity implements OnGestureListener {
 			logger.debug("Flash player not installed.");
 		}
 
-	}
-
-	private void initGUI_old(Bundle savedInstanceState) {
-
-		// startActivity(new Intent(Intent.ACTION_VIEW,
-		// Uri.parse("http://player.vimeo.com/video/27244727")));
-		// LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-		// ViewGroup.LayoutParams.MATCH_PARENT,
-		// ViewGroup.LayoutParams.MATCH_PARENT);
-		// LinearLayout myLayout = new LinearLayout(this);
-		// myLayout.setLayoutParams(params);
-
-		// HTML5WebView mWebView = new HTML5WebView(this);
-		// myLayout.addView(mWebView.getLayout(), 250, 150);
-
-		// HTML5WebView mWebView = (HTML5WebView)
-		// findViewById(R.id.html5WebView);
-		// if (savedInstanceState != null) {
-		// mWebView.restoreState(savedInstanceState);
-		// } else {
-		// mWebView.loadUrl("http://player.vimeo.com/video/27244727");
-		// }
-
-		// LinearLayout layout = SELECTED_LAYOUT;
-		// ImageView openbottle = (ImageView) findViewById(R.id.bottleImage);
-		// Drawable drawble = Utils.loadImgFromAssets(this,
-		// "bottles/botl-001-open.png");
-		// openbottle.setImageDrawable(drawble);
-
-		// Resources r = getResources();
-		// Drawable[] layers = new Drawable[2];
-		// layers[0] = r.getDrawable(R.drawable.bottle_img);
-		// layers[1] = r.getDrawable(R.drawable.eye);
-		// LayerDrawable layerDrawble = new LayerDrawable(layers);
-		// openbottle.setImageDrawable(layerDrawble);
-
-		webView = (WebView) findViewById(R.id.bottledetails_webiew);
-		webView.getSettings().setJavaScriptEnabled(true);
-		webView.getSettings().setAppCacheEnabled(true);
-		webView.getSettings().setDomStorageEnabled(true);
-		webView.getSettings().setLoadWithOverviewMode(true);
-		webView.getSettings().setUseWideViewPort(true);
-		webView.getSettings().setBuiltInZoomControls(true);
-
-		webView.setWebChromeClient(new WebChromeClient() {
-		});
-		// how to enable the webview plugin changed in API 8
-		if (Build.VERSION.SDK_INT < 8) {
-			webView.getSettings().setPluginsEnabled(true);
-		} else {
-			webView.getSettings().setPluginState(PluginState.ON);
-		}
-
-		// webView.setWebViewClient(new WebViewClient() {
-		// @Override
-		// public boolean shouldOverrideUrlLoading(WebView view, String url) {
-		// if (url.contains("vimeo.com")) {
-		//
-		// webView.loadUrl(url
-		// + "?player_id=player&title=0&byline=0&portrait=0&autoplay=1&api=1");
-		// // System.out.println("override url is:::"+url);
-		// }
-		// return false;
-		// }
-		//
-		// });
-
-		// webView.loadData("<iframe src=\"http://player.vimeo.com/video/25349114\"></iframe>",
-		// "text/html", "utf-8");
-		// http://www.youtube.com/watch?v=MTTyLUIchNo&wide=1
-		// <iframe width="100%" height="166" scrolling="no" frameborder="no"
-		// src="https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F78558263"></iframe>
-		// <iframe src=\"http://www.google.com\"></iframe>"
-		// webView.loadData("<iframe src=\"http://www.google.com\"></iframe>",
-		// "text/html","utf-8");
-		// String webData =
-		// "<iframe src=\"http://player.vimeo.com/video/25349114\"></iframe>";
-		// <iframe
-		// src=\"https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F78558263\"></iframe>
-		// String iFrameData =
-		// "<center><iframe src=\"http://www.youtube.com/watch?v=MTTyLUIchNo&wide=1\"></iframe></center>";
-		// "<center><iframe src=\"http://www.youtube.com/embed/ChHijYrsdsY?feature=player_detailpage\" frameborder=\"0\" allowfullscreen></iframe></center>";
-
-		Log.e(TAG, "isFalsh Player Available: " + Utils.isFlashAvailable(this));
-		String video_audio_id = "25349114";
-
-		String iFrameData = Utils.generateIFrameTag(video_audio_id,
-				TAGS.BOTTLE_VIMEO_TYPE);
-		Log.e(TAG, "iFrame data: " + iFrameData);
-
-		webView.loadData(iFrameData, "text/html", "utf-8");
-		// webView.loadUrl("http://player.vimeo.com/video/24577973?player_id=player&autoplay=1&title=0&byline=0&portrait=0&api=1&maxheight=480&maxwidth=800");
-
-		// HTML5WebView mWebView = (HTML5WebView)
-		// findViewById(R.id.html5WebView);
-
-		String messageHeadder = "<h1> Message:</h1> \n";
-		String mesaageData = messageHeadder
-				+ "<p>\n\t<span style=\"font-size:11px;\"><span style=\"font-family: lucida sans unicode,lucida grande,sans-serif;\">While he attempts to put pressure on Congress to pass federal measures that would increase gun control, President Obama is visiting Colorado today to draw attention to its recently passed gun control laws.</span></span></p>\n<p>\n\t<span style=\"font-size:11px;\"><span style=\"font-family: lucida sans unicode,lucida grande,sans-serif;\">Despite the state&#39;s tradition of hunting and historically highly valued gun ownership rights, Colorado expanded its restrictions on magazines and expanded background checks with a bill passed two weeks ago. Obama will visit community leaders and law enforcement officers not far from Aurora, where James Holmes killed 12 people in a movie theater last summer (prosecutors announced this week that they would pursue the death penalty for Holmes).</span></span></p>\n<p>\n\t<span style=\"font-size:11px;\"><span style=\"font-family: lucida sans unicode,lucida grande,sans-serif;\">The President is advocating for Congress to at least vote on a ban of assault weapons, limits on large-capacity ammunition magazines, and universal background checks on gun buyers. The background check requirement is the most important component of the law to gun control advocates, and while the issue divides congress, 90 percent of Americans polled in public surveys support expanded background checks.</span></span></p>\n<p>\n\t<span style=\"font-size:11px;\"><span style=\"font-family: lucida sans unicode,lucida grande,sans-serif;\">Obama has made a series of high-profile appearances over the past few weeks to advocate for gun control. As he called for legislation last week, he stood with 21 mothers who have lost their children to gun violence, saying: &quot;I haven&#39;t forgotten those kids.&quot;</span></span></p>\n<p>\n\t<br />\n\t<span style=\"font-size:11px;\"><span style=\"font-family: lucida sans unicode,lucida grande,sans-serif;\">- Maggie Lange<br />\n\tABC</span></span></p>\n<div class=\"post-body\">\n\t<h1>\n\t\t<span style=\"font-size:8px;\"><a class=\"plus-icon modfont\">Maggie Lange</a></span></h1>\n</div>\n<p>\n\t&nbsp;</p>\n";
-		// String mesaageData = messageHeadder +
-		// CURRENT_OPEN_BOTTLE.getMessage();
-		TextView messagesView = (TextView) findViewById(R.id.bottledetails_messages_filed);
-		messagesView.setMovementMethod(new ScrollingMovementMethod());
-		messagesView.setText(Html.fromHtml(mesaageData));
-		// myLayout.addView(messagesView, ViewGroup.LayoutParams.WRAP_CONTENT,
-		// ViewGroup.LayoutParams.WRAP_CONTENT);
-		Toast.makeText(this, "Bottle details opened", Toast.LENGTH_SHORT)
-				.show();
 	}
 
 	@Override
@@ -468,8 +554,11 @@ public class BottleDetailsView extends Activity implements OnGestureListener {
 
 	@Override
 	protected void onPause() {
-		webView.destroy();
-
+		if (webView != null) {
+			webView.clearCache(true);
+			webView.freeMemory();
+			webView.destroy();
+		}
 		super.onPause();
 	}
 
@@ -485,5 +574,132 @@ public class BottleDetailsView extends Activity implements OnGestureListener {
 	public void onBackPressed() {
 		super.onBackPressed();
 		this.finish();
+	}
+
+	private void playVideo() {
+		try {
+			// final String path = viddyvideolink;
+			final String videoPath = webViewIFrameData;
+
+			progressDialog = ProgressDialog.show(this, "",
+					"Buffering media...", true);
+			progressDialog.setCancelable(true);
+
+			getWindow().setFormat(PixelFormat.TRANSLUCENT);
+			MediaController mediaController = new MediaController(this);
+			mediaController.setAnchorView(mVideoView);
+
+			Uri video = Uri.parse(videoPath);
+			mVideoView.setMediaController(mediaController);
+			mVideoView.setVideoURI(video);
+			mVideoView.requestFocus();
+			mVideoView.setOnPreparedListener(new OnPreparedListener() {
+
+				public void onPrepared(MediaPlayer mp) {
+					progressDialog.dismiss();
+					mVideoView.start();
+				}
+			});
+
+			//
+			// System.out.println("path --> " + path);
+			// Log.v(TAG, "path: " + path);
+			// if (path == null || path.length() == 0) {
+			// Toast.makeText(this, "File URL/path is empty",
+			// Toast.LENGTH_LONG).show();
+			//
+			// } else {
+			// // If the path has not changed, just start the media player
+			// if (path.equals(current) && mVideoView != null) {
+			// mVideoView.start();
+			// mVideoView.requestFocus();
+			// return;
+			// }
+			// current = path;
+			// System.out.println("Current path --> " + path);
+			// mVideoView.setVideoPath(getDataSource(path));
+			// mVideoView.start();
+			// mVideoView.requestFocus();
+			//
+			// System.out.println("end try in play");
+
+		} catch (Exception e) {
+			Log.e(TAG, "error: " + e.getMessage(), e);
+			if (mVideoView != null) {
+				mVideoView.stopPlayback();
+			}
+		}
+	}
+
+	private String getDataSource(String path) throws IOException {
+		if (!URLUtil.isNetworkUrl(path)) {
+			return path;
+		} else {
+			URL url = new URL(path);
+			URLConnection cn = url.openConnection();
+			cn.connect();
+			InputStream stream = cn.getInputStream();
+			if (stream == null)
+				throw new RuntimeException("stream is null");
+			File temp = File.createTempFile("mediaplayertmp", "mp4");
+			System.out.println("hi");
+			temp.deleteOnExit();
+			String tempPath = temp.getAbsolutePath();
+
+			FileOutputStream out = new FileOutputStream(temp);
+			byte buf[] = new byte[128];
+			do {
+				try {
+					int numread = stream.read(buf);
+					if (numread <= 0)
+						break;
+					out.write(buf, 0, numread);
+				} catch (Exception e) {
+					Toast.makeText(getApplicationContext(),
+							"connection timeout.", Toast.LENGTH_SHORT).show();
+					logger.error("Connection time out for viddy video...");
+					e.printStackTrace();
+				}
+			} while (true);
+			try {
+				stream.close();
+			} catch (IOException ex) {
+				Log.e(TAG, "error: " + ex.getMessage(), ex);
+			}
+			return tempPath;
+		}
+	}
+
+	private String getMp3FullURL(String aid) {
+		return URLs.BOTTLE_DIRECT_AUDIO_BASE_URL + "JingleBells.mp3";
+	}
+
+	private class AsyncDownloader extends AsyncTask<Void,Void, String> {
+
+		private String process_name;
+		private String video_audio_id;
+
+		public AsyncDownloader(String video_audio_id, String process_name) {
+			this.video_audio_id = video_audio_id;
+			this.process_name = process_name;
+		}
+
+		
+
+		@Override
+		protected String doInBackground(Void... params) {
+			String result = "";
+			if (process_name.equalsIgnoreCase("audio")) {
+				result = WebServiceRequesterHelper.getInstance(
+						getApplicationContext()).getMP3AudioAPI(video_audio_id);
+			}
+			else if (process_name.equalsIgnoreCase("video")) {
+				result = WebServiceRequesterHelper.getInstance(
+						getApplicationContext()).getMP3AudioAPI(video_audio_id);
+			}
+			return result;
+		}
+
+		
 	}
 }

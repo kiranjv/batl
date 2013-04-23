@@ -91,6 +91,8 @@ public class ListRowItemsAdapter extends BaseAdapter {
 		/* update top image. */
 		final ImageView headderImage = (ImageView) row
 				.findViewById(R.id.final_bottle_top_imageView1);
+		Log.e(TAG, "Full top image URL: "+bottle.getFull_top_image_url()+" bottle type: "+bottle.getBotlType()+" Title: "+bottle.getTitle());
+		
 		imageLoader.DisplayImage(bottle.getFull_top_image_url(), headderImage);
 		logger.debug("Headder image: "+bottle.getFull_top_image_url());
 //		new DownloadImageTask(context, headderImage, null,

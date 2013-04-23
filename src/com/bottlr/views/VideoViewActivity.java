@@ -34,7 +34,7 @@ public class VideoViewActivity extends Activity {
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        setContentView(R.layout.videoview_layout);
+        setContentView(R.layout.videoviewactivity_layout);
         mVideoView = (VideoView) findViewById(R.id.surface_view);
 
         mPath = (EditText) findViewById(R.id.path);

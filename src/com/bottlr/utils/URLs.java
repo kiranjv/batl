@@ -7,6 +7,13 @@ public class URLs {
 	public static String BASE_URL = "http://184.107.155.35:8080/";
 	public static String BOTTLE_URL = BASE_URL + "getBotls";
 	
+	//public static String BASE_URL = "http://testbotl.com:8080/";
+	//public static String BOTTLE_URL = BASE_URL + "getUserBotls/515";
+	
+	public static String BOTTLE_URL_AUDIO_API = BASE_URL + "getAudioUrl/";
+	
+	public static String BOTTLE_DIRECT_AUDIO_BASE_URL = "http://c801462.r62.cf2.rackcdn.com/";
+	
 	//Youtube
 	public static String YOUTUBE_BASEURL = "http://www.youtube.com/watch?v=";
 	public static String YOUTUBE_THUMB_URLBASE = "http://i1.ytimg.com/vi/"; 

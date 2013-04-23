@@ -60,7 +60,7 @@ public class BottleParseHelper {
 		}
 	}
 
-	public static BottleDetails parseBottleDetails(JSONObject json_bottle,
+	public BottleDetails parseBottleDetails(JSONObject json_bottle,
 			JSONObject userJsonObject) throws JSONException {
 		String bottle_id = json_bottle.getString("bid");
 		int aid = Integer.parseInt(json_bottle.getString("aid"));
@@ -85,6 +85,7 @@ public class BottleParseHelper {
 		String full_top_image_url = "";
 		String full_video_url = "";
 		String full_audio_url = "";
+		String audio_from = Utils.getJsonValue(json_bottle, "audiofrom");
 		String audio_url = "";
 		String vidfrom = "";
 		String vidUrl = "";
@@ -134,7 +135,7 @@ public class BottleParseHelper {
 		/* video type bottle */
 		else if (botlType == "video" || botlType.equalsIgnoreCase("video")) {
 			imageName = json_bottle.getString("imageName");
-			vidfrom = getJsonValue(json_bottle, "vidfrom");
+			vidfrom = Utils.getJsonValue(json_bottle, "vidfrom");
 			if (vidfrom.equalsIgnoreCase("")) {
 				vidfrom = "Youtube";
 
@@ -162,7 +163,12 @@ public class BottleParseHelper {
 					&& !json_bottle.getString("imageName").equalsIgnoreCase("")) {
 				imageName = json_bottle.getString("imageName");
 
+			} else if (!json_bottle.isNull("imageurl_image")
+					&& !json_bottle.getString("imageurl_image").equalsIgnoreCase("")) {
+				imageName = json_bottle.getString("imageurl_image");
+
 			}
+				
 
 		}
 
@@ -188,9 +194,9 @@ public class BottleParseHelper {
 			full_top_image_url = Utils.generateLargeTopImage(imageName);
 
 		if (botlType.equalsIgnoreCase("video")) {
-			full_top_image_url = Utils.generateVideoThumbImgUrl(videoid,
-					videoType);
-			full_video_url = Utils.generateFullVideoUrl(videoid, videoType);
+			full_top_image_url = Utils.generateVideoThumbImgUrl(context, videoid,
+					vidfrom, json_bottle);
+			full_video_url = Utils.generateFullVideoUrl(videoid, vidfrom);
 		}
 
 		if (!audio_url.equalsIgnoreCase("")
@@ -206,6 +212,7 @@ public class BottleParseHelper {
 		Log.v(TAG, "bottle type: " + botlType);
 		Log.v(TAG, "imageName: " + imageName);
 		Log.v(TAG, "audio_url: " + audio_url);
+		Log.v(TAG, "audio_from: " + audio_from);
 		Log.v(TAG, "vidfrom: " + vidfrom);
 		Log.v(TAG, "vidUrl: " + vidUrl);
 		Log.v(TAG, "full_top_image_url: " + full_top_image_url);
@@ -221,23 +228,10 @@ public class BottleParseHelper {
 				dateCreated, distance, imageName, likeCount, locationsCount,
 				message, title, username, videoid, vidUrl, videoType,
 				full_top_image_url, full_video_url, full_audio_url, audio_url,
-				vidfrom, avatar_img, pattren_url, real_name, bottled_date_msg);
+				vidfrom, avatar_img, pattren_url, real_name, bottled_date_msg, audio_from);
 
 	}
 	
 	
-	private static String getJsonValue(JSONObject json_object, String key_value) {
-		String value = "";
-		try {
-			if(!json_object.isNull(key_value) && !json_object
-						.getString(key_value).equalsIgnoreCase(""))
-				value = json_object.getString(key_value);
-			return value;
-		} catch (JSONException e) {
-			
-			e.printStackTrace();
-			
-		}
-		return value;
-	}
+	
 }
