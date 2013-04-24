@@ -93,12 +93,13 @@ public class BottleParseHelper {
 				+ userJsonObject.getString("avatarSm");
 		String real_name = userJsonObject.getString("realname");
 		String pattren_url = json_bottle.getString("patternUrl");
-		String bottled_date_msg = "bottled "+dateCreated;
-		if(!json_bottle.isNull("reBotld"))
-		{
-			bottled_date_msg = "rebotled "+dateCreated+" by "+json_bottle.getJSONObject("reBotld").getString("name");
+		String bottled_date_msg = "bottled " + dateCreated;
+		String createdAt = Utils.getJsonValue(json_bottle, "createdAt");
+		if (!json_bottle.isNull("reBotld")) {
+			bottled_date_msg = "rebotled " + dateCreated + " by "
+					+ json_bottle.getJSONObject("reBotld").getString("name");
 		}
-		
+
 		/* Image bottle */
 		if (botlType == "image" || botlType.equalsIgnoreCase("image")) {
 
@@ -164,26 +165,26 @@ public class BottleParseHelper {
 				imageName = json_bottle.getString("imageName");
 
 			} else if (!json_bottle.isNull("imageurl_image")
-					&& !json_bottle.getString("imageurl_image").equalsIgnoreCase("")) {
+					&& !json_bottle.getString("imageurl_image")
+							.equalsIgnoreCase("")) {
 				imageName = json_bottle.getString("imageurl_image");
 
 			}
-				
 
 		}
 
 		else if (botlType == "AudioUrl"
 				|| botlType.equalsIgnoreCase("AudioUrl")) {
-			
-			if(!json_bottle.isNull("audiourl_url")) {
-				if(!json_bottle.getString("audiourl_url").equalsIgnoreCase(""))
-				audio_url = json_bottle.getString("audiourl_url");
-			} else if(!json_bottle.isNull("soundcloud_url")) {
-				if(!json_bottle.getString("soundcloud_url").equalsIgnoreCase(""))
-				audio_url = json_bottle.getString("soundcloud_url");
+
+			if (!json_bottle.isNull("audiourl_url")) {
+				if (!json_bottle.getString("audiourl_url").equalsIgnoreCase(""))
+					audio_url = json_bottle.getString("audiourl_url");
+			} else if (!json_bottle.isNull("soundcloud_url")) {
+				if (!json_bottle.getString("soundcloud_url").equalsIgnoreCase(
+						""))
+					audio_url = json_bottle.getString("soundcloud_url");
 			}
-			
-			
+
 			imageName = json_bottle.getString("imageName");
 
 		}
@@ -194,8 +195,8 @@ public class BottleParseHelper {
 			full_top_image_url = Utils.generateLargeTopImage(imageName);
 
 		if (botlType.equalsIgnoreCase("video")) {
-			full_top_image_url = Utils.generateVideoThumbImgUrl(context, videoid,
-					vidfrom, json_bottle);
+			full_top_image_url = Utils.generateVideoThumbImgUrl(context,
+					videoid, vidfrom, json_bottle);
 			full_video_url = Utils.generateFullVideoUrl(videoid, vidfrom);
 		}
 
@@ -204,7 +205,6 @@ public class BottleParseHelper {
 			full_audio_url = Utils.generateFullAudioUrl(audio_url);
 		}
 
-		
 		videoType = vidfrom;
 		/* End of parsing details */
 		Log.v(TAG, "--------------------------------");
@@ -221,17 +221,17 @@ public class BottleParseHelper {
 		Log.v(TAG, "Avatar location: " + avatar_img);
 		Log.v(TAG, "Pattren url: " + pattren_url);
 		Log.v(TAG, "Real name: " + real_name);
-		Log.v(TAG, "bottled date msg: "+bottled_date_msg);
+		Log.v(TAG, "bottled date msg: " + bottled_date_msg);
+		Log.v(TAG, "Created At: " + createdAt);
 		Log.v(TAG, "--------------------------------");
 
 		return new BottleDetails(bottle_id, botlType, botlImageUrl,
 				dateCreated, distance, imageName, likeCount, locationsCount,
 				message, title, username, videoid, vidUrl, videoType,
 				full_top_image_url, full_video_url, full_audio_url, audio_url,
-				vidfrom, avatar_img, pattren_url, real_name, bottled_date_msg, audio_from);
+				vidfrom, avatar_img, pattren_url, real_name, bottled_date_msg,
+				audio_from, createdAt);
 
 	}
-	
-	
-	
+
 }

@@ -72,6 +72,7 @@ public class BottleDetails {
 
 	/** bottle audio from details */
 	private String audio_from;
+	private String createdAt;
 
 	public BottleDetails(JSONObject json_bottle) {
 		// try {
@@ -89,7 +90,7 @@ public class BottleDetails {
 			String vidUrl, String videoType, String full_top_image_url,
 			String full_video_url, String full_audio_url, String audio_url,
 			String vidfrom, String avatar_img, String pattren_url,
-			String real_name, String bottled_date_msg, String audio_from) {
+			String real_name, String bottled_date_msg, String audio_from, String createdAt) {
 		this.bottle_id = bottle_id;
 		this.botlType = botlType;
 		this.botlImageUrl = botlImageUrl;
@@ -114,6 +115,21 @@ public class BottleDetails {
 		this.real_name = real_name;
 		this.bottled_date_msg = bottled_date_msg;
 		this.audio_from = audio_from;
+		this.createdAt = createdAt;
+	}
+
+	/**
+	 * @return the createdAt
+	 */
+	public String getCreatedAt() {
+		return createdAt;
+	}
+
+	/**
+	 * @param createdAt the createdAt to set
+	 */
+	public void setCreatedAt(String createdAt) {
+		this.createdAt = createdAt;
 	}
 
 	/**

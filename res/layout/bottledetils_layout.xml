@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<!-- <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<!--
+     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/scrollView1"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     
-    >
- -->
+    >
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
@@ -28,7 +28,7 @@
             android:layout_gravity="center"
             android:src="@drawable/bot_open" />
     </LinearLayout>
-
+
     <ImageView
         android:id="@+id/bottledetails_bottleHImage"
         android:layout_width="350dp"
@@ -43,7 +43,7 @@
         android:layout_width="250dp"
         android:layout_height="150dp"
         android:layout_gravity="center" >
-    </com.bottlr.views.HTML5WebView>
+    </com.bottlr.views.HTML5WebView>
     -->
 
     <WebView
@@ -59,20 +59,19 @@
         android:layout_height="200dp"
         layout="@layout/bottlevideoview_layout"
         android:gravity="center_horizontal"
-        />
+        />
     -->
 
 
     <!-- video view layout -->
 
     <LinearLayout
-        
         android:id="@+id/bottle_details_videoview_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:orientation="vertical" >
-
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -81,8 +80,8 @@
 
             <ImageButton
                 android:id="@+id/bottle_detail_videoview_playbutton"
-                android:layout_width="22dp"
-                android:layout_height="22dp"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
                 android:src="@drawable/play" />
 
             <TextView
@@ -93,14 +92,11 @@
                 android:text="media name"
                 android:textColor="@color/black" />
         </LinearLayout>
-
+
         <VideoView
             android:id="@+id/bottle_detail_surface_view"
-            android:layout_width="350dp"
-            android:layout_height="160dp"
-            android:scrollbarAlwaysDrawVerticalTrack="true" >
-
-        </VideoView>
+            android:layout_width="301dp"
+            android:layout_height="160dp" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -138,13 +134,12 @@
     </LinearLayout>
 
     <!-- video view layout end -->
-
+
     <TextView
         android:id="@+id/bottledetails_messages_filed"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="2dp"
         android:textColor="@color/black" />
-    
-</LinearLayout>
-<!-- </ScrollView> -->
+
+</LinearLayout><!-- </ScrollView> -->

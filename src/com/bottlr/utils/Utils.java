@@ -331,4 +331,9 @@ public class Utils {
 		}
 		return value;
 	}
+	
+	public static int getDownloadOldBottlesCount() {
+		TAGS.CURRENT_SYNC_OLD_BOTTLE_COUNT += TAGS.SYNC_BOTTLE_OFFSET;
+		return TAGS.CURRENT_SYNC_OLD_BOTTLE_COUNT;
+	}
 }

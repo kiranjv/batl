@@ -28,7 +28,7 @@ public class BottlesDownloadModel extends AbstractProxy {
 		this.context = context;
 	}
 
-	public String downloadBottlesJson(int bottle_count) {
+	public String downloadBottlesJson(String url) {
 		DefaultHttpClient client = new DefaultHttpClient();
 		HttpConnectionParams.setConnectionTimeout(client.getParams(), 10000); // Timeout
 
@@ -37,7 +37,7 @@ public class BottlesDownloadModel extends AbstractProxy {
 		// queryString.add("lng", "" + longitude);
 		// queryString.add("distance", "" + radius);
 
-		String url = URLs.BOTTLE_URL + "/"+bottle_count;
+		
 		Log.v(TAG, "URL: "+url);
 		HttpGet getRequest = new HttpGet(url);
 		// getRequest.setHeader("Content-Type", "application/json");

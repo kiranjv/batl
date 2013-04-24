@@ -298,7 +298,7 @@ public class BottleDetailsView extends Activity implements OnGestureListener {
 
 					LinearLayout.LayoutParams videoviewlp = new LinearLayout.LayoutParams(
 							mVideoView.getWidth(), 50);
-					mVideoView.setLayoutParams(videoviewlp);
+					//mVideoView.setLayoutParams(videoviewlp);
 					medianame_textview.setText(TAGS.CURRENT_MP3_FileName);
 					Log.v(TAG, "Audio url: " + audiourl);
 					webViewIFrameData = audiourl;
@@ -326,7 +326,9 @@ public class BottleDetailsView extends Activity implements OnGestureListener {
 				isVideoShow = true;
 				LinearLayout.LayoutParams videoviewlp = new LinearLayout.LayoutParams(
 						mVideoView.getWidth(), 160);
-				mVideoView.setLayoutParams(videoviewlp);
+				
+				medianame_textview.setVisibility(View.GONE);
+				//mVideoView.setLayoutParams(videoviewlp);
 				webViewIFrameData = Utils.generateIFrameTag(video_id,
 						video_from);
 			}

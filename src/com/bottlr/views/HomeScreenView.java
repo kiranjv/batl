@@ -2,6 +2,9 @@ package com.bottlr.views;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,11 +31,14 @@ import android.widget.Toast;
 import com.bottlr.R;
 import com.bottlr.dataacess.BottleDetails;
 import com.bottlr.dataacess.BottlesRepository;
-import com.bottlr.helpers.AsyncBottleDownload;
+import com.bottlr.dataacess.BottlesStoreManager;
+
 import com.bottlr.helpers.BottleParseHelper;
 import com.bottlr.helpers.ItemDetails;
 import com.bottlr.helpers.ListRowItemsAdapter;
 import com.bottlr.network.BottlesDownloadModel;
+import com.bottlr.utils.TAGS;
+import com.bottlr.utils.URLs;
 import com.bottlr.utils.Utils;
 
 public class HomeScreenView extends Activity {
@@ -50,10 +56,14 @@ public class HomeScreenView extends Activity {
 	private ArrayList<BottleDetails> bottle_details_list;
 	private LinearLayout loading_layout;
 
+	private TimerTask UpdateTimerTask;
+
+	private static Timer UpdateBottlesTimer = null;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		Log.e("ME", "onCreate");
 		this.context = this;
 		setContentView(R.layout.homescreen_layout);
 		// show The Image
@@ -88,8 +98,39 @@ public class HomeScreenView extends Activity {
 
 	@Override
 	protected void onStart() {
+		Log.e("ME", "onStart");
+		if (UpdateBottlesTimer == null && UpdateTimerTask == null) {
+			UpdateTimerTask = new TimerTask() {
+
+				@Override
+				public void run() {
+					Log.v(TAG, "Lastest bottle update timer activated.");
+					runOnUiThread(new Runnable() {
+
+						@Override
+						public void run() {
+							new AsyncLatestBottleDownload(listview_adapter,
+									new Random().nextInt(20)).execute();
+							listview_bottles.refreshDrawableState();
+						}
+					});
+
+				}
+			};
+
+			UpdateBottlesTimer = new Timer("Update Bottle");
+			UpdateBottlesTimer.schedule(UpdateTimerTask, Utils
+					.secsToMilliSeconds(TAGS.SYNC_LATEST_BOTLE_TIMER_DELAY),
+					Utils.secsToMilliSeconds(30));
+
+		}
+
 		TextView nobottle_view = (TextView) findViewById(R.id.homeview_nobottle_text);
-		bottle_details_list = new BottlesRepository(context).retriveBottles();
+
+		// bottle_details_list = new
+		// BottlesRepository(context).retriveBottles();
+		bottle_details_list = BottlesStoreManager.getStoreInstance(context)
+				.getBottles_list();
 		if (bottle_details_list.size() > 1) {
 			// Log.e(TAG, "Bottles from bottle repo: "+bottle_details);
 			listview_bottles = (ListView) findViewById(R.id.homescreen_listview);
@@ -140,8 +181,10 @@ public class HomeScreenView extends Activity {
 					if ((lastInScreen == totalItemCount) && !(loadingMore)) {
 						// Run background thread
 
-						new AsyncHomeBottleDownload(lastInScreen,
-								listview_adapter, 5).execute();
+						new AsyncOldBottleDownload(lastInScreen,
+								listview_adapter, Utils
+										.getDownloadOldBottlesCount())
+								.execute();
 
 						// Thread tt = new loadBackgroung(lastInScreen,
 						// listview_adapter);
@@ -154,21 +197,46 @@ public class HomeScreenView extends Activity {
 			nobottle_view.setVisibility(View.VISIBLE);
 		}
 
-		// start bottle download service
-		startBottleService();
-
 		super.onStart();
 
 	}
 
-	private void startBottleService() {
+	@Override
+	protected void onPause() {
+		Log.e("ME", "onPause");
 
+		if (UpdateBottlesTimer != null && UpdateTimerTask != null) {
+			UpdateTimerTask.cancel();
+			UpdateTimerTask = null;
+			UpdateBottlesTimer = null;
+
+		}
+		super.onPause();
+	}
+
+	@Override
+	protected void onResume() {
+		Log.e("ME", "onResume");
+		super.onResume();
+	}
+
+	@Override
+	protected void onRestart() {
+		Log.e("ME", "onRestart");
+		super.onRestart();
 	}
 
 	@Override
 	protected void onStop() {
+		Log.e("ME", "onStop");
 		// TODO Auto-generated method stub
 		super.onStop();
+	}
+
+	@Override
+	protected void onDestroy() {
+		Log.e("ME", "onDestroy");
+		super.onDestroy();
 	}
 
 	public void onSingleBottleClick(View v) {
@@ -219,7 +287,7 @@ public class HomeScreenView extends Activity {
 
 	}
 
-	class AsyncHomeBottleDownload extends AsyncTask<Void, Void, Boolean> {
+	class AsyncOldBottleDownload extends AsyncTask<Void, Void, Boolean> {
 
 		private static final String TAG = "AsyncHomeBottleDownload";
 
@@ -229,7 +297,7 @@ public class HomeScreenView extends Activity {
 		List<BottleDetails> parsedBottles;
 		private String failureMSG;
 
-		public AsyncHomeBottleDownload(int lastIndex,
+		public AsyncOldBottleDownload(int lastIndex,
 				ListRowItemsAdapter adaptor, int bottle_count) {
 			this.lastIndex = lastIndex;
 			this.adaptor = adaptor;
@@ -250,7 +318,15 @@ public class HomeScreenView extends Activity {
 		@Override
 		protected Boolean doInBackground(Void... params) {
 			BottlesDownloadModel download = new BottlesDownloadModel(context);
-			String bottles = download.downloadBottlesJson(bottle_count);
+
+			// prepare url for old bottle download with count.
+			// String url = URLs.BOTTLE_KING_OLD_BOTTLE_URL + bottle_count;
+			// String url = URLs.BOTTLE_KING_OLD_BOTTLE_URL + bottle_count;
+			String url = URLs.USER_OLD_BOTTLE_URL + bottle_count;
+			Log.v(TAG, "Old bottle URL: " + url);
+			logger.debug("old bottles url: " + url);
+			String bottles = download.downloadBottlesJson(url);
+			logger.debug("old bottles response : " + bottles);
 			if (bottles == null) {
 				failureMSG = download.getFailureMessage();
 				return false;
@@ -260,8 +336,9 @@ public class HomeScreenView extends Activity {
 			parsedBottles = bottlesParser.parseBottles(bottles);
 			Log.e(TAG, "Downloaded bottles size: " + parsedBottles.size());
 			Log.e(TAG, "Downloaded bottles json: " + bottles);
-			bottlesParser.storeBottleLocal(parsedBottles);
-			
+			// bottlesParser.storeBottleLocal(parsedBottles);
+			BottlesStoreManager.getStoreInstance(context).storeBottlesLast(
+					parsedBottles);
 
 			loadingMore = false;
 			return true;
@@ -318,50 +395,111 @@ public class HomeScreenView extends Activity {
 
 	}
 
-	class loadBackgroung extends Thread {
-		public int lastIndex;
-		public ListRowItemsAdapter adaptor;
+	class AsyncLatestBottleDownload extends AsyncTask<Void, Void, Boolean> {
 
-		public loadBackgroung(int lastIndex, ListRowItemsAdapter adaptor) {
-			super();
-			this.lastIndex = lastIndex;
+		private static final String TAG = "AsyncHomeBottleDownload";
+
+		private int bottle_count;
+		private ListRowItemsAdapter adaptor;
+		List<BottleDetails> parsedBottles;
+		private String failureMSG;
+
+		public AsyncLatestBottleDownload(ListRowItemsAdapter adaptor,
+				int bottle_count) {
+
 			this.adaptor = adaptor;
+			this.bottle_count = bottle_count;
 		}
 
 		@Override
-		public void run() {
+		protected void onPreExecute() {
+			loadingMore = true;
 			loading_layout.setVisibility(View.VISIBLE);
-			handler.post(new Runnable() {
+			super.onPreExecute();
+		}
 
-				@Override
-				public void run() {
+		/**
+		 * asyncronus background service to download the bottles from bottle
+		 * server.
+		 */
+		@Override
+		protected Boolean doInBackground(Void... params) {
+			String top_bottle_time = BottlesStoreManager.getStoreInstance(
+					getApplicationContext()).getTopBottleCreatedAtTime();
+			// String url = URLs.BOTTLE_KING_NEW_BOTTLE_URL + top_bottle_time
+			// + TAGS.PATH_SEPERATER + 0;
+			String url = URLs.USER_NEW_BOTTLE_URL + top_bottle_time
+					+ TAGS.PATH_SEPERATER + 0;
 
-					BottlesDownloadModel download = new BottlesDownloadModel(
-							context);
-					String bottles = download.downloadBottlesJson(5);
-					if (bottles == null) {
-						// failureMSG = download.getFailureMessage();
+			Log.v(TAG, "New bottles url: " + url);
+			logger.debug("New bottles url: " + url);
+			BottlesDownloadModel download = new BottlesDownloadModel(context);
+			String bottles = download.downloadBottlesJson(url);
+			logger.debug("new bottles response : " + bottles);
+			if (bottles == null) {
+				failureMSG = download.getFailureMessage();
+				return false;
+			}
 
-					}
+			BottleParseHelper bottlesParser = new BottleParseHelper(context);
+			parsedBottles = bottlesParser.parseBottles(bottles);
+			Log.e(TAG, "Downloaded bottles size: " + parsedBottles.size());
+			Log.e(TAG, "Downloaded bottles json: " + bottles);
+			// bottlesParser.storeBottleLocal(parsedBottles);
+			BottlesStoreManager.getStoreInstance(context).storeBottlesFront(
+					parsedBottles);
 
-					BottleParseHelper bottlesParser = new BottleParseHelper(
-							context);
-					List<BottleDetails> parsedBottles = bottlesParser
-							.parseBottles(bottles);
-					Log.e(TAG,
-							"Downloaded bottles size: " + parsedBottles.size());
-					Log.e(TAG, "Downloaded bottles json: " + bottles);
-					bottlesParser.storeBottleLocal(parsedBottles);
+			loadingMore = false;
+			return true;
+		}
 
+		@Override
+		protected void onPostExecute(Boolean result) {
+			loading_layout.setVisibility(View.GONE);
+
+			if (!result) {
+				// UIUtils.OkDialog(context,
+				// "No bottles from server. Message is "+failureMSG);
+				Toast.makeText(context,
+						"No bottles from server. Message is " + failureMSG,
+						Toast.LENGTH_SHORT).show();
+			} else {
+				try {
 					// TODO Auto-generated method stub
 					for (int i = 0; i < parsedBottles.size(); i++) {
 						bottle_details_list.add(parsedBottles.get(i));
 					}
 					adaptor.notifyDataSetChanged();
+				} catch (Exception e) {
+					Log.e(TAG,
+							"Error notify dataset change.. " + e.getMessage());
+					logger.error("Error notify dataset change.. "
+							+ e.getMessage());
+					e.printStackTrace();
 				}
-			});
-			loadingMore = false;
+				Toast.makeText(
+						context,
+						"Bottle download sucess." + parsedBottles.size()
+								+ " bottles downloaded.", Toast.LENGTH_SHORT)
+						.show();
+			}
 
+			super.onPostExecute(result);
+		}
+
+		/**
+		 * @return the parsedBottles
+		 */
+		public List<BottleDetails> getParsedBottles() {
+			return parsedBottles;
+		}
+
+		/**
+		 * @param parsedBottles
+		 *            the parsedBottles to set
+		 */
+		public void setParsedBottles(List<BottleDetails> parsedBottles) {
+			this.parsedBottles = parsedBottles;
 		}
 
 	}

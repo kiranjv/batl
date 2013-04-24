@@ -20,7 +20,7 @@ import android.widget.Toast;
 import com.bottlr.R;
 import com.bottlr.dataacess.BottleDetails;
 import com.bottlr.dataacess.BottlesRepository;
-import com.bottlr.helpers.AsyncBottleDownload;
+
 import com.bottlr.helpers.ItemDetails;
 import com.bottlr.helpers.ListRowItemsAdapter;
 import com.bottlr.utils.Utils;
