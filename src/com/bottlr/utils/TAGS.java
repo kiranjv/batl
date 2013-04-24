@@ -29,6 +29,7 @@ public class TAGS {
 	public static final int BOTTLE_INITIAL_DOWNLOAD = 5;
 	
 	public static BottleDetails SELECTED_BOTTLE = null;
+	public static String CURRENT_MP3_FileName = "";
 	
 	
 	

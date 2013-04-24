@@ -2,7 +2,6 @@ package com.bottlr.helpers;
 
 import java.io.IOException;
 
-import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -13,13 +12,14 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.bottlr.network.AbstractProxy;
-import com.bottlr.utils.QueryString;
-import com.bottlr.utils.URLs;
-import com.bottlr.utils.Utils;
-
 import android.content.Context;
 import android.util.Log;
+
+import com.bottlr.network.AbstractProxy;
+import com.bottlr.utils.QueryString;
+import com.bottlr.utils.TAGS;
+import com.bottlr.utils.URLs;
+import com.bottlr.utils.Utils;
 
 public class WebServiceRequesterHelper extends AbstractProxy {
 
@@ -60,6 +60,7 @@ public class WebServiceRequesterHelper extends AbstractProxy {
 				main_json = new JSONObject(responseData);
 				audiodata_json = main_json.getJSONObject("audiodata");
 				String filename = Utils.getJsonValue(audiodata_json, "url");
+				TAGS.CURRENT_MP3_FileName = filename;
 				audio_url = URLs.BOTTLE_DIRECT_AUDIO_BASE_URL + filename;
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block

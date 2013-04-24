@@ -13,6 +13,7 @@ import java.util.concurrent.ExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -52,6 +53,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.MediaController;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
@@ -107,6 +109,10 @@ public class BottleDetailsView extends Activity implements OnGestureListener {
 
 	private ProgressDialog progressDialog;
 
+	private ImageButton mVideoView_Play;
+
+	private TextView medianame_textview;
+
 	static final FrameLayout.LayoutParams COVER_SCREEN_PARAMS = new FrameLayout.LayoutParams(
 			ViewGroup.LayoutParams.MATCH_PARENT,
 			ViewGroup.LayoutParams.MATCH_PARENT);
@@ -153,6 +159,7 @@ public class BottleDetailsView extends Activity implements OnGestureListener {
 		String localPath = Utils.openBottleLocalPath(
 				CURRENT_OPEN_BOTTLE.getBotlImageUrl(), TAGS.BOTTLE_OPEN_TYPE);
 		Log.v(TAG, "Bottle local path: " + localPath);
+
 		openedBottleImage.setImageDrawable(Utils.loadImgFromAssets(this,
 				localPath));
 
@@ -165,6 +172,14 @@ public class BottleDetailsView extends Activity implements OnGestureListener {
 		// findViewById(R.id.bottledetails_videoview_layout);
 		video_include_layout = (LinearLayout) findViewById(R.id.bottle_details_videoview_layout);
 		mVideoView = (VideoView) findViewById(R.id.bottle_detail_surface_view);
+		mVideoView_Play = (ImageButton) findViewById(R.id.bottle_detail_videoview_playbutton);
+		mVideoView_Play.setOnClickListener(new OnClickListener() {
+			public void onClick(View view) {
+				playVideo();
+			}
+		});
+
+		medianame_textview = (TextView) findViewById(R.id.bottle_detail_media_name);
 
 		// mPath.setText("http://logisticinfotech.com/extra/Veer.mp4");
 		// mPath.setText("http://www.youtube.com/watch?v=rkOySwlEtVk&amp;feature=youtube_gdata_player");
@@ -221,6 +236,7 @@ public class BottleDetailsView extends Activity implements OnGestureListener {
 
 	}
 
+	@TargetApi(11)
 	private void configureGUI() {
 
 		Log.v(TAG, "------Bottle details-----------");
@@ -263,9 +279,10 @@ public class BottleDetailsView extends Activity implements OnGestureListener {
 					isVideoShow = true;
 
 					// webViewIFrameData = getMp3FullURL("36");
-//					String audiourl = WebServiceRequesterHelper.getInstance(
-//							getApplicationContext()).getMP3AudioAPI(audio_id);
-					AsyncDownloader asyncDownloader = new AsyncDownloader(audio_id, "audio");
+					// String audiourl = WebServiceRequesterHelper.getInstance(
+					// getApplicationContext()).getMP3AudioAPI(audio_id);
+					AsyncDownloader asyncDownloader = new AsyncDownloader(
+							audio_id, "audio");
 					String audiourl = null;
 					try {
 						audiourl = asyncDownloader.execute().get();
@@ -276,6 +293,13 @@ public class BottleDetailsView extends Activity implements OnGestureListener {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
+
+					// make videoview smaller
+
+					LinearLayout.LayoutParams videoviewlp = new LinearLayout.LayoutParams(
+							mVideoView.getWidth(), 50);
+					mVideoView.setLayoutParams(videoviewlp);
+					medianame_textview.setText(TAGS.CURRENT_MP3_FileName);
 					Log.v(TAG, "Audio url: " + audiourl);
 					webViewIFrameData = audiourl;
 				} else {
@@ -300,6 +324,9 @@ public class BottleDetailsView extends Activity implements OnGestureListener {
 			} else {
 				isWebShow = false;
 				isVideoShow = true;
+				LinearLayout.LayoutParams videoviewlp = new LinearLayout.LayoutParams(
+						mVideoView.getWidth(), 160);
+				mVideoView.setLayoutParams(videoviewlp);
 				webViewIFrameData = Utils.generateIFrameTag(video_id,
 						video_from);
 			}
@@ -349,7 +376,7 @@ public class BottleDetailsView extends Activity implements OnGestureListener {
 					"showing video view. Data: " + webViewIFrameData,
 					Toast.LENGTH_SHORT).show();
 			video_include_layout.setVisibility(View.VISIBLE);
-			playVideo();
+			// playVideo();
 			new Timer().schedule(new TimerTask() {
 
 				@Override
@@ -587,6 +614,7 @@ public class BottleDetailsView extends Activity implements OnGestureListener {
 
 			getWindow().setFormat(PixelFormat.TRANSLUCENT);
 			MediaController mediaController = new MediaController(this);
+
 			mediaController.setAnchorView(mVideoView);
 
 			Uri video = Uri.parse(videoPath);
@@ -674,7 +702,7 @@ public class BottleDetailsView extends Activity implements OnGestureListener {
 		return URLs.BOTTLE_DIRECT_AUDIO_BASE_URL + "JingleBells.mp3";
 	}
 
-	private class AsyncDownloader extends AsyncTask<Void,Void, String> {
+	private class AsyncDownloader extends AsyncTask<Void, Void, String> {
 
 		private String process_name;
 		private String video_audio_id;
@@ -684,22 +712,18 @@ public class BottleDetailsView extends Activity implements OnGestureListener {
 			this.process_name = process_name;
 		}
 
-		
-
 		@Override
 		protected String doInBackground(Void... params) {
 			String result = "";
 			if (process_name.equalsIgnoreCase("audio")) {
 				result = WebServiceRequesterHelper.getInstance(
 						getApplicationContext()).getMP3AudioAPI(video_audio_id);
-			}
-			else if (process_name.equalsIgnoreCase("video")) {
+			} else if (process_name.equalsIgnoreCase("video")) {
 				result = WebServiceRequesterHelper.getInstance(
 						getApplicationContext()).getMP3AudioAPI(video_audio_id);
 			}
 			return result;
 		}
 
-		
 	}
 }

@@ -270,11 +270,11 @@ public class Utils {
 				// String soundcloud_url =
 				// "http://soundcloud.com/moontide/dirty-water-standells-cover";
 
-				iFrame = "<iframe id=\"iframesoundcloud\" width=\"100\" height=\"166\" scrolling=\"no\" frameborder=\"no\" src=\"http://w.soundcloud.com/player/?url="
+				iFrame = "<iframe id=\"iframesoundcloud\" width=\"1200\" height=\"250\" scrolling=\"no\" frameborder=\"no\" src=\"http://w.soundcloud.com/player/?url="
 						+ video_audio_id
 						+ "&amp;auto_play=true&amp;show_artwork=false&amp;color=ff7700\"></iframe>";
 			} else {
-				iFrame = "<center><iframe width=\"1200\" height=\"550\" src=\"https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F"
+				iFrame = "<center><iframe width=\"1200\" height=\"250\" src=\"https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F"
 						+ video_audio_id + "\"></iframe></center>";
 			}
 
