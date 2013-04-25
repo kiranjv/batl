@@ -53,8 +53,8 @@ public class PressBottleCapView extends Activity {
 	}
 
 	protected void openBottle() {
-		Toast.makeText(getApplicationContext(), "Openning bottle..",
-				Toast.LENGTH_LONG).show();
+//		Toast.makeText(getApplicationContext(), "Openning bottle..",
+//				Toast.LENGTH_LONG).show();
 		//show login screen
 		Intent intent = new Intent(PressBottleCapView.this,
 				HomeScreenView.class);

@@ -2,28 +2,43 @@ package com.bottlr.utils;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.URL;
+import java.util.concurrent.ExecutionException;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.bottlr.dataacess.BottleDetails;
-import com.bottlr.dataacess.BottlesRepository;
-import com.bottlr.helpers.WebServiceRequesterHelper;
 
 import android.content.Context;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
+import android.os.Environment;
 import android.util.Log;
 import android.widget.ImageView;
+
+import com.bottlr.dataacess.BottleDetails;
+import com.bottlr.dataacess.BottlesRepository;
+import com.bottlr.helpers.WebServiceRequesterHelper;
 
 public class Utils {
 
@@ -108,13 +123,13 @@ public class Utils {
 		return url;
 	}
 
-	public static String generateVideoThumbImgUrl(Context context, String videoid,
-			String video_type, JSONObject json_bottle) {
+	public static String generateVideoThumbImgUrl(Context context,
+			String videoid, String video_type, JSONObject json_bottle) {
 		String url = "";
 		if (video_type.equalsIgnoreCase("youtube") || video_type == "youtube") {
 			url = URLs.YOUTUBE_THUMB_URLBASE + videoid
 					+ URLs.YOUTUBE_THUMB_URLEND;
-			// Log.d(TAG, "Youtube video thumb url: " + url);
+			 Log.d(TAG, "Youtube video thumb url: " + url);
 		} else if (video_type.equalsIgnoreCase("vimeo")
 				|| video_type == "vimeo") {
 			url = getJsonValue(json_bottle, "vimeoimg");
@@ -122,11 +137,13 @@ public class Utils {
 		} else if (video_type.equalsIgnoreCase("socialcam")
 				|| video_type == "socialcam") {
 			// url = getJsonValue(json_bottle, "vimeoimg");
-			url = WebServiceRequesterHelper.getInstance(context).getSocailCamThumbImageAPI(videoid);
+			url = WebServiceRequesterHelper.getInstance(context)
+					.getSocailCamThumbImageAPI(videoid);
 		}
 
 		else if (video_type.equalsIgnoreCase("viddy") || video_type == "viddy") {
-			url = "http://cdn-edc-ns.viddy.com/images/video/"+videoid+".jpg";
+			url = "http://cdn-edc-ns.viddy.com/images/video/" + videoid
+					+ ".jpg";
 
 		} else if (video_type.equalsIgnoreCase("soundcloud")
 				|| video_type == "soundcloud") {
@@ -264,23 +281,147 @@ public class Utils {
 		}
 
 		else if (type.equalsIgnoreCase(TAGS.BOTTLE_SOUNDCLOUD_TYPE)) {
-
+			String url = "";
 			if (video_audio_id.contains("http://soundcloud.com/")) {
+				url = "http://testbotl.com:8080/soundcloudapi?soundcloudurl="
+						+ video_audio_id;
+				Log.v(TAG, "URL: " + url);
 
-				// String soundcloud_url =
-				// "http://soundcloud.com/moontide/dirty-water-standells-cover";
-
-				iFrame = "<iframe id=\"iframesoundcloud\" width=\"1200\" height=\"250\" scrolling=\"no\" frameborder=\"no\" src=\"http://w.soundcloud.com/player/?url="
-						+ video_audio_id
-						+ "&amp;auto_play=true&amp;show_artwork=false&amp;color=ff7700\"></iframe>";
 			} else {
-				iFrame = "<center><iframe width=\"1200\" height=\"250\" src=\"https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F"
-						+ video_audio_id + "\"></iframe></center>";
+				url = "http://testbotl.com:8080/soundcloudapi?trackid="
+						+ video_audio_id;
+				Log.v(TAG, "URL: " + url);
+			}
+
+			try {
+				iFrame = new soundapi().execute(url).get();
+				Log.v(TAG, "Response: " + iFrame);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 
 		}
 
+		// else if (type.equalsIgnoreCase(TAGS.BOTTLE_SOUNDCLOUD_TYPE)) {
+		// if (video_audio_id.contains("http://soundcloud.com/")) {
+		// // String soundcloud_url =
+		// // "http://soundcloud.com/moontide/dirty-water-standells-cover";
+		// iFrame =
+		// "<iframe id=\"iframesoundcloud\" width=\"1200\" height=\"250\" scrolling=\"no\" frameborder=\"no\" src=\"http://w.soundcloud.com/player/?url="
+		// + video_audio_id
+		// +
+		// "&amp;auto_play=true&amp;show_artwork=false&amp;color=ff7700\"></iframe>";
+		// } else {
+		// iFrame =
+		// "<center><iframe width=\"1200\" height=\"250\" src=\"https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F"
+		// + video_audio_id + "\"></iframe></center>";
+		// // iFrame =
+		// //
+		// "<center><iframe width=\"100\" height=\"166\" scrolling=\"no\" frameborder=\"no\" src=\"https://api.soundcloud.com/tracks/3100297/stream?client_id=0995afa4963d1c7a0b9041b8efa08fc6\"></iframe></center>";
+		// // iFrame =
+		// //
+		// "<html><body><object height=\"81\" width=\"100\" id=\"yourPlayerId\" classid=\"clsid:D27CDB6E-AE6D-11cf-96B8-444553540000\"><param name=\"movie\" value=\"http://player.soundcloud.com/player.swf?url=http%3A%2F%2Fsoundcloud.com%2Fmatas%2Fhobnotropic&amp;enable_api=true&amp;object_id=yourPlayerId\"></param><param name=\"allowscriptaccess\" value=\"always\"></param><embed allowscriptaccess=\"always\" height=\"81\" src=\"http://player.soundcloud.com/player.swf?url=http%3A%2F%2Fsoundcloud.com%2Fmatas%2Fhobnotropic&amp;enable_api=true&amp;object_id=yourPlayerId\" type=\"application/x-shockwave-flash\" width=\"100\" name=\"yourPlayerId\"></embed></object></body></html>";
+		// }
+		//
+		// }
+
 		return iFrame;
+
+	}
+
+	private static class soundapi extends AsyncTask<String, String, String> {
+
+		private String failureMessage;
+
+		@Override
+		protected String doInBackground(String... params) {
+			String url = params[0];
+			String data = getData(url);
+			String file_name = Environment.getExternalStorageDirectory()+"/code.html";
+			String filename = writeToFile(file_name, data);
+
+			return filename;
+		}
+
+		/**
+		 * Prints some data to a file using a BufferedWriter
+		 * 
+		 * @return
+		 */
+		public String writeToFile(String filename, String data) {
+			File myFile = new File(filename);
+			try {
+				myFile.createNewFile();
+				FileOutputStream fOut = new FileOutputStream(myFile);
+				OutputStreamWriter myOutWriter = new OutputStreamWriter(fOut);
+				myOutWriter.write(data);
+				myOutWriter.close();
+				fOut.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			return filename;
+		}
+
+		private String getData(String url) {
+			DefaultHttpClient client = new DefaultHttpClient();
+			HttpConnectionParams
+					.setConnectionTimeout(client.getParams(), 10000); // Timeout
+
+			QueryString queryString = new QueryString();
+			// queryString.add("lat", "" + latitude);
+			// queryString.add("lng", "" + longitude);
+			// queryString.add("distance", "" + radius);
+
+			Log.v(TAG, "URL: " + url);
+			HttpGet getRequest = new HttpGet(url);
+			// getRequest.setHeader("Content-Type", "application/json");
+
+			String result = null;
+
+			try {
+				HttpResponse response = client.execute(getRequest);
+				Log.v(TAG, "Server response: " + response);
+				if (response == null) {
+
+					result = null;
+					failureMessage = "Server sent null response.";
+
+				} else if (response.getStatusLine().getStatusCode() != 200) {
+					response = null;
+					result = null;
+					failureMessage = "Bottle download fail. Response code: "
+							+ response.getStatusLine().getStatusCode();
+				} else {
+					result = EntityUtils.toString(response.getEntity());
+				}
+
+			} catch (ClientProtocolException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			return result;
+		}
+
+	}
+
+	private static String soundCloudScrip() {
+		String data = "<html><body><script src=\"http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js\"></script> <script src=\"http://connect.soundcloud.com/sdk.js\"></script> <script>SC.initialize({client_id: \"0995afa4963d1c7a0b9041b8efa08fc6\"});SC.get(\"/tracks/293\", {limit: 1}, function(tracks){SC.oEmbed(tracks.uri, document.getElementById(\"track\"));});</script> <div id=\"track\"></div></body></html>";
+
+		return data;
 
 	}
 
@@ -331,7 +472,7 @@ public class Utils {
 		}
 		return value;
 	}
-	
+
 	public static int getDownloadOldBottlesCount() {
 		TAGS.CURRENT_SYNC_OLD_BOTTLE_COUNT += TAGS.SYNC_BOTTLE_OFFSET;
 		return TAGS.CURRENT_SYNC_OLD_BOTTLE_COUNT;

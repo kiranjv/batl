@@ -29,6 +29,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.text.Html;
 import android.text.InputFilter.LengthFilter;
 import android.text.method.ScrollingMovementMethod;
@@ -172,6 +173,9 @@ public class BottleDetailsView extends Activity implements OnGestureListener {
 		// findViewById(R.id.bottledetails_videoview_layout);
 		video_include_layout = (LinearLayout) findViewById(R.id.bottle_details_videoview_layout);
 		mVideoView = (VideoView) findViewById(R.id.bottle_detail_surface_view);
+
+		// mVideoViewThumb = (ImageView)
+		// findViewById(R.id.bottle_detailoutside_imageview);
 		mVideoView_Play = (ImageButton) findViewById(R.id.bottle_detail_videoview_playbutton);
 		mVideoView_Play.setOnClickListener(new OnClickListener() {
 			public void onClick(View view) {
@@ -277,7 +281,7 @@ public class BottleDetailsView extends Activity implements OnGestureListener {
 					Log.v(TAG, "Create mp3 link of server");
 					isWebShow = false;
 					isVideoShow = true;
-
+					// mVideoViewThumb.setVisibility(View.VISIBLE);
 					// webViewIFrameData = getMp3FullURL("36");
 					// String audiourl = WebServiceRequesterHelper.getInstance(
 					// getApplicationContext()).getMP3AudioAPI(audio_id);
@@ -298,7 +302,7 @@ public class BottleDetailsView extends Activity implements OnGestureListener {
 
 					LinearLayout.LayoutParams videoviewlp = new LinearLayout.LayoutParams(
 							mVideoView.getWidth(), 50);
-					//mVideoView.setLayoutParams(videoviewlp);
+					// mVideoView.setLayoutParams(videoviewlp);
 					medianame_textview.setText(TAGS.CURRENT_MP3_FileName);
 					Log.v(TAG, "Audio url: " + audiourl);
 					webViewIFrameData = audiourl;
@@ -326,18 +330,23 @@ public class BottleDetailsView extends Activity implements OnGestureListener {
 				isVideoShow = true;
 				LinearLayout.LayoutParams videoviewlp = new LinearLayout.LayoutParams(
 						mVideoView.getWidth(), 160);
-				
+
 				medianame_textview.setVisibility(View.GONE);
-				//mVideoView.setLayoutParams(videoviewlp);
+				// mVideoViewThumb.setVisibility(View.GONE);
+				// mVideoView.setLayoutParams(videoviewlp);
 				webViewIFrameData = Utils.generateIFrameTag(video_id,
 						video_from);
 			}
 
+		} else if (botlType != null && botlType.equalsIgnoreCase("widget")) {
+			isWebShow = false;
+			isVideoShow = false;
+			isHeadderShow = true;
 		}
 
-		Toast.makeText(this,
-				"isWebShow: " + isWebShow + " isHeadderShow:" + isHeadderShow,
-				Toast.LENGTH_LONG).show();
+//		Toast.makeText(this,
+//				"isWebShow: " + isWebShow + " isHeadderShow:" + isHeadderShow,
+//				Toast.LENGTH_LONG).show();
 		Log.v(TAG, "isWebShow: " + isWebShow + " isHeadderShow:"
 				+ isHeadderShow);
 		logger.debug("isWebShow: " + isWebShow + " isHeadderShow:"
@@ -345,8 +354,8 @@ public class BottleDetailsView extends Activity implements OnGestureListener {
 		Log.v(TAG, "iFrame Data: " + webViewIFrameData);
 
 		if (isHeadderShow) {
-			Toast.makeText(this, "showing headder image..", Toast.LENGTH_SHORT)
-					.show();
+//			Toast.makeText(this, "showing headder image..", Toast.LENGTH_SHORT)
+//					.show();
 			Log.v(TAG,
 					"Headder image url: "
 							+ CURRENT_OPEN_BOTTLE.getFull_top_image_url());
@@ -361,8 +370,8 @@ public class BottleDetailsView extends Activity implements OnGestureListener {
 
 		// configure webview based on flags
 		if (isWebShow && webViewIFrameData != null) {
-			Toast.makeText(this, "showing web bottle for.." + botlType,
-					Toast.LENGTH_SHORT).show();
+//			Toast.makeText(this, "showing web bottle for.." + botlType,
+//					Toast.LENGTH_SHORT).show();
 			if (botlType.equalsIgnoreCase(""))
 				headderImage.setVisibility(View.GONE);
 			configureWebView();
@@ -374,9 +383,9 @@ public class BottleDetailsView extends Activity implements OnGestureListener {
 		// configure videoview
 		if (isVideoShow && webViewIFrameData != null) {
 			// show videoview
-			Toast.makeText(this,
-					"showing video view. Data: " + webViewIFrameData,
-					Toast.LENGTH_SHORT).show();
+//			Toast.makeText(this,
+//					"showing video view. Data: " + webViewIFrameData,
+//					Toast.LENGTH_SHORT).show();
 			video_include_layout.setVisibility(View.VISIBLE);
 			// playVideo();
 			new Timer().schedule(new TimerTask() {
@@ -398,8 +407,8 @@ public class BottleDetailsView extends Activity implements OnGestureListener {
 		configureMessageView();
 		// myLayout.addView(messagesView, ViewGroup.LayoutParams.WRAP_CONTENT,
 		// ViewGroup.LayoutParams.WRAP_CONTENT);
-		Toast.makeText(this, "Bottle details opened", Toast.LENGTH_SHORT)
-				.show();
+//		Toast.makeText(this, "Bottle details opened", Toast.LENGTH_SHORT)
+//				.show();
 		Log.v(TAG, "-------------------------------");
 	}
 
@@ -439,7 +448,7 @@ public class BottleDetailsView extends Activity implements OnGestureListener {
 					.setJavaScriptCanOpenWindowsAutomatically(true);
 			webView.getSettings().setAllowFileAccess(true);
 			webView.setInitialScale(60);
-			webView.setBackgroundColor(Color.BLACK);
+			webView.setBackgroundColor(Color.WHITE);
 			getWindow().addFlags(128);
 			webView.getSettings()
 					.setUserAgentString(
@@ -493,8 +502,19 @@ public class BottleDetailsView extends Activity implements OnGestureListener {
 			// "<iframe width=\"640\" height=\"640\" src=\"http://www.viddy.com/embed/video/25517315-b52c-45b3-a62f-99b766abfaf8\" frameborder=\"0\" allowfullscreen></iframe>";
 			Log.v(TAG, "Web view iframe data: " + webViewIFrameData);
 			logger.debug("WebView Data: " + webViewIFrameData);
-			webView.loadData(webViewIFrameData, "text/html", "utf-8");
-			// webView.loadUrl("http://www.viddy.com/embed/video/0b2b103a-0c40-48a4-877a-64645ef5a0ae");
+			// webView.loadData(webViewIFrameData, "text/html", "utf-8");
+			// webView.loadUrl("https://w.soundcloud.com/player/?url=https://soundcloud.com/cnn/newsday042313");
+			// webView.loadUrl("file:///android_asset/code.html");
+			// webView.loadUrl("https://soundcloud.com/cnn/newsday042313");
+			// webView.loadUrl(webViewIFrameData);
+			//webView.loadUrl("file://"+webViewIFrameData);
+			if (webViewIFrameData.contains("sdcard")) {
+				Log.v(TAG, "Html path: "+webViewIFrameData);
+				webView.loadUrl("file://"+webViewIFrameData);
+			} else {
+				webView.loadData(webViewIFrameData, "text/html", "utf-8");
+			}
+
 		} else {
 			UIUtils.OkDialog(this, "Flash player is not installed. ");
 			logger.debug("Flash player not installed.");
@@ -583,12 +603,24 @@ public class BottleDetailsView extends Activity implements OnGestureListener {
 
 	@Override
 	protected void onPause() {
-		if (webView != null) {
-			webView.clearCache(true);
-			webView.freeMemory();
-			webView.destroy();
-		}
+		Log.e(TAG, "onpause");
+		//
 		super.onPause();
+
+		if (webView != null) {
+//			webView.clearCache(true);
+//			webView.freeMemory();
+			deleteDatabase("webview.db");
+			deleteDatabase("webviewCache.db");
+			webView.destroy();
+			webView = null;
+		}
+	}
+
+	@Override
+	protected void onStop() {
+		Log.e(TAG, "onstop");
+		super.onStop();
 	}
 
 	private void navigateToHomeScreen() {

@@ -46,12 +46,15 @@
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
     </RelativeLayout>
-	
+	<ImageView  android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:background="@drawable/footer"/>
 	
-	<include
+	<!-- <include
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:gravity="center"
-    layout="@layout/fottler_layout" />
+    layout="@layout/fottler_layout" /> -->
 
 </LinearLayout>

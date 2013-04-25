@@ -187,13 +187,20 @@ public class BottleParseHelper {
 
 			imageName = json_bottle.getString("imageName");
 
+		} else if (botlType == "widget" || botlType.equalsIgnoreCase("widget")) {
+			imageName = json_bottle.getString("imageurl_image");
 		}
 
 		/* generate urls to corresponding type */
-		if (!imageName.equalsIgnoreCase("")
+		if (botlType != null && botlType.equalsIgnoreCase("widget")) {
+			Log.v(TAG, "widget image url:"+imageName);
+			full_top_image_url = imageName;
+		}
+		else if (!imageName.equalsIgnoreCase("")
 				|| !imageName.equalsIgnoreCase("null"))
-			full_top_image_url = Utils.generateLargeTopImage(imageName);
 
+			full_top_image_url = Utils.generateLargeTopImage(imageName);
+		
 		if (botlType.equalsIgnoreCase("video")) {
 			full_top_image_url = Utils.generateVideoThumbImgUrl(context,
 					videoid, vidfrom, json_bottle);

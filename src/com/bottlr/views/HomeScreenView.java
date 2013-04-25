@@ -46,6 +46,7 @@ public class HomeScreenView extends Activity {
 	static private final Logger logger = LoggerFactory
 			.getLogger(HomeScreenView.class);
 
+	private int prev_selected_position = -1;
 	private static final String TAG = "HomeScreenView";
 	public ListView listview_bottles;
 	private ListRowItemsAdapter listview_adapter;
@@ -135,24 +136,29 @@ public class HomeScreenView extends Activity {
 			// Log.e(TAG, "Bottles from bottle repo: "+bottle_details);
 			listview_bottles = (ListView) findViewById(R.id.homescreen_listview);
 			listview_bottles.setDivider(null);
+			
 			// list_bottles.setAdapter(new ItemListBaseAdapter(this,
 			// bottle_details));
 			listview_adapter = new ListRowItemsAdapter(this,
 					bottle_details_list);
 			listview_bottles.setAdapter(listview_adapter);
 			listview_bottles.setOnItemClickListener(new OnItemClickListener() {
+				
+
 				@Override
 				public void onItemClick(AdapterView<?> a, View v, int position,
 						long id) {
+					 prev_selected_position = position;
+					
 					Object o = listview_bottles.getItemAtPosition(position);
 					BottleDetails obj_BottleDetails = (BottleDetails) o;
 					BottleDetailsView.CURRENT_OPEN_BOTTLE = obj_BottleDetails;
-					Toast.makeText(
-							HomeScreenView.this,
-							"You have chosen bottle id : " + " "
-									+ obj_BottleDetails.getBottle_id()
-									+ " Position: " + position,
-							Toast.LENGTH_SHORT).show();
+//					Toast.makeText(
+//							HomeScreenView.this,
+//							"You have chosen bottle id : " + " "
+//									+ obj_BottleDetails.getBottle_id()
+//									+ " Position: " + position,
+//							Toast.LENGTH_SHORT).show();
 
 					Intent intent = new Intent(HomeScreenView.this,
 							BottleDetailsView.class);
@@ -193,6 +199,9 @@ public class HomeScreenView extends Activity {
 				}
 			});
 
+			if(prev_selected_position != -1)
+			listview_bottles.smoothScrollToPosition(prev_selected_position);
+			
 		} else {
 			nobottle_view.setVisibility(View.VISIBLE);
 		}
@@ -245,8 +254,8 @@ public class HomeScreenView extends Activity {
 		TextView bottleView = (TextView) layout
 				.findViewById(R.id.singlebottle_clicked_bottleid);
 		String bottle_id = (String) bottleView.getText();
-		Toast.makeText(this, "Selected first bottle clicked id:" + bottle_id,
-				Toast.LENGTH_SHORT).show();
+//		Toast.makeText(this, "Selected first bottle clicked id:" + bottle_id,
+//				Toast.LENGTH_SHORT).show();
 
 		// BottleDetails bottle = Utils.getBottleDetails(this, bottle_id);
 		// BottleDetailsView.CURRENT_OPEN_BOTTLE = bottle;
@@ -264,8 +273,8 @@ public class HomeScreenView extends Activity {
 				.findViewById(R.id.second_bottle_clicked_bottleid);
 
 		String bottle_id = (String) bottleView.getText();
-		Toast.makeText(this, "Selected second bottle clicked id:" + bottle_id,
-				Toast.LENGTH_SHORT).show();
+//		Toast.makeText(this, "Selected second bottle clicked id:" + bottle_id,
+//				Toast.LENGTH_SHORT).show();
 
 		// BottleDetails bottle = Utils.getBottleDetails(this, bottle_id);
 		// BottleDetailsView.CURRENT_OPEN_BOTTLE = bottle;
@@ -281,9 +290,9 @@ public class HomeScreenView extends Activity {
 		LinearLayout likelayout = (LinearLayout) v;
 		TextView likeText = (TextView) v
 				.findViewById(R.id.singlebotl_likepanel_likelayout_likes_number);
-		Toast.makeText(this,
-				"Bottle like clicked. Likes: " + likeText.getText(),
-				Toast.LENGTH_SHORT).show();
+//		Toast.makeText(this,
+//				"Bottle like clicked. Likes: " + likeText.getText(),
+//				Toast.LENGTH_SHORT).show();
 
 	}
 
@@ -320,8 +329,8 @@ public class HomeScreenView extends Activity {
 			BottlesDownloadModel download = new BottlesDownloadModel(context);
 
 			// prepare url for old bottle download with count.
-			// String url = URLs.BOTTLE_KING_OLD_BOTTLE_URL + bottle_count;
-			// String url = URLs.BOTTLE_KING_OLD_BOTTLE_URL + bottle_count;
+			
+//			String url = URLs.BOTTLE_KING_OLD_BOTTLE_URL + bottle_count;
 			String url = URLs.USER_OLD_BOTTLE_URL + bottle_count;
 			Log.v(TAG, "Old bottle URL: " + url);
 			logger.debug("old bottles url: " + url);
@@ -426,10 +435,10 @@ public class HomeScreenView extends Activity {
 		protected Boolean doInBackground(Void... params) {
 			String top_bottle_time = BottlesStoreManager.getStoreInstance(
 					getApplicationContext()).getTopBottleCreatedAtTime();
-			// String url = URLs.BOTTLE_KING_NEW_BOTTLE_URL + top_bottle_time
-			// + TAGS.PATH_SEPERATER + 0;
-			String url = URLs.USER_NEW_BOTTLE_URL + top_bottle_time
-					+ TAGS.PATH_SEPERATER + 0;
+			//String url = URLs.BOTTLE_KING_NEW_BOTTLE_URL + top_bottle_time
+			//		+ TAGS.PATH_SEPERATER + 0;
+			 String url = URLs.USER_NEW_BOTTLE_URL + top_bottle_time
+			 + TAGS.PATH_SEPERATER + 0;
 
 			Log.v(TAG, "New bottles url: " + url);
 			logger.debug("New bottles url: " + url);
