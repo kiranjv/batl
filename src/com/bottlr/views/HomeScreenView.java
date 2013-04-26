@@ -305,7 +305,7 @@ public class HomeScreenView extends Activity {
 		private ListRowItemsAdapter adaptor;
 		List<BottleDetails> parsedBottles;
 		private String failureMSG;
-
+        private int counter = 1;
 		public AsyncOldBottleDownload(int lastIndex,
 				ListRowItemsAdapter adaptor, int bottle_count) {
 			this.lastIndex = lastIndex;
@@ -330,8 +330,8 @@ public class HomeScreenView extends Activity {
 
 			// prepare url for old bottle download with count.
 			
-//			String url = URLs.BOTTLE_KING_OLD_BOTTLE_URL + bottle_count;
-			String url = URLs.USER_OLD_BOTTLE_URL + bottle_count;
+			String url = URLs.BOTTLE_KING_OLD_BOTTLE_URL + bottle_count;
+//			String url = URLs.USER_OLD_BOTTLE_URL + bottle_count;
 			Log.v(TAG, "Old bottle URL: " + url);
 			logger.debug("old bottles url: " + url);
 			String bottles = download.downloadBottlesJson(url);
@@ -346,22 +346,25 @@ public class HomeScreenView extends Activity {
 			Log.e(TAG, "Downloaded bottles size: " + parsedBottles.size());
 			Log.e(TAG, "Downloaded bottles json: " + bottles);
 			// bottlesParser.storeBottleLocal(parsedBottles);
-			BottlesStoreManager.getStoreInstance(context).storeBottlesLast(
-					parsedBottles);
+			Log.v("AsyncOldBottleDownload", "Counter: "+counter);
+			counter++;
+			// BottlesStoreManager.getStoreInstance(context).storeBottlesLast(
+			// parsedBottles);
 
-			loadingMore = false;
+			
 			return true;
 		}
 
 		@Override
 		protected void onPostExecute(Boolean result) {
+			counter = 1;
 			loading_layout.setVisibility(View.GONE);
 
 			if (!result) {
 				// UIUtils.OkDialog(context,
 				// "No bottles from server. Message is "+failureMSG);
 				Toast.makeText(context,
-						"No bottles from server. Message is " + failureMSG,
+						"No bottles.",
 						Toast.LENGTH_SHORT).show();
 			} else {
 				try {
@@ -379,10 +382,13 @@ public class HomeScreenView extends Activity {
 				}
 				Toast.makeText(
 						context,
-						"Bottle download sucess." + parsedBottles.size()
-								+ " bottles downloaded.", Toast.LENGTH_SHORT)
+						parsedBottles.size()+" bottles downloaded.", Toast.LENGTH_SHORT)
 						.show();
 			}
+			
+			BottlesStoreManager.getStoreInstance(context).printBottlesListIds();
+			
+			loadingMore = false;
 
 			super.onPostExecute(result);
 		}
@@ -435,10 +441,10 @@ public class HomeScreenView extends Activity {
 		protected Boolean doInBackground(Void... params) {
 			String top_bottle_time = BottlesStoreManager.getStoreInstance(
 					getApplicationContext()).getTopBottleCreatedAtTime();
-			//String url = URLs.BOTTLE_KING_NEW_BOTTLE_URL + top_bottle_time
-			//		+ TAGS.PATH_SEPERATER + 0;
-			 String url = URLs.USER_NEW_BOTTLE_URL + top_bottle_time
-			 + TAGS.PATH_SEPERATER + 0;
+			String url = URLs.BOTTLE_KING_NEW_BOTTLE_URL + top_bottle_time
+					+ TAGS.PATH_SEPERATER + 0;
+			 //String url = URLs.USER_NEW_BOTTLE_URL + top_bottle_time
+			 //+ TAGS.PATH_SEPERATER + 0;
 
 			Log.v(TAG, "New bottles url: " + url);
 			logger.debug("New bottles url: " + url);
@@ -470,7 +476,7 @@ public class HomeScreenView extends Activity {
 				// UIUtils.OkDialog(context,
 				// "No bottles from server. Message is "+failureMSG);
 				Toast.makeText(context,
-						"No bottles from server. Message is " + failureMSG,
+						"No bottles.",
 						Toast.LENGTH_SHORT).show();
 			} else {
 				try {
@@ -488,8 +494,8 @@ public class HomeScreenView extends Activity {
 				}
 				Toast.makeText(
 						context,
-						"Bottle download sucess." + parsedBottles.size()
-								+ " bottles downloaded.", Toast.LENGTH_SHORT)
+						parsedBottles.size()
+								+ " bottles.", Toast.LENGTH_SHORT)
 						.show();
 			}
 

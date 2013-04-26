@@ -185,7 +185,16 @@ public class BottleParseHelper {
 					audio_url = json_bottle.getString("soundcloud_url");
 			}
 
-			imageName = json_bottle.getString("imageName");
+			if (!json_bottle.isNull("imageName")
+					&& !json_bottle.getString("imageName").equalsIgnoreCase("")) {
+				imageName = json_bottle.getString("imageName");
+
+			} else if (!json_bottle.isNull("imageurl_image")
+					&& !json_bottle.getString("imageurl_image")
+							.equalsIgnoreCase("")) {
+				imageName = json_bottle.getString("imageurl_image");
+
+			}
 
 		} else if (botlType == "widget" || botlType.equalsIgnoreCase("widget")) {
 			imageName = json_bottle.getString("imageurl_image");
@@ -193,14 +202,13 @@ public class BottleParseHelper {
 
 		/* generate urls to corresponding type */
 		if (botlType != null && botlType.equalsIgnoreCase("widget")) {
-			Log.v(TAG, "widget image url:"+imageName);
+			Log.v(TAG, "widget image url:" + imageName);
 			full_top_image_url = imageName;
-		}
-		else if (!imageName.equalsIgnoreCase("")
+		} else if (!imageName.equalsIgnoreCase("")
 				|| !imageName.equalsIgnoreCase("null"))
 
 			full_top_image_url = Utils.generateLargeTopImage(imageName);
-		
+
 		if (botlType.equalsIgnoreCase("video")) {
 			full_top_image_url = Utils.generateVideoThumbImgUrl(context,
 					videoid, vidfrom, json_bottle);

@@ -103,8 +103,8 @@ public class SplashScreenView extends Activity {
 				BottlesDownloadModel download = new BottlesDownloadModel(
 						context);
 				// download inital botls with 0
-				// String url = URLs.BOTTLE_KING_OLD_BOTTLE_URL + 0;
-				String url = URLs.USER_OLD_BOTTLE_URL + 0;
+				 String url = URLs.BOTTLE_KING_OLD_BOTTLE_URL + 0;
+				//String url = URLs.USER_OLD_BOTTLE_URL + 0;
 				logger.debug("Initial url: " + url);
 				String bottles = download.downloadBottlesJson(url);
 				logger.debug("Initial url response: " + bottles);

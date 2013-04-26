@@ -72,6 +72,8 @@ public class BottleDetails {
 
 	/** bottle audio from details */
 	private String audio_from;
+	
+	/** bottle created time */
 	private String createdAt;
 
 	public BottleDetails(JSONObject json_bottle) {
@@ -501,6 +503,19 @@ public class BottleDetails {
 				+ " full audio url: " + full_audio_url + " real name: "
 				+ real_name + " bottle date msg: " + bottled_date_msg;
 		return data;
+	}
+	
+	
+	@Override
+	public boolean equals(Object object) {
+		if (object instanceof BottleDetails) {
+			BottleDetails bottle = (BottleDetails) object;
+			String id = bottle.getBottle_id();
+			String currt_id = this.getBottle_id();
+			return (id == currt_id)||(id.equalsIgnoreCase(currt_id));
+		}
+
+		return object == this;
 	}
 
 }

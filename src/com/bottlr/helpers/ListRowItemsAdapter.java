@@ -69,7 +69,6 @@ public class ListRowItemsAdapter extends BaseAdapter {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		Log.v(TAG, "-----------------------------------");
 		Log.v(TAG, "Row position: " + position);
-		Log.v(TAG, "View: " + convertView);
 		Log.v(TAG,
 				"itemDetailsrrayList List Size: " + itemDetailsrrayList.size());
 
@@ -91,10 +90,12 @@ public class ListRowItemsAdapter extends BaseAdapter {
 		/* update top image. */
 		final ImageView headderImage = (ImageView) row
 				.findViewById(R.id.final_bottle_top_imageView1);
+		Log.v(TAG, "Bottle type: "+bottle.getBotlType()+" Title:"+bottle.getTitle());
 		Log.e(TAG, "Full top image URL: "+bottle.getFull_top_image_url()+" bottle type: "+bottle.getBotlType()+" Title: "+bottle.getTitle());
-		
+		logger.debug("Bottle type: "+bottle.getBotlType()+" Title:"+bottle.getTitle());
+		logger.debug("Headder image url: "+bottle.getFull_top_image_url());
 		imageLoader.DisplayImage(bottle.getFull_top_image_url(), headderImage);
-		logger.debug("Headder image: "+bottle.getFull_top_image_url());
+		
 //		new DownloadImageTask(context, headderImage, null,
 //				bottle.getFull_top_image_url()).execute();
 	//	DownloadThreadPollHelper.getExcecutor().execute(new DownloadImageThread(context, headderImage, bottle.getFull_top_image_url()));

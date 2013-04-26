@@ -59,6 +59,8 @@ public class BottlesDownloadModel extends AbstractProxy {
 						+ response.getStatusLine().getStatusCode();
 			} else {
 				result = getResponseBody();
+				Log.v(TAG, "Server response json: "+result);
+				
 			}
 
 		} catch (ClientProtocolException e) {

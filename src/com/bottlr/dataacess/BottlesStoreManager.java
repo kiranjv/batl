@@ -1,16 +1,35 @@
 package com.bottlr.dataacess;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import android.content.Context;
+import android.util.Log;
 
 public class BottlesStoreManager {
 
 	private static BottlesStoreManager bottle_store = null;
 	private static Context context;
 
-	private ArrayList<BottleDetails> bottles_list = new ArrayList<BottleDetails>();
+	private ArrayList<BottleDetails> bottles_list = new ArrayList<BottleDetails>(){
+//		public boolean contains(Object object) {
+//			if(object != null) {
+//				BottleDetails bottle = (BottleDetails) object;
+//			for (int i = 0; i < size(); i++) {
+//				BottleDetails bottleDetails = this.get(i);
+//				if(bottle.equals(bottleDetails)) {
+//					return true;
+//				}
+//			}
+//			}
+//			
+//			return false;
+//			
+//			
+//		};
+	};
+	private String TAG = "BottlesStoreManager";
 
 	private BottlesStoreManager(Context context) {
 		this.context = context;
@@ -30,10 +49,15 @@ public class BottlesStoreManager {
 			BottleDetails bottleDetails = bottles.get(i);
 			storeBottleLast(bottleDetails);
 		}
+		
 	}
 
 	public void storeBottleLast(BottleDetails bottle) {
-		bottles_list.add(bottle);
+
+		 if (!bottles_list.contains(bottle)) {
+		     Log.v(TAG, bottle.getBottle_id()+" not exist..");
+			 bottles_list.add(bottle);
+		 }
 	}
 
 	public void storeBottlesFront(List<BottleDetails> bottles) {
@@ -44,7 +68,8 @@ public class BottlesStoreManager {
 	}
 
 	public void storeBottleFront(BottleDetails bottle) {
-		bottles_list.add(0, bottle);
+		if (!bottles_list.contains(bottle))
+			bottles_list.add(0, bottle);
 	}
 
 	/**
@@ -61,26 +86,47 @@ public class BottlesStoreManager {
 	public void setBottles_list(ArrayList<BottleDetails> bottles_list) {
 		this.bottles_list = bottles_list;
 	}
-	
+
 	public BottleDetails getTopBottle() {
 		BottleDetails bottle = bottles_list.get(0);
 		return bottle;
 	}
-	
-	
+
 	public BottleDetails getLastBottle() {
 		BottleDetails bottle = bottles_list.get(bottles_list.size() - 1);
 		return bottle;
 	}
+
 	public String getTopBottleCreatedAtTime() {
 		BottleDetails bottle = bottles_list.get(0);
 		return bottle.getCreatedAt();
 	}
-	
-	
+
 	public String getLastBottleCreatedAtTime() {
 		BottleDetails bottle = bottles_list.get(bottles_list.size() - 1);
 		return bottle.getCreatedAt();
+	}
+
+	public void printBottlesListIds() {
+
+		Log.v(TAG, "---------" + bottles_list.size()
+				+ " store bottles-----------------");
+		for (int i = 0; i < bottles_list.size(); i++) {
+			Log.v(TAG, "bottle " + i + " id:"
+					+ bottles_list.get(i).getBottle_id());
+		}
+		Log.v(TAG,
+				"----------------------------------------------------------------");
+
+	}
+
+	public void removeDuplicates() {
+
+		// add elements to al, including duplicates
+		HashSet hs = new HashSet<BottleDetails>(bottles_list);
+
+		bottles_list.clear();
+		bottles_list.addAll(hs);
 	}
 
 }
