@@ -30,21 +30,22 @@
             android:layout_x="49dp"
             android:layout_y="21dp"
             android:src="@drawable/loading" />
-
+
         <TextView
             android:id="@+id/final_bottle_realname_textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_x="89dp"
+            android:layout_x="65dp"
             android:layout_y="194dp"
             android:text="Real Name"
-            android:textColor="@color/black" />
-
+            android:textColor="@color/black"
+            android:textSize="13dp" />
+
         <ImageView
             android:id="@+id/final_bottle_avatar_imageView1"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_x="28dp"
+            android:layout_x="15dp"
             android:layout_y="197dp"
             android:src="@drawable/bottle_img" />
 
@@ -194,15 +195,16 @@
             android:textSize="12dp"
             android:textStyle="bold"
             android:typeface="normal" />
-
+
         <TextView
             android:id="@+id/final_bottle_username_textView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_x="89dp"
+            android:layout_x="65dp"
             android:layout_y="218dp"
             android:text="UserName"
-            android:textColor="@color/black" />
+            android:textColor="@color/black"
+            android:textSize="13dp" />
 
     </AbsoluteLayout>
 

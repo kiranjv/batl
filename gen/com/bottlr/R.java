@@ -234,7 +234,8 @@ public final class R {
         public static final int singlebottle_layout=0x7f03000f;
         public static final int splashscreen_layout=0x7f030010;
         public static final int video_loading_progress=0x7f030011;
-        public static final int videoviewactivity_layout=0x7f030012;
+        public static final int videoview_layout=0x7f030012;
+        public static final int videoviewactivity_layout=0x7f030013;
     }
     public static final class menu {
         public static final int splash_screen=0x7f080000;

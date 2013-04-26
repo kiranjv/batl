@@ -22,10 +22,12 @@ public class AsyncBottleDownload extends AsyncTask<Void, Void, Boolean> {
 	List<BottleDetails> parsedBottles;
 	private String failureMSG;
 
-	public AsyncBottleDownload(Context context, int bottle_count) {
+	private String url;
+
+	public AsyncBottleDownload(Context context, String url) {
 		this.context = context;
 		
-		this.bottle_count = bottle_count;
+		this.url = url;
 	}
 
 	@Override
@@ -40,7 +42,8 @@ public class AsyncBottleDownload extends AsyncTask<Void, Void, Boolean> {
 	@Override
 	protected Boolean doInBackground(Void... params) {
 		BottlesDownloadModel download = new BottlesDownloadModel(context);
-		String bottles = download.downloadBottlesJson(bottle_count);
+		
+		String bottles = download.downloadBottlesJson(url);
 		if (bottles == null) {
 			failureMSG = download.getFailureMessage();
 			return false;
