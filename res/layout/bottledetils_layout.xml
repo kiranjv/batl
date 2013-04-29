@@ -28,13 +28,15 @@
             android:layout_gravity="center"
             android:src="@drawable/bot_open" />
     </LinearLayout>
-
+
     <ImageView
         android:id="@+id/bottledetails_bottleHImage"
-        android:layout_width="550dp"
-        android:layout_height="150dp"
+        android:layout_width="fill_parent"
+        android:layout_height="220dp"
         android:layout_gravity="center_horizontal"
-        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
+        android:baselineAlignBottom="true"
+        android:scaleType="fitXY"
         android:src="@drawable/nopreview" />
 
     <!--

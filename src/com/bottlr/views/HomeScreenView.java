@@ -94,7 +94,6 @@ public class HomeScreenView extends Activity {
 		});
 
 		login_button.setEnabled(false);
-
 	}
 
 	@Override
@@ -112,7 +111,14 @@ public class HomeScreenView extends Activity {
 						public void run() {
 							new AsyncLatestBottleDownload(listview_adapter,
 									new Random().nextInt(20)).execute();
+							try {
+							if(listview_bottles != null) {
 							listview_bottles.refreshDrawableState();
+							}
+							}
+							catch (Exception e) {
+								e.printStackTrace();
+							}
 						}
 					});
 
@@ -441,6 +447,10 @@ public class HomeScreenView extends Activity {
 		protected Boolean doInBackground(Void... params) {
 			String top_bottle_time = BottlesStoreManager.getStoreInstance(
 					getApplicationContext()).getTopBottleCreatedAtTime();
+			
+			if(top_bottle_time == null) 
+				return false;
+			
 			String url = URLs.BOTTLE_KING_NEW_BOTTLE_URL + top_bottle_time
 					+ TAGS.PATH_SEPERATER + 0;
 			 //String url = URLs.USER_NEW_BOTTLE_URL + top_bottle_time

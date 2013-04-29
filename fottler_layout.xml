@@ -5,10 +5,11 @@
     android:orientation="vertical" >
     
 <ImageView
-    android:id="@+id/presscap_headderimg"
+    android:id="@+id/imageView1"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
+    android:layout_alignLeft="@+id/imageButton1"
     android:scaleType="fitXY"
-    android:src="@drawable/headder" />
+    android:src="@drawable/footer" />
 
 </LinearLayout>

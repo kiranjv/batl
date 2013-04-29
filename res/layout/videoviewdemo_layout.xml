@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:orientation="vertical"
+android:layout_width="fill_parent"
+android:layout_height="fill_parent">
+
+<TextView android:id="@+id/label"
+android:layout_width="fill_parent"
+android:layout_height="wrap_content"
+android:text="Type video name here:" />
+<EditText
+android:id="@+id/edittext"
+android:layout_width="fill_parent"
+android:layout_height="wrap_content"/>
+
+<RelativeLayout
+xmlns:android="http://schemas.android.com/apk/res/android"
+android:orientation="vertical"
+android:layout_width="fill_parent"
+android:layout_height="fill_parent">
+
+<Button android:id="@+id/topBtn"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:text="Top"
+android:layout_centerHorizontal="true">
+</Button>
+
+<VideoView android:id="@+id/surface_view"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+/>
+
+<ImageView android:id="@+id/overlayImage"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+
+android:layout_below="@+id/topBtn"
+/>
+
+</RelativeLayout>
+
+</LinearLayout>

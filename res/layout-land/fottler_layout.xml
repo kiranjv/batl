@@ -3,11 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-    
+    
 <ImageView
-	    android:id="@+id/imageView1"
-	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content"
-	    android:layout_alignLeft="@+id/imageButton1"
-	    android:src="@drawable/footer" />
+    android:id="@+id/imageView1"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignLeft="@+id/imageButton1"
+    android:scaleType="fitXY"
+    android:src="@drawable/fotter_message" />
+
 </LinearLayout>

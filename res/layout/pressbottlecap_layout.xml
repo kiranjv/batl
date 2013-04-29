@@ -10,12 +10,14 @@
     android:layout_height="wrap_content"
     android:gravity="center"
     layout="@layout/headder_layout" />
-
+
     <ImageView
         android:id="@+id/presscap_messageimg"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0.08"
+        android:layout_weight="0.15"
+        android:paddingTop="30dp"
+        android:scaleType="fitXY"
         android:src="@drawable/botlmessage" />
 
     <RelativeLayout
@@ -26,30 +28,33 @@
         <ImageView
             android:id="@+id/presscap_bottlebutton"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="130dp"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="20dp"
             
             android:src="@drawable/bottlecap_unclick" />
-
+
         <TextView
             android:id="@+id/pressbottle_opentext"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/presscap_bottlebutton"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="30dp"
-            android:text="Open Bottle"
-			android:textColor="#f8f8f8"
-			
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+            android:layout_marginTop="15dp"
+            android:text="Open Botls"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#f8f8f8" />
 
     </RelativeLayout>
-	<ImageView  android:layout_width="fill_parent"
+
+<ImageView
+    android:layout_width="fill_parent"
     android:layout_height="wrap_content"
+    android:layout_weight="0.07"
+    android:background="@drawable/footer"
     android:gravity="center"
-    android:background="@drawable/footer"/>
+    android:scaleType="fitXY" />
 	
 	<!-- <include
     android:layout_width="fill_parent"

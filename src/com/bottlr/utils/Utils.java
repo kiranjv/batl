@@ -339,11 +339,19 @@ public class Utils {
 
 		@Override
 		protected String doInBackground(String... params) {
+			String filename = null;
+			try {
 			String url = params[0];
 			String data = getData(url);
 			String file_name = Environment.getExternalStorageDirectory()+"/code.html";
-			String filename = writeToFile(file_name, data);
+			filename = writeToFile(file_name, data);
+			}
+			catch(Exception e) {
+				logger.error("Exception while download sound api. Message: "+e.getMessage());
+				e.printStackTrace();
+			}
 
+			
 			return filename;
 		}
 
