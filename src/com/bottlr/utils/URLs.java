@@ -7,7 +7,10 @@ public class URLs {
 	//public static String BASE_URL = "http://184.107.155.35:8080/";
 	//public static String BOTTLE_URL = BASE_URL + "getBotls";
 	
-	public static String BASE_URL = "http://testbotl.com:8080/";
+//	public static String BASE_URL = "http://testbotl.com:8080/";
+	
+	public static final String IMAGE_API = "http://www.testbotl.com:8080/webphoneapi?webtype=image&resourceUrl=";
+	public static String BASE_URL = "http://botl.com/";
 	public static String BOTTLE_KING_OLD_BOTTLE_URL = BASE_URL + "getBotls/";
 	public static String BOTTLE_KING_NEW_BOTTLE_URL = BASE_URL + "getRecentBotls/";
 	

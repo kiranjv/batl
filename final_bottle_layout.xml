@@ -2,132 +2,78 @@
     android:id="@+id/AbsoluteLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
-
+
     <AbsoluteLayout
-        android:layout_width="194dp"
-        android:layout_height="248dp"
-        android:layout_x="44dp"
-        android:layout_y="12dp"
+        android:layout_width="258dp"
+        android:layout_height="wrap_content"
+        android:layout_x="43dp"
+        android:layout_y="31dp"
         android:background="@drawable/bottle_background_original" >
-
+
+        <TextView
+            android:id="@+id/final_bottle_title_textView1"
+            android:layout_width="222dp"
+            android:layout_height="wrap_content"
+            android:layout_x="15dp"
+            android:layout_y="150dp"
+            android:gravity="center|start"
+            android:maxLines="2"
+            android:text="Title"
+            android:textColor="@color/black"
+            android:textSize="15dp"
+            android:textStyle="normal"
+             />
+
         <ImageView
             android:id="@+id/final_bottle_top_imageView1"
-            android:layout_width="138dp"
-            android:layout_height="82dp"
-            android:layout_x="25dp"
-            android:layout_y="11dp"
+            android:layout_width="218dp"
+            android:layout_height="120dp"
+            android:layout_x="15dp"
+            android:layout_y="21dp"
             android:scaleType="fitXY"
             android:src="@drawable/loading" />
+
+        <TextView
+            android:id="@+id/final_bottle_realname_textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_x="65dp"
+            android:layout_y="200dp"
+            android:text="Real Name"
+            android:textColor="@color/black"
+            android:textSize="13dp" />
+
+        <ImageView
+            android:id="@+id/final_bottle_avatar_imageView1"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_x="15dp"
+            android:layout_y="197dp"
+            android:src="@drawable/bottle_img" />
 
         <AbsoluteLayout
-            android:layout_width="188dp"
-            android:layout_height="47dp"
-            android:layout_x="2dp"
-            android:layout_y="199dp"
+            android:layout_width="248dp"
+            android:layout_height="60dp"
+            android:layout_x="6dp"
+            android:layout_y="288dp"
             android:background="#d6d6d6" >
-
+
             <ImageView
                 android:id="@+id/final_bottle_bottle_imageView1"
-                android:layout_width="37dp"
-                android:layout_height="match_parent"
+                android:layout_width="55dp"
+                android:layout_height="60dp"
                 android:layout_x="2dp"
-                android:layout_y="4dp"
+                android:layout_y="6dp"
                 android:adjustViewBounds="true"
                 android:baselineAlignBottom="true"
                 android:scaleType="fitXY"
                 android:src="@drawable/botl_002_sm" />
-
-            <ImageView
-                android:id="@+id/imageView2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_x="37dp"
-                android:layout_y="6dp"
-                android:src="@drawable/seprator" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_x="52dp"
-                android:layout_y="10dp"
-                android:gravity="center_horizontal"
-                android:orientation="vertical" >
-
-                <ImageView
-                    android:id="@+id/imageView3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/heart" />
-
-                <TextView
-                    android:id="@+id/final_bottle_likes_value_textView1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="1"
-                    android:textColor="@color/black"
-                    android:textSize="10dp" />
-
-                <TextView
-                    android:id="@+id/textView2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="likes"
-                    android:textColor="@color/black"
-                    android:textSize="10dp" />
-            </LinearLayout>
-
-            <ImageView
-                android:id="@+id/imageView4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_x="81dp"
-                android:layout_y="4dp"
-                android:src="@drawable/seprator" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_x="94dp"
-                android:layout_y="8dp"
-                android:gravity="center_horizontal"
-                android:orientation="vertical" >
-
-                <ImageView
-                    android:id="@+id/imageView5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/eye" />
-
-                <TextView
-                    android:id="@+id/final_bottle_views_value_textView3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="10"
-                    android:textColor="@color/black"
-                    android:textSize="10dp" />
-
-                <TextView
-                    android:id="@+id/textView4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="views"
-                    android:textColor="@color/black"
-                    android:textSize="10dp" />
-            </LinearLayout>
-
-            <ImageView
-                android:id="@+id/imageView6"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_x="128dp"
-                android:layout_y="5dp"
-                android:src="@drawable/seprator" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_x="138dp"
-                android:layout_y="8dp"
+                android:layout_x="190dp"
+                android:layout_y="13dp"
                 android:gravity="center_horizontal"
                 android:orientation="vertical" >
 
@@ -143,7 +89,7 @@
                     android:layout_height="wrap_content"
                     android:text="55555"
                     android:textColor="@color/black"
-                    android:textSize="10dp" />
+                    android:textSize="12dp" />
 
                 <TextView
                     android:id="@+id/textView6"
@@ -153,72 +99,126 @@
                     android:textColor="@color/black"
                     android:textSize="10dp" />
             </LinearLayout>
-        </AbsoluteLayout>
 
-        <TextView
-            android:id="@+id/final_bottle_realname_textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_x="41dp"
-            android:layout_y="140dp"
-            android:text="Real Name"
-            android:textColor="@color/black"
-            android:textSize="8dp" />
+            <ImageView
+                android:id="@+id/imageView6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_x="169dp"
+                android:layout_y="7dp"
+                android:src="@drawable/seprator" />
 
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_x="128dp"
+                android:layout_y="14dp"
+                android:gravity="center_horizontal"
+                android:orientation="vertical" >
+
+                <ImageView
+                    android:id="@+id/imageView5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/eye" />
+
+                <TextView
+                    android:id="@+id/final_bottle_views_value_textView3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="10"
+                    android:textColor="@color/black"
+                    android:textSize="12dp" />
+
+                <TextView
+                    android:id="@+id/textView4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="views"
+                    android:textColor="@color/black"
+                    android:textSize="10dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_x="70dp"
+                android:layout_y="14dp"
+                android:gravity="center_horizontal"
+                android:orientation="vertical" >
+
+                <ImageView
+                    android:id="@+id/imageView3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/heart" />
+
+                <TextView
+                    android:id="@+id/final_bottle_likes_value_textView1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1"
+                    android:textColor="@color/black"
+                    android:textSize="12dp" />
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="likes"
+                    android:textColor="@color/black"
+                    android:textSize="10dp" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_x="55dp"
+                android:layout_y="8dp"
+                android:src="@drawable/seprator" />
+
+            <ImageView
+                android:id="@+id/imageView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_x="112dp"
+                android:layout_y="6dp"
+                android:src="@drawable/seprator" />
+
+        </AbsoluteLayout>
+
         <TextView
             android:id="@+id/final_bottle_username_textView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_x="41dp"
-            android:layout_y="154dp"
+            android:layout_x="65dp"
+            android:layout_y="217dp"
             android:text="UserName"
             android:textColor="@color/black"
-            android:textSize="8dp" />
-
+            android:textSize="13dp" />
+
         <TextView
             android:id="@+id/final_bottle_datemsg_textView4"
-            android:layout_width="wrap_content"
+            android:layout_width="229dp"
             android:layout_height="wrap_content"
-            android:layout_x="8dp"
-            android:layout_y="177dp"
+            android:layout_x="12dp"
+            android:layout_y="250dp"
             android:lines="2"
-            android:text="rebotled on a day ago by bottle king"
+            android:text="rebottled on a day ago by bottle king"
             android:textColor="@color/black"
-            android:textSize="8dp"
-            android:textStyle="bold"
+            android:textSize="13dp"
             android:typeface="normal" />
 
-        <ImageView
-            android:id="@+id/final_bottle_avatar_imageView1"
-            android:layout_width="22dp"
-            android:layout_height="22dp"
-            android:layout_x="10dp"
-            android:layout_y="140dp"
-            android:src="@drawable/bottle_img" />
-
-        <TextView
-            android:id="@+id/final_bottle_title_textView1"
-            android:layout_width="194dp"
-            android:layout_height="24dp"
-            android:layout_x="-1dp"
-            android:layout_y="98dp"
-            android:gravity="center"
-            android:maxLines="2"
-            android:text="Title"
-            android:textColor="@color/black"
-            android:textSize="8dp"
-            android:textStyle="normal" />
-
     </AbsoluteLayout>
-
+
     <AbsoluteLayout
         android:id="@+id/final_bottle_pattern_img_abosolutelayout"
-        android:layout_width="200dp"
-        android:layout_height="20dp"
+        android:layout_width="262dp"
+        android:layout_height="30dp"
         android:layout_x="35dp"
-        android:layout_y="259dp"
+        android:layout_y="379dp"
         android:background="@drawable/pattern_001" >
-
-    </AbsoluteLayout>
+</AbsoluteLayout>
 
 </AbsoluteLayout>

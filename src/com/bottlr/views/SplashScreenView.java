@@ -47,11 +47,11 @@ public class SplashScreenView extends Activity {
 
 		progressDialog = (ProgressBar) findViewById(R.id.splashscreen_ProgressBar01);
 
-		DBAdapter dbAdapter = new DBAdapter(context);
+		//DBAdapter dbAdapter = new DBAdapter(context);
 		try {
 
-			dbAdapter.closeDatabase();
-			dbAdapter.open();
+			//dbAdapter.closeDatabase();
+			//dbAdapter.open();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -63,7 +63,9 @@ public class SplashScreenView extends Activity {
 			public void handleMessage(Message msg) {
 				super.handleMessage(msg);
 				try {
+					if(progressDialog != null) {
 					progressDialog.clearAnimation();
+					}
 					startOpenBottleView();
 				} catch (Exception e) {
 					Log.e(TAG, "Exception while dismissing progress dialog");

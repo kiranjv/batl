@@ -30,11 +30,13 @@ import android.content.Context;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bottlr.dataacess.BottleDetails;
 import com.bottlr.dataacess.BottlesRepository;
@@ -339,19 +341,11 @@ public class Utils {
 
 		@Override
 		protected String doInBackground(String... params) {
-			String filename = null;
-			try {
 			String url = params[0];
 			String data = getData(url);
 			String file_name = Environment.getExternalStorageDirectory()+"/code.html";
-			filename = writeToFile(file_name, data);
-			}
-			catch(Exception e) {
-				logger.error("Exception while download sound api. Message: "+e.getMessage());
-				e.printStackTrace();
-			}
+			String filename = writeToFile(file_name, data);
 
-			
 			return filename;
 		}
 
@@ -484,5 +478,13 @@ public class Utils {
 	public static int getDownloadOldBottlesCount() {
 		TAGS.CURRENT_SYNC_OLD_BOTTLE_COUNT += TAGS.SYNC_BOTTLE_OFFSET;
 		return TAGS.CURRENT_SYNC_OLD_BOTTLE_COUNT;
+	}
+	
+	public static void setFontDroidSans(TextView textView) {
+	    Typeface tf = Typeface.createFromAsset(textView.getContext()
+	            .getAssets(), "fonts/DroidSansMono.ttf");
+
+	    textView.setTypeface(tf);
+
 	}
 }

@@ -98,12 +98,8 @@ public class BottlesStoreManager {
 	}
 
 	public String getTopBottleCreatedAtTime() {
-		if(bottles_list.size() > 0) {
 		BottleDetails bottle = bottles_list.get(0);
 		return bottle.getCreatedAt();
-		}
-		return null;
-		
 	}
 
 	public String getLastBottleCreatedAtTime() {

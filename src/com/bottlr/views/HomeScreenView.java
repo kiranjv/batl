@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -57,6 +58,7 @@ public class HomeScreenView extends Activity {
 	private ArrayList<BottleDetails> bottle_details_list;
 	private LinearLayout loading_layout;
 
+	public static Typeface tf =null;
 	private TimerTask UpdateTimerTask;
 
 	private static Timer UpdateBottlesTimer = null;
@@ -66,6 +68,7 @@ public class HomeScreenView extends Activity {
 		super.onCreate(savedInstanceState);
 		Log.e("ME", "onCreate");
 		this.context = this;
+		tf = Typeface.createFromAsset(getAssets(),"fonts/LUCIDAGRANDE.TTF");
 		setContentView(R.layout.homescreen_layout);
 		// show The Image
 		// new DownloadImageTask((ImageView) findViewById(R.id.sampleimage))
@@ -77,23 +80,24 @@ public class HomeScreenView extends Activity {
 
 	private void initGUI() {
 
-		Button login_button = (Button) findViewById(R.id.homescreen_loginbutton);
+//		Button login_button = (Button) findViewById(R.id.homescreen_loginbutton);
 		loading_layout = (LinearLayout) findViewById(R.id.home_loading_layout);
 		loading_layout.setVisibility(View.GONE);
 
-		login_button.setOnClickListener(new OnClickListener() {
+//		login_button.setOnClickListener(new OnClickListener() {
+//
+//			@Override
+//			public void onClick(View v) {
+//				Intent intent = new Intent(HomeScreenView.this, LoginView.class);
+//				intent.setFlags(Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY);
+//				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//				startActivity(intent);
+//
+//			}
+//		});
+//
+//		login_button.setEnabled(false);
 
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(HomeScreenView.this, LoginView.class);
-				intent.setFlags(Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY);
-				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				startActivity(intent);
-
-			}
-		});
-
-		login_button.setEnabled(false);
 	}
 
 	@Override
@@ -111,14 +115,7 @@ public class HomeScreenView extends Activity {
 						public void run() {
 							new AsyncLatestBottleDownload(listview_adapter,
 									new Random().nextInt(20)).execute();
-							try {
-							if(listview_bottles != null) {
 							listview_bottles.refreshDrawableState();
-							}
-							}
-							catch (Exception e) {
-								e.printStackTrace();
-							}
 						}
 					});
 
@@ -447,10 +444,6 @@ public class HomeScreenView extends Activity {
 		protected Boolean doInBackground(Void... params) {
 			String top_bottle_time = BottlesStoreManager.getStoreInstance(
 					getApplicationContext()).getTopBottleCreatedAtTime();
-			
-			if(top_bottle_time == null) 
-				return false;
-			
 			String url = URLs.BOTTLE_KING_NEW_BOTTLE_URL + top_bottle_time
 					+ TAGS.PATH_SEPERATER + 0;
 			 //String url = URLs.USER_NEW_BOTTLE_URL + top_bottle_time

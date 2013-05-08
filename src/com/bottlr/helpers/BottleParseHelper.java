@@ -96,9 +96,9 @@ public class BottleParseHelper {
 		String bottled_date_msg = "bottled " + dateCreated;
 		String createdAt = Utils.getJsonValue(json_bottle, "createdAt");
 		if (!json_bottle.isNull("reBotld")) {
-			JSONObject rebotlJsonObject = json_bottle.getJSONObject("reBotld");
-			bottled_date_msg = "rebottled " + dateCreated + " by "
-					+ Utils.getJsonValue(rebotlJsonObject, "name");
+			JSONObject jsonObject = json_bottle.getJSONObject("reBotld");
+			String uname = Utils.getJsonValue(jsonObject, "name");
+			bottled_date_msg = "rebottled " + dateCreated + " by " + uname;
 		}
 
 		/* Image bottle */

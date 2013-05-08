@@ -23,12 +23,14 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
+import android.util.Log;
 import android.widget.ImageView;
 
 import com.bottlr.R;
 import com.bottlr.utils.Utils;
 
 public class ImageLoader {
+	
 	static private final Logger logger = LoggerFactory
 			.getLogger(ImageLoader.class);
     MemoryCache memoryCache=new MemoryCache();
@@ -45,15 +47,17 @@ public class ImageLoader {
     final int stub_id=R.drawable.nopreview;
     public void DisplayImage(String url, ImageView imageView)
     {
+    	if(imageView == null) {
+    		return;
+    	}
+    	
         imageViews.put(imageView, url);
         Bitmap bitmap=memoryCache.get(url);
         if(bitmap!=null)
-        	 if(imageView != null)
             imageView.setImageBitmap(bitmap);
         else
         {
             queuePhoto(url, imageView);
-            if(imageView != null)
             imageView.setImageResource(stub_id);
         }
     }

@@ -344,9 +344,9 @@ public class BottleDetailsView extends Activity implements OnGestureListener {
 			isHeadderShow = true;
 		}
 
-		// Toast.makeText(this,
-		// "isWebShow: " + isWebShow + " isHeadderShow:" + isHeadderShow,
-		// Toast.LENGTH_LONG).show();
+//		Toast.makeText(this,
+//				"isWebShow: " + isWebShow + " isHeadderShow:" + isHeadderShow,
+//				Toast.LENGTH_LONG).show();
 		Log.v(TAG, "isWebShow: " + isWebShow + " isHeadderShow:"
 				+ isHeadderShow);
 		logger.debug("isWebShow: " + isWebShow + " isHeadderShow:"
@@ -354,25 +354,50 @@ public class BottleDetailsView extends Activity implements OnGestureListener {
 		Log.v(TAG, "iFrame Data: " + webViewIFrameData);
 
 		if (isHeadderShow) {
-			// Toast.makeText(this, "showing headder image..",
-			// Toast.LENGTH_SHORT)
-			// .show();
-			Log.v(TAG,
-					"Headder image url: "
-							+ CURRENT_OPEN_BOTTLE.getFull_top_image_url());
-			headderImage.setVisibility(View.VISIBLE);
-			// new DownloadImageTask(this, headderImage, null,
-			// CURRENT_OPEN_BOTTLE.getFull_top_image_url()).execute();
-			imageLoader.DisplayImage(
-					CURRENT_OPEN_BOTTLE.getFull_top_image_url(), headderImage);
+//			Toast.makeText(this, "showing headder image..", Toast.LENGTH_SHORT)
+//					.show();
+//			Log.v(TAG,
+//					"Headder image url: "
+//							+ CURRENT_OPEN_BOTTLE.getFull_top_image_url());
+//			headderImage.setVisibility(View.VISIBLE);
+//			// new DownloadImageTask(this, headderImage, null,
+//			// CURRENT_OPEN_BOTTLE.getFull_top_image_url()).execute();
+			String IMAGE_API_LOCATION = URLs.IMAGE_API + CURRENT_OPEN_BOTTLE.getImageName();
+			Log.v(TAG, "Headder API Url: "+IMAGE_API_LOCATION);
+//			imageLoader.DisplayImage(
+//					IMAGE_API_LOCATION, headderImage);
+			headderImage.setVisibility(View.GONE);
+			
+		WebView header_webview = (WebView) findViewById(R.id.Headdder_image_webciew);
+		header_webview.getSettings().setJavaScriptEnabled(true);
+		header_webview.getSettings().setAppCacheEnabled(true);
+		header_webview.getSettings().setDomStorageEnabled(true);
+		header_webview.getSettings().setLoadWithOverviewMode(true);
+		header_webview.getSettings().setUseWideViewPort(true);
+		header_webview.getSettings().setBuiltInZoomControls(false);
+		header_webview.getSettings().setLoadsImagesAutomatically(true);
+		header_webview.getSettings()
+				.setJavaScriptCanOpenWindowsAutomatically(true);
+		header_webview.getSettings().setAllowFileAccess(true);
+		header_webview.setInitialScale(60);
+		header_webview.setBackgroundColor(Color.WHITE);
+		getWindow().addFlags(128);
+		header_webview.getSettings()
+				.setUserAgentString(
+						"Mozilla/5.0 (Windows; U; Windows NT 6.1; en-GB; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 (.NET CLR 3.5.30729)");
+		header_webview.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
+
+		header_webview.loadUrl(IMAGE_API_LOCATION);
+			
+			
 		} else {
 			headderImage.setVisibility(View.GONE);
 		}
 
 		// configure webview based on flags
 		if (isWebShow && webViewIFrameData != null) {
-			// Toast.makeText(this, "showing web bottle for.." + botlType,
-			// Toast.LENGTH_SHORT).show();
+//			Toast.makeText(this, "showing web bottle for.." + botlType,
+//					Toast.LENGTH_SHORT).show();
 			if (botlType.equalsIgnoreCase(""))
 				headderImage.setVisibility(View.GONE);
 			configureWebView();
@@ -384,9 +409,9 @@ public class BottleDetailsView extends Activity implements OnGestureListener {
 		// configure videoview
 		if (isVideoShow && webViewIFrameData != null) {
 			// show videoview
-			// Toast.makeText(this,
-			// "showing video view. Data: " + webViewIFrameData,
-			// Toast.LENGTH_SHORT).show();
+//			Toast.makeText(this,
+//					"showing video view. Data: " + webViewIFrameData,
+//					Toast.LENGTH_SHORT).show();
 			video_include_layout.setVisibility(View.VISIBLE);
 			// playVideo();
 			new Timer().schedule(new TimerTask() {
@@ -395,7 +420,7 @@ public class BottleDetailsView extends Activity implements OnGestureListener {
 				public void run() {
 					runOnUiThread(new Runnable() {
 						public void run() {
-							// playVideo();
+							 playVideo();
 
 						}
 
@@ -408,8 +433,8 @@ public class BottleDetailsView extends Activity implements OnGestureListener {
 		configureMessageView();
 		// myLayout.addView(messagesView, ViewGroup.LayoutParams.WRAP_CONTENT,
 		// ViewGroup.LayoutParams.WRAP_CONTENT);
-		// Toast.makeText(this, "Bottle details opened", Toast.LENGTH_SHORT)
-		// .show();
+//		Toast.makeText(this, "Bottle details opened", Toast.LENGTH_SHORT)
+//				.show();
 		Log.v(TAG, "-------------------------------");
 	}
 
@@ -417,7 +442,7 @@ public class BottleDetailsView extends Activity implements OnGestureListener {
 		// show messages of the bottle.
 		String messageHeadder = "<h1> Message:</h1> \n";
 		String bottle_message = CURRENT_OPEN_BOTTLE.getMessage();
-		String mesaageData = "";// "<h1> No Messages.</h1>";
+		String mesaageData = "";
 		if (!bottle_message.equalsIgnoreCase("")) {
 			mesaageData = messageHeadder + bottle_message;
 		}
@@ -508,11 +533,10 @@ public class BottleDetailsView extends Activity implements OnGestureListener {
 			// webView.loadUrl("file:///android_asset/code.html");
 			// webView.loadUrl("https://soundcloud.com/cnn/newsday042313");
 			// webView.loadUrl(webViewIFrameData);
-			// webView.loadUrl("file://"+webViewIFrameData);
+			//webView.loadUrl("file://"+webViewIFrameData);
 			if (webViewIFrameData.contains("sdcard")) {
-				Log.v(TAG, "Html path: " + webViewIFrameData);
-				webView.loadUrl("file://" + webViewIFrameData);
-				//webView.loadUrl("http://c801459.r59.cf2.rackcdn.com/47eb1be1.jpg");
+				Log.v(TAG, "Html path: "+webViewIFrameData);
+				webView.loadUrl("file://"+webViewIFrameData);
 			} else {
 				webView.loadData(webViewIFrameData, "text/html", "utf-8");
 			}
@@ -610,8 +634,8 @@ public class BottleDetailsView extends Activity implements OnGestureListener {
 		super.onPause();
 
 		if (webView != null) {
-			// webView.clearCache(true);
-			// webView.freeMemory();
+//			webView.clearCache(true);
+//			webView.freeMemory();
 			deleteDatabase("webview.db");
 			deleteDatabase("webviewCache.db");
 			webView.destroy();
