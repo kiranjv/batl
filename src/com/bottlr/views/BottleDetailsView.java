@@ -114,6 +114,8 @@ public class BottleDetailsView extends Activity implements OnGestureListener {
 
 	private TextView medianame_textview;
 
+	private ImageView mVideoViewThumb;
+
 	static final FrameLayout.LayoutParams COVER_SCREEN_PARAMS = new FrameLayout.LayoutParams(
 			ViewGroup.LayoutParams.MATCH_PARENT,
 			ViewGroup.LayoutParams.MATCH_PARENT);
@@ -173,6 +175,7 @@ public class BottleDetailsView extends Activity implements OnGestureListener {
 		// findViewById(R.id.bottledetails_videoview_layout);
 		video_include_layout = (LinearLayout) findViewById(R.id.bottle_details_videoview_layout);
 		mVideoView = (VideoView) findViewById(R.id.bottle_detail_surface_view);
+		mVideoViewThumb = (ImageView) findViewById(R.id.bottle_detail_videoview_thumb_imageview);
 
 		// mVideoViewThumb = (ImageView)
 		// findViewById(R.id.bottle_detailoutside_imageview);
@@ -344,8 +347,8 @@ public class BottleDetailsView extends Activity implements OnGestureListener {
 			isHeadderShow = true;
 		}
 
-//		Toast.makeText(this,
-//				"isWebShow: " + isWebShow + " isHeadderShow:" + isHeadderShow,
+//		Toast.makeText(this,"isVideoShow: "+isVideoShow+
+//				" isWebShow: " + isWebShow + " isHeadderShow:" + isHeadderShow,
 //				Toast.LENGTH_LONG).show();
 		Log.v(TAG, "isWebShow: " + isWebShow + " isHeadderShow:"
 				+ isHeadderShow);
@@ -667,7 +670,10 @@ public class BottleDetailsView extends Activity implements OnGestureListener {
 		try {
 			// final String path = viddyvideolink;
 			final String videoPath = webViewIFrameData;
-
+            if(videoPath.contains(".mp4")) {
+            	// clear videoview thumb image
+            	mVideoViewThumb.setVisibility(View.GONE);
+            }
 			progressDialog = ProgressDialog.show(this, "",
 					"Buffering media...", true);
 			progressDialog.setCancelable(true);

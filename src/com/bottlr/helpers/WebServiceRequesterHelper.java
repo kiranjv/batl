@@ -94,7 +94,13 @@ public class WebServiceRequesterHelper extends AbstractProxy {
 				e.printStackTrace();
 			}
 
-			String thumb_url = Utils.getJsonValue(main_thumb_json, "url");
+			String thumb_url = null;
+			try {
+				thumb_url = Utils.getJsonValue(main_thumb_json, "url");
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			return thumb_url;
 		}
 		return null;

@@ -131,10 +131,15 @@ public class Utils {
 		if (video_type.equalsIgnoreCase("youtube") || video_type == "youtube") {
 			url = URLs.YOUTUBE_THUMB_URLBASE + videoid
 					+ URLs.YOUTUBE_THUMB_URLEND;
-			 Log.d(TAG, "Youtube video thumb url: " + url);
+			Log.d(TAG, "Youtube video thumb url: " + url);
 		} else if (video_type.equalsIgnoreCase("vimeo")
 				|| video_type == "vimeo") {
-			url = getJsonValue(json_bottle, "vimeoimg");
+			try {
+				url = getJsonValue(json_bottle, "vimeoimg");
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 		} else if (video_type.equalsIgnoreCase("socialcam")
 				|| video_type == "socialcam") {
@@ -285,13 +290,12 @@ public class Utils {
 		else if (type.equalsIgnoreCase(TAGS.BOTTLE_SOUNDCLOUD_TYPE)) {
 			String url = "";
 			if (video_audio_id.contains("http://soundcloud.com/")) {
-				url = "http://testbotl.com:8080/soundcloudapi?soundcloudurl="
+				url = URLs.BASE_URL + "soundcloudapi?soundcloudurl="
 						+ video_audio_id;
 				Log.v(TAG, "URL: " + url);
 
 			} else {
-				url = "http://testbotl.com:8080/soundcloudapi?trackid="
-						+ video_audio_id;
+				url = URLs.BASE_URL + "soundcloudapi?trackid=" + video_audio_id;
 				Log.v(TAG, "URL: " + url);
 			}
 
@@ -341,12 +345,20 @@ public class Utils {
 
 		@Override
 		protected String doInBackground(String... params) {
-			String url = params[0];
-			String data = getData(url);
-			String file_name = Environment.getExternalStorageDirectory()+"/code.html";
-			String filename = writeToFile(file_name, data);
+			try {
+				String url = params[0];
+				String data = getData(url);
+				String file_name = Environment.getExternalStorageDirectory()
+						+ "/code.html";
+				String filename = writeToFile(file_name, data);
 
-			return filename;
+				return filename;
+			} catch (Exception e) {
+				logger.error("Exception while download sound cloud. Message: "
+						+ e.getMessage());
+				e.printStackTrace();
+				return null;
+			}
 		}
 
 		/**
@@ -460,31 +472,26 @@ public class Utils {
 		}
 	}
 
-	public static String getJsonValue(JSONObject json_object, String key_value) {
+	public static String getJsonValue(JSONObject json_object, String key_value) throws JSONException {
 		String value = "";
-		try {
+	
 			if (!json_object.isNull(key_value)
 					&& !json_object.getString(key_value).equalsIgnoreCase(""))
 				value = json_object.getString(key_value);
 			return value;
-		} catch (JSONException e) {
-
-			e.printStackTrace();
-
-		}
-		return value;
+		
 	}
 
 	public static int getDownloadOldBottlesCount() {
 		TAGS.CURRENT_SYNC_OLD_BOTTLE_COUNT += TAGS.SYNC_BOTTLE_OFFSET;
 		return TAGS.CURRENT_SYNC_OLD_BOTTLE_COUNT;
 	}
-	
-	public static void setFontDroidSans(TextView textView) {
-	    Typeface tf = Typeface.createFromAsset(textView.getContext()
-	            .getAssets(), "fonts/DroidSansMono.ttf");
 
-	    textView.setTypeface(tf);
+	public static void setFontDroidSans(TextView textView) {
+		Typeface tf = Typeface.createFromAsset(textView.getContext()
+				.getAssets(), "fonts/DroidSansMono.ttf");
+
+		textView.setTypeface(tf);
 
 	}
 }

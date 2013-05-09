@@ -96,9 +96,17 @@ public class BottleParseHelper {
 		String bottled_date_msg = "bottled " + dateCreated;
 		String createdAt = Utils.getJsonValue(json_bottle, "createdAt");
 		if (!json_bottle.isNull("reBotld")) {
+			try {
 			JSONObject jsonObject = json_bottle.getJSONObject("reBotld");
 			String uname = Utils.getJsonValue(jsonObject, "name");
-			bottled_date_msg = "rebottled " + dateCreated + " by " + uname;
+			if(uname == null ||  uname.equalsIgnoreCase(""))
+			bottled_date_msg = "rebottled " + dateCreated + " by botlking";
+			else 
+				bottled_date_msg = "rebottled " + dateCreated + " by " + uname;
+			}
+			catch (Exception e) {
+				
+			}
 		}
 
 		/* Image bottle */

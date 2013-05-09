@@ -68,7 +68,7 @@ public class HomeScreenView extends Activity {
 		super.onCreate(savedInstanceState);
 		Log.e("ME", "onCreate");
 		this.context = this;
-		tf = Typeface.createFromAsset(getAssets(),"fonts/LUCIDAGRANDE.TTF");
+		tf = Typeface.createFromAsset(getAssets(),"fonts/AlikeAngular-Regular.ttf");
 		setContentView(R.layout.homescreen_layout);
 		// show The Image
 		// new DownloadImageTask((ImageView) findViewById(R.id.sampleimage))

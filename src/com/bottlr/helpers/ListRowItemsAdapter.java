@@ -75,6 +75,7 @@ public class ListRowItemsAdapter extends BaseAdapter {
 				"itemDetailsrrayList List Size: " + itemDetailsrrayList.size());
 
 		View row = l_Inflater.inflate(R.layout.listrow_layout, null);
+		
 		try {
 
 			/* first layout items update. */
