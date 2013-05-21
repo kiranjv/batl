@@ -236,9 +236,11 @@ public class Utils {
 		String iFrame = null;
 
 		if (type.equalsIgnoreCase(TAGS.BOTTLE_YOUTUBE_TYPE)) {
-			iFrame = "<center><iframe width=\"1050\" height=\"950\" src=\"http://www.youtube.com/embed/"
-					+ video_audio_id
-					+ "?feature=player_detailpage\" frameborder=\"0\" allowfullscreen></iframe></center>";
+			//iFrame = "<center><iframe width=\"1050\" height=\"950\" src=\"http://www.youtube.com/embed/"
+			//		+ video_audio_id
+			//		+ "?feature=player_detailpage;autoplay=1\" frameborder=\"1\" allowfullscreen></iframe></center>";
+			
+			iFrame = "<center><object type=\"application/x-shockwave-flash\" width=\"1050\" height=\"950\" vspace=\"0\" data=\"http://www.youtube.com/v/"+video_audio_id+"?fs=1&amp;hl=en_US&amp;autoplay=1\"><param name=\"movie\" value=\"http://www.youtube.com/v/"+video_audio_id+"?fs=1&amp;hl=en_US&amp;autoplay=1\"></param> <param name=\"wmode\" value=\"transparent\"></param></object></center>";
 
 		} else if (type.equalsIgnoreCase(TAGS.BOTTLE_VIMEO_TYPE)) {
 

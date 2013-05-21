@@ -9,7 +9,7 @@ public class URLs {
 	
 //	public static String BASE_URL = "http://testbotl.com:8080/";
 	
-	public static final String IMAGE_API = "http://www.testbotl.com:8080/webphoneapi?webtype=image&resourceUrl=";
+	public static final String IMAGE_API = "http://www.botl.com/webphoneapi?webtype=image&resourceUrl=";
 	public static String BASE_URL = "http://botl.com/";
 	public static String BOTTLE_KING_OLD_BOTTLE_URL = BASE_URL + "getBotls/";
 	public static String BOTTLE_KING_NEW_BOTTLE_URL = BASE_URL + "getRecentBotls/";
@@ -27,8 +27,10 @@ public class URLs {
 	
 	//Youtube
 	public static String YOUTUBE_BASEURL = "http://www.youtube.com/watch?v=";
-	public static String YOUTUBE_THUMB_URLBASE = "http://i1.ytimg.com/vi/"; 
-	public static String YOUTUBE_THUMB_URLEND = "/default.jpg";
+	//public static String YOUTUBE_THUMB_URLBASE = "http://i1.ytimg.com/vi/";
+	public static String YOUTUBE_THUMB_URLBASE = "http://img.youtube.com/vi/";
+	
+	public static String YOUTUBE_THUMB_URLEND = "/hqdefault.jpg";
 	
 	
 	

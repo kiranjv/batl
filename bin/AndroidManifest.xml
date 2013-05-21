@@ -37,6 +37,15 @@
         <!-- Home screen activity -->
         <activity android:name=".views.HomeScreenView" >
         </activity>
+        
+        <!-- Home screen grid view activity -->
+        <activity android:name=".views.HomeScreenGridView" >
+        </activity>
+        
+        <!-- Home screen wth 2 listviews activity -->
+        <activity android:name=".views.HomeScreenListViewShuffleActivity" >
+        </activity>
+        
 
         <!-- Bottle details view -->
         <activity

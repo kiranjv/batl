@@ -10,6 +10,7 @@
     android:background="@color/white" >
 
     <LinearLayout
+        android:id="@+id/bottledetails_main_linearlayout"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:orientation="vertical"
@@ -29,13 +30,13 @@
                 android:layout_gravity="center"
                 android:src="@drawable/bot_open" />
         </LinearLayout>
-
+
         <ImageView
             android:id="@+id/bottledetails_bottleHImage"
-            android:layout_width="550dp"
-            android:layout_height="10dp"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:scaleType="fitCenter"
+            android:scaleType="fitXY"
             android:src="@drawable/nopreview" />
 
         <!--

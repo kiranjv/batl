@@ -67,7 +67,7 @@ public class BottleParseHelper {
 		String botlType = json_bottle.getString("botlType");
 		String botlImageUrl = json_bottle.getString("botlImageUrl");
 		String dateCreated = json_bottle.getString("dateCreated");
-		String distance = json_bottle.getString("distance");
+		String distance = preProcessDistance(json_bottle.getString("distance"));
 		String imageName = json_bottle.getString("imageName");
 		String likeCount = "0";
 		if (!json_bottle.isNull("likes")) {
@@ -97,15 +97,16 @@ public class BottleParseHelper {
 		String createdAt = Utils.getJsonValue(json_bottle, "createdAt");
 		if (!json_bottle.isNull("reBotld")) {
 			try {
-			JSONObject jsonObject = json_bottle.getJSONObject("reBotld");
-			String uname = Utils.getJsonValue(jsonObject, "name");
-			if(uname == null ||  uname.equalsIgnoreCase(""))
-			bottled_date_msg = "rebottled " + dateCreated + " by botlking";
-			else 
-				bottled_date_msg = "rebottled " + dateCreated + " by " + uname;
-			}
-			catch (Exception e) {
-				
+				JSONObject jsonObject = json_bottle.getJSONObject("reBotld");
+				String uname = Utils.getJsonValue(jsonObject, "name");
+				if (uname == null || uname.equalsIgnoreCase(""))
+					bottled_date_msg = "rebottled " + dateCreated
+							+ " by botlking";
+				else
+					bottled_date_msg = "rebottled " + dateCreated + " by "
+							+ uname;
+			} catch (Exception e) {
+
 			}
 		}
 
@@ -256,6 +257,17 @@ public class BottleParseHelper {
 				vidfrom, avatar_img, pattren_url, real_name, bottled_date_msg,
 				audio_from, createdAt);
 
+	}
+
+	private String preProcessDistance(String dist) {
+		int ldist = Integer.parseInt(dist);
+		if (ldist > 1000) {
+			int ddist = ldist / 1000;
+			String rdist = (ldist % 1000) + "";
+			
+			dist = ddist + "." + rdist.charAt(0) + "k";
+		}
+		return dist;
 	}
 
 }

@@ -13,6 +13,7 @@ import java.util.concurrent.ExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -46,6 +47,7 @@ import android.webkit.URLUtil;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebSettings.PluginState;
+import android.webkit.WebSettings.ZoomDensity;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.EditText;
@@ -63,7 +65,7 @@ import com.bottlr.R;
 import com.bottlr.dataacess.BottleDetails;
 import com.bottlr.helpers.DownloadImageTask;
 import com.bottlr.helpers.WebServiceRequesterHelper;
-import com.bottlr.imgloader.ImageLoader;
+import com.bottlr.imgloader.ImageLoaderBottleDetails;
 import com.bottlr.utils.TAGS;
 import com.bottlr.utils.UIUtils;
 import com.bottlr.utils.URLs;
@@ -90,7 +92,7 @@ public class BottleDetailsView extends Activity implements OnGestureListener {
 	private WebView webView;
 	private ImageView openedBottleImage;
 	private ImageView headderImage;
-	private ImageLoader imageLoader;
+	private ImageLoaderBottleDetails imageLoader;
 
 	private VideoView mVideoView;
 
@@ -116,6 +118,8 @@ public class BottleDetailsView extends Activity implements OnGestureListener {
 
 	private ImageView mVideoViewThumb;
 
+	private LinearLayout main_layout;
+
 	static final FrameLayout.LayoutParams COVER_SCREEN_PARAMS = new FrameLayout.LayoutParams(
 			ViewGroup.LayoutParams.MATCH_PARENT,
 			ViewGroup.LayoutParams.MATCH_PARENT);
@@ -127,7 +131,7 @@ public class BottleDetailsView extends Activity implements OnGestureListener {
 
 		setContentView(R.layout.bottledetils_layout);
 
-		imageLoader = new ImageLoader(this);
+		imageLoader = new ImageLoaderBottleDetails(this);
 		long initGUI_start = System.currentTimeMillis();
 		initGUI(savedInstanceState);
 		long initGUI_end = System.currentTimeMillis();
@@ -136,9 +140,41 @@ public class BottleDetailsView extends Activity implements OnGestureListener {
 						+ Utils.milliToSeconds((initGUI_end - initGUI_start)));
 		logger.info("Init Gui Time: "
 				+ Utils.milliToSeconds((initGUI_end - initGUI_start)));
-		// configureGUI(savedInstanceState);
+		configureGUI();
 
 		gestureScanner = new GestureDetector(this);
+
+		main_layout = (LinearLayout) findViewById(R.id.bottledetails_main_linearlayout);
+		// main_layout.setOnClickListener(new OnClickListener() {
+		// float zoomFactor = 1.5f;
+		// float zoomFactorOffset = 0.5f;
+		// int clickCount = 0;
+		// boolean zoomedOut = false;
+		//
+		// @SuppressLint({ "NewApi", "NewApi", "NewApi", "NewApi" })
+		// @Override
+		// public void onClick(View v) {
+		// clickCount++;
+		// if (clickCount == 2) {
+		//
+		// if (zoomedOut) {
+		// // now zoom in
+		//
+		// v.setScaleX(1);
+		// v.setScaleY(1);
+		// zoomedOut = false;
+		// } else {
+		// v.setScaleX(zoomFactor);
+		// v.setScaleY(zoomFactor);
+		// zoomedOut = true;
+		// }
+		//
+		// clickCount = 0;
+		// }
+		//
+		// }
+		// });
+
 		super.onCreate(savedInstanceState);
 
 	}
@@ -148,7 +184,7 @@ public class BottleDetailsView extends Activity implements OnGestureListener {
 
 		super.onStart();
 		long initConf_start = System.currentTimeMillis();
-		configureGUI();
+//		configureGUI();
 		long initConf_end = System.currentTimeMillis();
 		Log.e(TAG,
 				"Init Gui Time: "
@@ -347,9 +383,9 @@ public class BottleDetailsView extends Activity implements OnGestureListener {
 			isHeadderShow = true;
 		}
 
-//		Toast.makeText(this,"isVideoShow: "+isVideoShow+
-//				" isWebShow: " + isWebShow + " isHeadderShow:" + isHeadderShow,
-//				Toast.LENGTH_LONG).show();
+		// Toast.makeText(this,"isVideoShow: "+isVideoShow+
+		// " isWebShow: " + isWebShow + " isHeadderShow:" + isHeadderShow,
+		// Toast.LENGTH_LONG).show();
 		Log.v(TAG, "isWebShow: " + isWebShow + " isHeadderShow:"
 				+ isHeadderShow);
 		logger.debug("isWebShow: " + isWebShow + " isHeadderShow:"
@@ -357,50 +393,58 @@ public class BottleDetailsView extends Activity implements OnGestureListener {
 		Log.v(TAG, "iFrame Data: " + webViewIFrameData);
 
 		if (isHeadderShow) {
-//			Toast.makeText(this, "showing headder image..", Toast.LENGTH_SHORT)
-//					.show();
-//			Log.v(TAG,
-//					"Headder image url: "
-//							+ CURRENT_OPEN_BOTTLE.getFull_top_image_url());
-//			headderImage.setVisibility(View.VISIBLE);
-//			// new DownloadImageTask(this, headderImage, null,
-//			// CURRENT_OPEN_BOTTLE.getFull_top_image_url()).execute();
-			String IMAGE_API_LOCATION = URLs.IMAGE_API + CURRENT_OPEN_BOTTLE.getImageName();
-			Log.v(TAG, "Headder API Url: "+IMAGE_API_LOCATION);
-//			imageLoader.DisplayImage(
-//					IMAGE_API_LOCATION, headderImage);
-			headderImage.setVisibility(View.GONE);
+			// Toast.makeText(this, "showing headder image..",
+			// Toast.LENGTH_SHORT)
+			// .show();
+			// Log.v(TAG,
+			// "Headder image url: "
+			// + CURRENT_OPEN_BOTTLE.getFull_top_image_url());
+			// headderImage.setVisibility(View.VISIBLE);
+			// // new DownloadImageTask(this, headderImage, null,
+			// // CURRENT_OPEN_BOTTLE.getFull_top_image_url()).execute();
+			String IMAGE_API_LOCATION = URLs.IMAGE_API
+					+ CURRENT_OPEN_BOTTLE.getImageName();
+			Log.v(TAG, "Headder API Url: " + IMAGE_API_LOCATION);
+			// imageLoader.DisplayImage(
+			// IMAGE_API_LOCATION, headderImage);
 			
-		WebView header_webview = (WebView) findViewById(R.id.Headdder_image_webciew);
-		header_webview.getSettings().setJavaScriptEnabled(true);
-		header_webview.getSettings().setAppCacheEnabled(true);
-		header_webview.getSettings().setDomStorageEnabled(true);
-		header_webview.getSettings().setLoadWithOverviewMode(true);
-		header_webview.getSettings().setUseWideViewPort(true);
-		header_webview.getSettings().setBuiltInZoomControls(false);
-		header_webview.getSettings().setLoadsImagesAutomatically(true);
-		header_webview.getSettings()
-				.setJavaScriptCanOpenWindowsAutomatically(true);
-		header_webview.getSettings().setAllowFileAccess(true);
-		header_webview.setInitialScale(60);
-		header_webview.setBackgroundColor(Color.WHITE);
-		getWindow().addFlags(128);
-		header_webview.getSettings()
-				.setUserAgentString(
-						"Mozilla/5.0 (Windows; U; Windows NT 6.1; en-GB; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 (.NET CLR 3.5.30729)");
-		header_webview.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
+		
+		imageLoader.DisplayImage(CURRENT_OPEN_BOTTLE.getFull_top_image_url(), headderImage);
+			
+		
 
-		header_webview.loadUrl(IMAGE_API_LOCATION);
-			
-			
+//			WebView header_webview = (WebView) findViewById(R.id.Headdder_image_webciew);
+//			header_webview.getSettings().setJavaScriptEnabled(true);
+//			header_webview.getSettings().setAppCacheEnabled(true);
+//			header_webview.getSettings().setDomStorageEnabled(true);
+//			header_webview.getSettings().setLoadWithOverviewMode(true);
+//			header_webview.getSettings().setUseWideViewPort(false);
+//			header_webview.getSettings().setBuiltInZoomControls(false);
+//			//header_webview.getSettings().setDefaultZoom(WebSettings.ZoomDensity.FAR);
+//			header_webview.getSettings().setSupportZoom(true);
+//			header_webview.getSettings().setLoadsImagesAutomatically(true);
+//			header_webview.getSettings()
+//					.setJavaScriptCanOpenWindowsAutomatically(true);
+//			header_webview.getSettings().setAllowFileAccess(true);
+//			header_webview.setInitialScale(60);
+//			header_webview.setBackgroundColor(Color.WHITE);
+//			getWindow().addFlags(128);
+//			header_webview
+//					.getSettings()
+//					.setUserAgentString(
+//							"Mozilla/5.0 (Windows; U; Windows NT 6.1; en-GB; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 (.NET CLR 3.5.30729)");
+//			header_webview
+//					.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
+//			header_webview.loadUrl(IMAGE_API_LOCATION);
+//
 		} else {
 			headderImage.setVisibility(View.GONE);
 		}
 
 		// configure webview based on flags
 		if (isWebShow && webViewIFrameData != null) {
-//			Toast.makeText(this, "showing web bottle for.." + botlType,
-//					Toast.LENGTH_SHORT).show();
+			// Toast.makeText(this, "showing web bottle for.." + botlType,
+			// Toast.LENGTH_SHORT).show();
 			if (botlType.equalsIgnoreCase(""))
 				headderImage.setVisibility(View.GONE);
 			configureWebView();
@@ -412,9 +456,9 @@ public class BottleDetailsView extends Activity implements OnGestureListener {
 		// configure videoview
 		if (isVideoShow && webViewIFrameData != null) {
 			// show videoview
-//			Toast.makeText(this,
-//					"showing video view. Data: " + webViewIFrameData,
-//					Toast.LENGTH_SHORT).show();
+			// Toast.makeText(this,
+			// "showing video view. Data: " + webViewIFrameData,
+			// Toast.LENGTH_SHORT).show();
 			video_include_layout.setVisibility(View.VISIBLE);
 			// playVideo();
 			new Timer().schedule(new TimerTask() {
@@ -423,7 +467,7 @@ public class BottleDetailsView extends Activity implements OnGestureListener {
 				public void run() {
 					runOnUiThread(new Runnable() {
 						public void run() {
-							 playVideo();
+							playVideo();
 
 						}
 
@@ -436,8 +480,8 @@ public class BottleDetailsView extends Activity implements OnGestureListener {
 		configureMessageView();
 		// myLayout.addView(messagesView, ViewGroup.LayoutParams.WRAP_CONTENT,
 		// ViewGroup.LayoutParams.WRAP_CONTENT);
-//		Toast.makeText(this, "Bottle details opened", Toast.LENGTH_SHORT)
-//				.show();
+		// Toast.makeText(this, "Bottle details opened", Toast.LENGTH_SHORT)
+		// .show();
 		Log.v(TAG, "-------------------------------");
 	}
 
@@ -470,7 +514,7 @@ public class BottleDetailsView extends Activity implements OnGestureListener {
 			webView.getSettings().setAppCacheEnabled(true);
 			webView.getSettings().setDomStorageEnabled(true);
 			webView.getSettings().setLoadWithOverviewMode(true);
-			webView.getSettings().setUseWideViewPort(true);
+			webView.getSettings().setUseWideViewPort(false);
 			webView.getSettings().setBuiltInZoomControls(false);
 			webView.getSettings().setLoadsImagesAutomatically(true);
 			webView.getSettings()
@@ -536,10 +580,10 @@ public class BottleDetailsView extends Activity implements OnGestureListener {
 			// webView.loadUrl("file:///android_asset/code.html");
 			// webView.loadUrl("https://soundcloud.com/cnn/newsday042313");
 			// webView.loadUrl(webViewIFrameData);
-			//webView.loadUrl("file://"+webViewIFrameData);
+			// webView.loadUrl("file://"+webViewIFrameData);
 			if (webViewIFrameData.contains("sdcard")) {
-				Log.v(TAG, "Html path: "+webViewIFrameData);
-				webView.loadUrl("file://"+webViewIFrameData);
+				Log.v(TAG, "Html path: " + webViewIFrameData);
+				webView.loadUrl("file://" + webViewIFrameData);
 			} else {
 				webView.loadData(webViewIFrameData, "text/html", "utf-8");
 			}
@@ -562,16 +606,17 @@ public class BottleDetailsView extends Activity implements OnGestureListener {
 		return gestureScanner.onTouchEvent(me);
 	}
 
-	// @Override
+	@Override
 	public boolean onDown(MotionEvent e) {
 		// viewA.setText("-" + "DOWN" + "-");
 		return true;
 	}
 
-	// @Override
+	@Override
 	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
 			float velocityY) {
 		try {
+			Log.d(TAG, "onFling action");
 			if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH)
 				return false;
 			// right to left swipe
@@ -611,18 +656,19 @@ public class BottleDetailsView extends Activity implements OnGestureListener {
 		mToast.show();
 	}
 
-	// @Override
+	@Override
 	public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX,
 			float distanceY) {
 		// viewA.setText("-" + "SCROLL" + "-");
 		return true;
 	}
 
-	// @Override
+	@Override
 	public void onShowPress(MotionEvent e) {
 		// viewA.setText("-" + "SHOW PRESS" + "-");
-	} // @Override
+	}
 
+	@Override
 	public boolean onSingleTapUp(MotionEvent e) {
 		// Toast mToast = Toast.makeText(getApplicationContext(), "Single Tap",
 		// Toast.LENGTH_SHORT).show();
@@ -637,8 +683,8 @@ public class BottleDetailsView extends Activity implements OnGestureListener {
 		super.onPause();
 
 		if (webView != null) {
-//			webView.clearCache(true);
-//			webView.freeMemory();
+			// webView.clearCache(true);
+			// webView.freeMemory();
 			deleteDatabase("webview.db");
 			deleteDatabase("webviewCache.db");
 			webView.destroy();
@@ -653,7 +699,8 @@ public class BottleDetailsView extends Activity implements OnGestureListener {
 	}
 
 	private void navigateToHomeScreen() {
-		Intent intent = new Intent(BottleDetailsView.this, HomeScreenView.class);
+		Intent intent = new Intent(BottleDetailsView.this,
+				HomeScreenListViewShuffleActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY);
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		startActivity(intent);
@@ -670,10 +717,10 @@ public class BottleDetailsView extends Activity implements OnGestureListener {
 		try {
 			// final String path = viddyvideolink;
 			final String videoPath = webViewIFrameData;
-            if(videoPath.contains(".mp4")) {
-            	// clear videoview thumb image
-            	mVideoViewThumb.setVisibility(View.GONE);
-            }
+			if (videoPath.contains(".mp4")) {
+				// clear videoview thumb image
+				mVideoViewThumb.setVisibility(View.GONE);
+			}
 			progressDialog = ProgressDialog.show(this, "",
 					"Buffering media...", true);
 			progressDialog.setCancelable(true);

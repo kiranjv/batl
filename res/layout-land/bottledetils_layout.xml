@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scrollView1"
+    android:layout_width="fill_parent"
+    android:layout_height="match_parent"
+    android:layout_alignParentBottom="true"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentRight="true"
+    android:layout_alignParentTop="true"
+    android:background="@color/white" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        android:scrollbarAlwaysDrawVerticalTrack="true"
+        android:scrollbars="vertical" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="#00aedb"
+            android:gravity="center" >
+
+            <ImageView
+                android:id="@+id/bottledetails_open_botl_img"
+                android:layout_width="300dp"
+                android:layout_height="120dp"
+                android:layout_gravity="center"
+                android:src="@drawable/bot_open" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/bottledetails_bottleHImage"
+            android:layout_width="550dp"
+            android:layout_height="10dp"
+            android:layout_gravity="center_horizontal"
+            android:scaleType="fitCenter"
+            android:src="@drawable/nopreview" />
+
+        <!--
+    <com.bottlr.views.HTML5WebView
+        android:id="@+id/html5WebView"
+        android:layout_width="250dp"
+        android:layout_height="150dp"
+        android:layout_gravity="center" >
+    </com.bottlr.views.HTML5WebView>
+        -->
+
+        <WebView
+            android:id="@+id/Headdder_image_webciew"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
+
+        <WebView
+            android:id="@+id/bottledetails_webiew"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal" >
+        </WebView>
+        <!--
+         <include
+        android:id="@+id/bottledetails_videoview_layout"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        layout="@layout/bottlevideoview_layout"
+        android:gravity="center_horizontal"
+        />
+        -->
+
+
+        <!-- video view layout -->
+
+        <LinearLayout
+            android:id="@+id/bottle_details_videoview_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="5dp" >
+
+                <ImageButton
+                    android:id="@+id/bottle_detail_videoview_playbutton"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/play" />
+
+                <TextView
+                    android:id="@+id/bottle_detail_media_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="10dp"
+                    android:text="media name"
+                    android:textColor="@color/black" />
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white" >
+
+                <VideoView
+                    android:id="@+id/bottle_detail_surface_view"
+                    android:layout_width="500dp"
+                    android:layout_height="200dp" />
+
+                <ImageView
+                    android:id="@+id/bottle_detail_videoview_thumb_imageview"
+                    android:layout_width="500dp"
+                    android:layout_height="200dp"
+                    android:layout_alignLeft="@id/bottle_detail_surface_view"
+                    android:layout_alignTop="@id/bottle_detail_surface_view"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/no_image" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <ImageButton
+                    android:id="@+id/bottle_detail_play"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/play"
+                    android:visibility="gone" />
+
+                <ImageButton
+                    android:id="@+id/bottle_detail_pause"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/pause"
+                    android:visibility="gone" />
+
+                <ImageButton
+                    android:id="@+id/bottle_detail_reset"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/reset"
+                    android:visibility="gone" />
+
+                <ImageButton
+                    android:id="@+id/bottle_detail_stop"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/stop"
+                    android:visibility="gone" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- video view layout end -->
+
+        <TextView
+            android:id="@+id/bottledetails_messages_filed"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="2dp"
+            android:textColor="@color/black" />
+    </LinearLayout>
+
+</ScrollView>

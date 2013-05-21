@@ -56,8 +56,13 @@ public class PressBottleCapView extends Activity {
 //		Toast.makeText(getApplicationContext(), "Openning bottle..",
 //				Toast.LENGTH_LONG).show();
 		//show login screen
+//		Intent intent = new Intent(PressBottleCapView.this,
+//				HomeScreenView.class);
+		
+//		Intent intent = new Intent(PressBottleCapView.this,
+//				HomeScreenGridView.class);
 		Intent intent = new Intent(PressBottleCapView.this,
-				HomeScreenView.class);
+				HomeScreenListViewShuffleActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY);
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		startActivity(intent);
